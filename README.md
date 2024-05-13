@@ -45,7 +45,7 @@ for and to give an example of how it is used.
 An example man page from this project:
 
 ```
-FF-ICOSA(1)                            General Commands Manual                          FF-ICOSA(1)
+FF-ICOSA(1)                      General Commands Manual                     FF-ICOSA(1)
 
 NAME
        ff-icosa — psychedelic icosahedral fractal picture generator
@@ -54,8 +54,8 @@ SYNOPSIS
        ff-icosa <width> <height> <scale amount> <?seed?> <?option?>
 
 DESCRIPTION
-       ff-icosa  generates psychedelic icosahedral fractal pictures in farbfeld(5) image format and
-       writes the result to stdout.
+       ff-icosa  generates psychedelic icosahedral fractal pictures in farbfeld(5) image
+       format and writes the result to stdout.
 
        This program does not read from standard in.
 
@@ -84,7 +84,7 @@ EXAMPLES
 SEE ALSO
        farbfeld(5), farbfeld-utils(7)
 
-farbfeld-utils                               2024-04-03                                 FF-ICOSA(1)
+farbfeld-utils                         2024-04-03                            FF-ICOSA(1)
 ```
 
 ## Installation
