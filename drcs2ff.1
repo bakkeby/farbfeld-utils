@@ -1,0 +1,59 @@
+.Dd 2023-11-08
+.Dt DRCS2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm drcs2ff
+.Nd convert DEC VT320 font file to farbfeld
+.Sh SYNOPSIS
+.Nm
+<bg color> <fg color>
+.Sh DESCRIPTION
+.Nm
+reads a DEC VT320 font file from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+This is in the context of a DEC VT320 terminal and the font file is referred to as a Dynamically
+Redefined Character Set (shortened to DRCS).
+.Pp
+The Digital VT320, like the VT200 Series before it, allows character glyphs to be created and sent
+to the terminal as a Dynamically Redefined Character Set (DRCS). This way you can use up to 96
+custom character shapes on the screen at one time. These extra characters can be used to provide
+letter shapes that are missing from the built-in sets, or they can even be used to pretend that the
+terminal has graphics capability. This is known as Soft Character Sets.
+.Pp
+Refer to https://www.vt100.net/dec/vt320/soft_characters for more details.
+.Pp
+Note that the aspect ratio of the picture is different to what would be visible on a actual DEC
+VT320 terminal.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+.Pp
+Takes two arguments; the background and foreground colour. You can use - to make it transparent.
+.Pp
+The colour arguments can follow these patterns:
+  -                 transparent
+  rrggbb            three pairs of 8-bit hex values
+  rrggbbaa          four pairs of 8-bit hex values
+  rrrrggggbbbb      three pairs of 16-bit hex values
+  rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+.Pp
+The character set name from the input is ignored.
+.Sh EXAMPLES
+$
+.Nm
+- A03811 < drcs.font > image.ff
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

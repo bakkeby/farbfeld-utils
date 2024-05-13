@@ -1,0 +1,40 @@
+.Dd 2023-10-25
+.Dt GIF2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm gif2ff
+.Nd convert Graphics Interchange Format (GIF) image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a Graphics Interchange Format (GIF) image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+The tool takes no arguments and can not load animations; only the first frame is loaded.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.gif > image.ff
+.Pp
+$
+.Nm
+< image.gif | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr 2ff 1 ,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7
+

@@ -1,0 +1,61 @@
+.Dd 2023-11-10
+.Dt KAP2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm kap2ff
+.Nd convert BSB/KAP nautical charts to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a BSB/KAP nautical charts image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+BSB (or BSB/KAP) is a file format used primarily for the storage and
+transmission of nautical charts. Although the format is commonly known as
+"BSB", the main file extension is actually .kap (or sometimes .cap), though .bsb
+files can also optionally be used. The main image data (as raster images)
+is found in .kap files, possibly with multiple images in separate files being
+part of a multi-page chart. The .bsb file, if present, has additional data
+pertaining to the chart as a whole. Additional metadata is contained in
+associated text files, generally stored with .bsb.txt and .kap.txt double
+extensions, or else names ending in "_bsb.txt" and "_kap.txt".
+
+This decoder only supports .kap files.
+
+One optional three letter command-line argument is possible.
+   - if specified, it is the name of the palette to use
+   - if not specified, "RGB" is used by default
+
+Palette options: RGB, DAY, DSK, NGT, NGR, GRY, PRC, PRG
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh FORMAT DETAILS
+Some information on the file format can be found on these web pages:
+
+https://libbsb.sourceforge.net/bsb_file_format.html
+
+https://opencpn.org/wiki/dokuwiki/doku.php?id=opencpn:supplementary_software:chart_conversion_manual:bsb_kap_file_format
+
+.Sh EXAMPLES
+$
+.Nm
+< chart.kap > image.ff
+.Pp
+$
+.Nm
+DSK < chart.kap | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

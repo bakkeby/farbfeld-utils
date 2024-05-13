@@ -1,0 +1,79 @@
+.Dd 2024-04-27
+.Dt FF-CIRCLE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-circle
+.Nd farbfeld filter that draws a filled circle or pie slices onto a picture
+.Sh SYNOPSIS
+.Nm
+<?option?> <X> <Y> <radius> <pos> <colour> <pos> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the circle filter and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes the following arguments:
+   options -- affects the output in various ways
+   X origin -- starting X position (center of circle)
+   Y origin -- starting Y position (center of circle)
+   radius -- size of the circle (can incluce fractions)
+             the ellipse of the circle can be specified by adding a comma
+             followed by the desired ellipse value (defaults to 1.0)
+   alternating positions and colours
+
+The options start with a + followed by one or more of the these characters:
+   v -- fill transparent parts of the picture with the pie colour
+   t -- if the circle partially overlaps a transparent area then keep an
+        outline of the non-transparent area being painted over
+   a -- remove transparency in the circle area
+   n -- pie sections are each gradient from dark to given colour
+   r -- gradient black radiating from the center of the circle
+
+The alternating positions and colours start with a position, and then a
+colour, and then a position, and then a colour, and then a position, and so
+on; it must start and end with a position, and there must be at least one
+colour. A position is a floating number in range 0 to 1, where 0 is the top
+position and increasing numbers are going counterclockwise around the circle,
+to make the size of the pie slice.
+
+The colours can have the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+50 100 50 0 FF6060 1.0 < image.ff > image-circle.ff
+.Pp
+$
+.Nm
+150 100 30 0 FF6060 0.45 60FF60 0.75 6060FF 1 < image.ff > image-circle.ff
+.Pp
+$
+.Nm
++v 50 50 30 0 FF6060 0.45 60FF60 1.0 < image.ff > image-circle.ff
+.Pp
+$
+.Nm
++tn 50 50 30 0 FF6060 1 < image.ff > image-circle.ff
+.Pp
+$
+.Nm
++a 50 50 30 0 FF6060 1 < image.ff > image-circle.ff
+.Pp
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

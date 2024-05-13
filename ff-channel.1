@@ -1,0 +1,51 @@
+.Dd 2024-04-03
+.Dt FF-CHANNEL 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-channel
+.Nd farbfeld filter that combines channels from four farbfeld pictures
+.Sh SYNOPSIS
+.Nm
+<file> <file> <?file?> <?file?>
+.Sh DESCRIPTION
+.Nm
+combines channels from four
+.Xr farbfeld 5
+pictures and writes the result to stdout.
+.Pp
+No data is read from stdin.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes four pictures as command-line arguments, all of which must be
+the same size.
+
+The output picture takes:
+   - the red channel from the first input
+   - the green channel from the second input
+   - the blue channel from the third input and
+   - the alpha channel from the fourth input
+
+An alternative invocation is to provide only two pictures as command-line
+arguments. In this case, the red and green and blue channels come from the
+first picture, and the alpha channel comes from the second picture.
+.Sh EXAMPLES
+$
+.Nm
+red.ff green.ff blue.ff alpha.ff > channels-combined.ff
+.Pp
+$
+.Nm
+rgb.ff alpha.ff > channels-combined.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

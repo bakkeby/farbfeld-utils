@@ -1,0 +1,46 @@
+.Dd 2023-11-07
+.Dt MPP2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm mpp2ff
+.Nd convert Multi Palette Picture (Atari ST) image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads an MPP image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+MPP is a raster graphics format designed to be used with Atari ST and STE
+computers. The MPP file format supports different kinds of images. It has a
+modular-based structure, making the format easily expandable by adding source
+or binary plugins into the file viewer.
+.Pp
+Refer to https://github.com/zerkman/mpp for more details on the format.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.mpp > image.ff
+.Pp
+$
+.Nm
+< image.mpp | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr ff2mpp 1,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

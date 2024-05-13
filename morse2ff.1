@@ -1,0 +1,52 @@
+.Dd 2024-03-22
+.Dt MORSE2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm morse2ff
+.Nd convert Murdoch Mysteries television show morse format to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Op palette
+.Sh DESCRIPTION
+.Nm
+reads the bespoke morse format from standard in, converts it to farbfeld and writes the result to
+stdout.
+.Pp
+This program implements a file format used in one episode of Murdoch Mysteries
+television show. Each line has letters/numbers which are converted into morse
+code and then the dots and dashes are converted to pixels (ignoring the breaks
+between letters); each line of text is a new scanline of the picture. (Only
+letters and numbers can be used; punctuations, accented alphabets, etc are not
+possible).
+
+The program takes one optional argument being any combination of the following
+letters:
+
+   r: Reverse video. If specified, then a dot is white and a dash is black.
+      Normally (if not specified), then a dot is black and a dash is white.
+
+The decoder automatically figures out whether or not the input format is
+compact, hence the c argument is not required but the tool will not complain
+if that argument is passed.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+r < image.txt > morse.ff
+.Pp
+$
+.Nm
+< image.txt > morse.ff
+.Sh SEE ALSO
+.Xr ff2morse 1 ,
+.Xr farbfeld 5

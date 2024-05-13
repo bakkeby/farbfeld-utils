@@ -1,0 +1,86 @@
+.Dd 2024-03-25
+.Dt RGB2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm rgb2ff
+.Nd convert headerless true colour formats to farbfeld
+.Sh SYNOPSIS
+.Nm
+<width> <height> <?opt?> ...
+.Sh DESCRIPTION
+.Nm
+reads a headerless true colour format file from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh Options
+This decoder takes two or more arguments. The first two are the width and
+height, and the rest consist of settings to override the defaults, which
+consist of a (case-sensitive) letter, followed by a number, with no space or
+anything else in between.
+
+Valid options include:
+  A -- Number of bits of alpha channel. (If zero (the default) then all pixels
+       are opaque.)
+  B -- Number of bits of blue channel
+  G -- Number of bits of green channel
+  R -- Number of bits of red channel
+  S -- If nonzero, automatically sets the s setting based on alignment, so
+       that a scanline is always aligned to this many bytes boundary
+  a -- Bit position of alpha channel
+  b -- Bit position of blue channel
+  e -- Endianness; 1 for big-endian (default) or 0 for small-endian
+  g -- Bit position of green channel
+  i -- Interlace mode. Zero is default. If positive, it is the number of
+       planes, and it has first the low plane for all pixels of the first row,
+       the second plane for all pixels of the first row, etc, and then next
+       plane, and so on. If -1, has the first plane for all pixels, before the
+       next one. The low plane always comes first; endianness only controls
+       order of bytes within each plane.
+  k -- Number of padding bytes after each plane
+  m -- If set to 1, indicates that the input file uses premultiplied alpha.
+       Zero is the default setting meaning direct data.
+  p -- Bytes per pixel (1 to 8; default 3). In interlace mode, number of bytes
+       per pixel in each plane.
+  r -- Bit position of red channel
+  s -- Number of bytes of padding between scanlines
+
+If the file contains a header, use tail -c+N to skip the header. If the order
+of scanlines isn't in television order, use
+.Xr ff-turn 1
+to correct it after.
+
+Channels are allowed to overlap (and need not be contiguous); this can be used
+for grey scale. The output of any channel is automatically maximum if the
+number of bits of that channel is set to zero. An example of how the bit
+positions work (assuming R=G=B=8, r=16, g=8, b=0, big-endian, which are the
+default settings):
+
+   Bit positions                  8 7 6 5 4 3 2 1 0
+   | . . . : . . . | . . . : . . . | . . . : . . . |
+    [     RED     ] [    GREEN    ] [    BLUE     ]
+
+Formats:
+  - Falcon True Color: 384 240 p2 R5 G6 B5 r11 g5 b0
+.Sh EXAMPLES
+$
+.Nm
+320 240 i2 s2 < image.bin > image.ff
+.Pp
+$
+.Nm
+320 240 S2 < image.bin > image.ff
+.Sh SEE ALSO
+.Xr ff-turn 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

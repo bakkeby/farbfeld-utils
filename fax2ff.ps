@@ -1,0 +1,56 @@
+% Fax to farbfeld
+% Public domain
+
+true setpacking
+
+/stdin (%stdin) (r) file def
+/stdout (%stdout) (w) file def
+/stderr (%stderr) (w) file def
+
+/Parameters <<
+  /Columns 1728
+  /Rows 100
+>> def
+
+errordict /handleerror {stderr (PostScript error\n) writestring quit} bind put
+
+ARGUMENTS {
+  (=) search {
+    exch pop exch token pop exch pop exec Parameters 3 1 roll put
+  } {
+    stderr (Invalid argument\n) writestring quit
+  } ifelse
+} forall
+
+/faxfile stdin Parameters /CCITTFaxDecode filter def
+
+/Rows Parameters /Rows get def
+/Columns Parameters /Columns get def
+stdout (farbfeld) writestring
+stdout Columns -24 bitshift 255 and write
+stdout Columns -16 bitshift 255 and write
+stdout Columns -8 bitshift 255 and write
+stdout Columns 255 and write
+stdout Rows -24 bitshift 255 and write
+stdout Rows -16 bitshift 255 and write
+stdout Rows -8 bitshift 255 and write
+stdout Rows 255 and write
+
+/buf Columns -3 bitshift string def
+
+/Colors [<0000 0000 0000 FFFF> <FFFF FFFF FFFF FFFF>] def
+
+/dopixel {
+  1 bitshift dup -8 bitshift 1 and Colors exch get stdout exch writestring
+} bind def
+
+Rows {
+  faxfile buf readstring pop
+  {8 //dopixel repeat pop} forall
+  Columns 7 and 0 ne {
+    faxfile read pop
+    Columns 7 and //dopixel repeat pop
+  } if
+} bind repeat
+
+stdout flushfile quit

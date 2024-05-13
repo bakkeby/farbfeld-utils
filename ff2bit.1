@@ -1,0 +1,111 @@
+.Dd 2024-03-23
+.Dt FF2BIT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2bit
+.Nd converts farbfeld to various uncompressed headerless bitwise palette formats
+.Sh SYNOPSIS
+.Nm
+<default colour> <transparent colour> <format> <colour> <colour> ...
+.Sh DESCRIPTION
+.Nm
+reads
+.Xr farbfeld 5
+from stdin, converts to various uncompressed headerless bitwise palette formats and writes the
+result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This encoder takes the following arguments:
+   - the value to use for colours not found in the palette
+   - value to use for transparent pixels
+   - format (see below)
+   - two or more colour specifications
+
+The format specification is one letter (uppercase or lowercase), possibly
+followed by a number called the format parameter; there should be no space or
+anything else in between the letter and number.
+
+ ┌────────┬──────────┐
+ │ Format │ Colours  │
+ ├────────┼──────────┤
+ │ B, b   │ 2, 4, 16 │
+ │ F, f   │ 4        │
+ │ h      │ 16       │
+ │ P, p   │ 2, 4, 16 │
+ │ S, s   │ 16       │
+ │ W, w   │ 2        │
+ │ X      │ 2, 4, 16 │
+ │ Z      │ 2 to 256 │
+ └────────┴──────────┘
+
+Some formats have an uppercase and lowercase variant. In these cases,
+uppercase means the high bit corresponds to the leftmost pixel while lowercase
+means the low bit corresponds to the leftmost pixel.
+
+The formats B, P, and W pack together eight, four, or two pixels in one byte;
+the letter indicates what scanline padding to use:
+   - B aligns each scanline to a one byte boundary
+   - W aligns each scanline to a two byte boundary
+   - P uses no scanline padding
+
+The X and Z formats each use one byte per pixel.
+
+The F format packs eight pixels per byte, but stores two planes. The format
+parameter is the number of bytes per plane; use 8 for NES/Famicom.
+
+The S format has four planes, first with alternating plane 0 with plane 1 for
+all rows, and then alternating plane 2 with plane 3 for all rows. The format
+parameter is the number of rows. This is the Super Famicom format.
+
+The h format uses one byte per pixel, and uses Hold-And-Modify format. The
+colour to encode does not need to be in the palette, but in this case two of
+the three RGB channels must match that of the previous pixel (at the beginning
+of a scanline, treat the "previous pixel" as equal to palette entry 0).
+
+Plane map mode
+
+Only the encoder implements plane map mode. This is given by specifying as the
+mode, a plus or minus sign, followed by the plane map. In this case, the first
+two arguments are the number of pixels per "row" (not necessarily a full
+scanline of input) and the number of "rows" per "tile". The tiles still
+need to be arranged in a vertical strip.
+
+The plane map is given then as digits, commas, and colons (or semicolons;
+colons are also allowed though since the shell may use semicolons for a
+different function).
+
+For example:
+   - 10 -- bit 1 then bit 0 of each tile
+   - 0,1 -- planar interleaved by rows
+   - 0;1 -- planar interleaved by planes
+   - 0,1;2,3 -- SNES/PCE format
+
+The colour arguments can have these patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+Alpha values are not possible for the encoder.
+.Pp
+Also refer to:
+   - https://en.wikipedia.org/wiki/Hold-And-Modify
+.Sh EXAMPLES
+$
+.Nm
+30A090 FFC0CB F8 F06060 8080A0 < image.ff > image.bin
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr bit2ff 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

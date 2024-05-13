@@ -1,0 +1,116 @@
+.Dd 2024-03-24
+.Dt MAKI2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm maki2ff
+.Nd convert Maki-chan MKI graphics to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads an MKI file from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+Maki-chan is a family of raster graphics formats that were mainly used in
+Japan and it may be associated with MSX computers.
+
+Maki-chan covers three formats: MKI (MAKI), MAG and MAX. This decoder only
+supports the MAKI format.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh Options
+This decoder does not take any arguments.
+
+.Sh FORMAT DETAILS
+Each Maki-chan file starts with a signature: MAKI01A, MAKI01B, or MAKI02, padded to 8 bytes with
+spaces. This indicates the format version: MAKI v1 or MAG v2.
+
+MAKI v1 header
+
+.Bd -literal -offset left
+┌───────┬──────┬───────────────────────────────────────────────────────────────────────────────┐
+│Offset │ Size │ Description                                                                   │
+├───────┼──────┼───────────────────────────────────────────────────────────────────────────────┤
+│     0 │    8 │ Signature "MAKI01A " or "MAKI01B "                                            │
+│     8 │    4 │ Computer model that the image was saved on, e.g. PC98, PC88, ESEQ, X68K, MSX2 │
+│    12 │   20 │ User name etc. metadata string, encoded in Shift-JIS; usually terminates with │
+│       │      │ byte $1A, but not always                                                      │
+│    32 │    2 │ Size of "flag B" section, in bytes                                            │
+│    34 │    2 │ Size of "pixel data A" section, in bytes                                      │
+│    36 │    2 │ Size of "pixel data B" section, in bytes                                      │
+│    38 │    2 │ Extension flag, see below                                                     │
+│    40 │    2 │ Top left corner X offset, only 00 00 allowed                                  │
+│    42 │    2 │ Top left corner Y offset, only 00 00 allowed                                  │
+│    44 │    2 │ Image pixel width                                                             │
+│    46 │    2 │ Image pixel height                                                            │
+│    48 │   48 │ Palette: 16 byte triplets, order GRB                                          │
+└───────┴──────┴───────────────────────────────────────────────────────────────────────────────┘
+.Ed
+
+The extension flag, as defined, only uses the lowest two bits:
+
+Bit 0 is the 200-row flag, or aspect ratio flag. If this bit is not set, use a normal pixel aspect
+ratio. If set, all pixels are twice as tall as they are wide; after decompressing normally, stretch
+the image to double height to unsquash it.
+
+Bit 1 is the digital 8-color flag, used to indicate a legacy screenmode with only 3 bits per pixel.
+
+The MAKI v1 algorithm assumes that all images are full-screen 640x400. Larger images are not allowed
+as defined, and smaller images are padded to full-screen with solid borders. For this reason, the
+top left corner offset is not really used either.
+
+When reading the palette, note that only the top 4 bits are significant. By the specification, the
+bottom nibble must be set to 0 if the top is 0; otherwise, it must be set to $F. So values $10..$FF
+must get a bitwise OR $0F, and values $00..$0F must get a bitwise AND $F0.
+
+MAKI v1 data layout
+
+.Bd -literal -offset left
+┌───────┬──────┬────────────────────────────┐
+│Offset │ Size │ Description                │
+├───────┼──────┼────────────────────────────┤
+│     0 │   96 │ Header and palette         │
+│    96 │ 1000 │ Flag A section             │
+│  1096 │  ... │ Flag B section             │
+│   ... │  ... │ Pixel data sections A+B    │
+├───────┴──────┴────────────────────────────┤
+│ End of file                               │
+└───────────────────────────────────────────┘
+.Ed
+
+The header and palette are immediately followed by a fixed "flag A" section which is always 1000
+bytes long, then a variable-size "flag B" section, and a variable-size block of pixel data.
+
+The pixel data is technically split in two sections due to the 64k segment size on 16-bit systems,
+but the second section immediately follows the first, so you can treat it as a single block.
+
+Note: the flag A section's size is not included in the header since it is fixed, and the other
+section sizes given there may actually be incorrect. This is not a problem; during the first
+decompression phase, only the flag A and flag B sections are being read. Pixel data is applied
+during the second phase, and can be assumed to start immediately after the last flag B byte you
+processed regardless of the nominal flag B section size.
+
+Also see:
+   - https://mooncore.eu/bunny/txt/makichan.htm
+.Sh EXAMPLES
+$
+.Nm
+< image.mki > image.ff
+.Pp
+$
+.Nm
+< image.mki | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

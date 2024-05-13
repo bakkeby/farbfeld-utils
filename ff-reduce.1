@@ -1,0 +1,98 @@
+.Dd 2024-05-09
+.Dt FF-REDUCE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-reduce
+.Nd farbfeld filter that reduces a picture to a specified palette
+.Sh SYNOPSIS
+.Nm
+<nearest colour mode> <dithering> <colour> <?colour?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the reduce filter and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes at least three arguments:
+   - nearest colour mode; one letter, optionally followed by numeric arguments
+     each preceded by a comma (all as a single command-line argument)
+     Precede with + for hold-and-modify
+   - dithering mode; one letter, optionally followed by numeric arguments each
+     preceded by a comma (all as a single command-line argument)
+   - the rest of the arguments are the colours (which must be opaque; the
+     alpha value cannot be specified)
+     (the maximum number of colours is 1024)
+
+Nearest colour modes:
+   a -- absolute value of differences - if arguments are given, they are the
+        denominator and numerator of a fraction to add additional badness
+        multiplied by the palette index
+   b -- compare to previous colour
+   c -- absolute value of differences - takes up to 16 arguments, it may be a
+        way to control which of the colours of the palette is used for what
+        colours
+   d -- alternates between red, green and blue channels resulting in more
+        detail and smoother gradients - if arguments are given then they can
+        affect the output
+   e -- same as d, but also applies an absolute value of difference
+   m -- determines palette to be used if the channels are greater than that of
+        the palette, takes no arguments
+   n -- auto-weighted Euclidean distance, takes no arguments
+   s -- squared - value of differences squared - if arguments are given, they
+        are the denominator and numerator of a fraction to add additional
+        badness multiplied by the palette index
+   t -- involves some multiplication of difference and bitshifting, takes up
+        to 16 arguments, it may be a way to control which of the colours of
+        the palette is used for what colours
+   w -- weighted Euclidean distance; the three arguments are the weighting
+        factors for red, green, blue
+   x -- unclear, seems to only consider half of the palettes half of the time,
+        takes no arguments
+   y -- yliluoma; the three arguments are the weighting factors for red,
+        green, blue
+
+Dithering modes:
+   e -- diffusion method - takes 1 or more arguments, the first of which
+        cannot be 0, add more arguments for greater effect (add too many and
+        results in noise)
+   k -- bayer 8; the first argument is the amount of scanline shifting, and
+        the next three are the right shift amounts for red, green, blue
+   o -- takes three arguments, which are values between 0 and 65535 - use
+        higher values to see the effect
+   q -- takes three arguments, which are values between 0 and 65535 - use
+        higher values to see the effect
+   r -- random; the arguments are the modulus, bias, and mask; the first two
+        are shared between all channels, and the third is computed separately
+        per channel
+   v -- diffusion method - takes 1 or more arguments, the first of which
+        cannot be 0, add more arguments for greater effect (add too many and
+        results in noise)
+   x -- diffusion method - takes 1 or more arguments, the first of which
+        cannot be 0, add more arguments for greater effect (add too many and
+        results in noise)
+   y -- diffusion method - takes 1 or more arguments, the first of which
+        cannot be 0, add more arguments for greater effect (add too many and
+        results in noise)
+   z -- no dithering
+
+The colours can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+d,4,1 z 3b2625 955045 c73933 c76b63 752420 461214 ... < image.ff > image-reduce.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

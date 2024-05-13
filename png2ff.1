@@ -1,0 +1,48 @@
+.Dd 2024-03-28
+.Dt PNG2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm png2ff
+.Nd convert PNG to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a PNG image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+This can decode iPhone format PNG files in addition to proper PNG files. It
+can load animations, but only the first frame will be used.
+
+This decoder differs from the program with the same name in the suckless base
+farbfeld library in that it uses the standalone lodepng library for decoding
+PNG files, whereas the base library version has a dependency on libpng.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This decoder takes no command-line arguments.
+.Sh REFERENCES
+https://lodev.org/lodepng/
+.Sh EXAMPLES
+$
+.Nm
+< image.png > image.ff
+.Pp
+$
+.Nm
+< image.png | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr ff2png 1 ,
+.Xr 2ff 1 ,
+.Xr bzip2 1 ,
+.Xr farbfeld 5

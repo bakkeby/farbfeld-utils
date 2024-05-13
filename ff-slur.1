@@ -1,0 +1,51 @@
+.Dd 2024-05-04
+.Dt FF-SLUR 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-slur
+.Nd farbfeld filter that applies a random melting like filter
+.Sh SYNOPSIS
+.Nm
+<seed> <probability> <probability> <probability> <probability>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the slur filter and writes the result to stdout.
+.Pp
+This farbfeld filter applies a random melting like filter.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes exactly five arguments:
+   - a random seed value
+   - probability 1
+   - probability 2
+   - probability 3
+   - probability 4
+
+The four probabilities affect the strength of the filter and are integer
+values in the range from 0 to 255.
+
+The first probability will be added to the second, and the second probability
+will be added to the third. That means that by providing 30 20 40 the end
+result will be that p1 = 30, p2 = 50 and p3 = 90. This is something to keep in
+mind when adjusting the values.
+
+The fourth probability is standalone and is not affected by the other three.
+.Sh EXAMPLES
+$
+.Nm
+313 130 90 30 150 < image.ff > image-slur.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

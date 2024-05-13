@@ -1,0 +1,63 @@
+.Dd 2024-04-29
+.Dt FF-CROP 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-crop
+.Nd farbfeld filter that crops a picture
+.Sh SYNOPSIS
+.Nm
+<x-offset> <y-offset> <width> <height> <?border colour?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the crop filter and writes the result to stdout.
+.Pp
+ff-crop can also be used to increase the canvas of an image and/or to add a
+border around an image.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes four or five arguments.
+
+The first two are the X and Y offset of the top-left corner in the original
+picture to crop to, and the next two are the width and height of the result.
+It is OK for the X and Y offsets to be negative, and it is also OK to take a
+piece larger than the original picture. The fifth argument is optional and is
+the border colour to use for parts that are included in the new picture that
+are out of the range of the old picture.
+
+The border colour can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+If the border colour is not specified then it will default to be fully
+transparent.
+.Sh EXAMPLES
+$
+.Nm
+0 0 640 480 < image.ff > image-crop.ff
+.Pp
+$
+.Nm
+150 112 300 300 < image.ff > image-crop.ff
+.Pp
+$
+.Nm
+0 0 100 100 < image.ff |
+.Nm
+-5 -5 110 110 > crop_border.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

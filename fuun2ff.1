@@ -1,0 +1,57 @@
+.Dd 2023-10-25
+.Dt FUUN2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm fuun2ff
+.Nd convert Fuun RNA description to farbfeld
+.Sh SYNOPSIS
+.Nm
+<?width?> <?height?>
+.Sh DESCRIPTION
+.Nm
+reads a Fuun RNA description from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+Fuun RNA is a graphic description language. It was defined for the task of the
+ICFP contest 2007 (“Morph Endo”).
+.Pp
+The RNA of the extraterrestrial Fuun species (program) is a string of RNA
+bases, where a base is one of the following four letters: I, C, F, P. RNA is
+normally generated from Fuun DNA. The RNA is always read as a sequence of
+chunks of 7 bases each (and the DNA actually writes it in the same 7 chunks).
+Every 7 byte chunk encodes an operation, and all the operations of the program
+are executed sequentially, without any forms of flow control. There are 21
+operations, 20 of which each have a single encoding to chunks, and every other
+code is interpreted as a no-op.
+.Pp
+The output of an RNA program is an 8 bit deep RGB bitmap image of size 600x600
+pixels.
+.Pp
+Optionally the image size can be specified with one or two command line
+arguments:
+   fuun2ff 800       - will output a bitmap image of size 800x800
+   fuun2ff 600 440   - will output a bitmap image of size 600x448
+.Pp
+Also refer to:
+   - https://save-endo.cs.uu.nl/
+   - https://save-endo.cs.uu.nl/Endo.pdf
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+1000 < RNA.txt > image.ff
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

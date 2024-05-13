@@ -1,0 +1,47 @@
+.Dd 2024-05-08
+.Dt FF-TOCMYK 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-tocmyk
+.Nd farbfeld program that converts RGB colours to CMYK
+.Sh SYNOPSIS
+.Nm
+<float> <float> <float> <float>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts RGB colours to CMYK and writes the result to stdout.
+.Pp
+This program converts a picture in RGB format (on input; alpha is ignored) to
+CMYK. Instead of red, green, blue, alpha, the channels now correspond to cyan,
+magenta, yellow, black/key.
+.Pp
+Use
+.Xr ff-matrix 1
+to convert CMYK to RGB.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes four arguments, all of which are floating numbers.
+
+The first two are the multiply and add amount for black generation, and the
+last two are the multiply and add amount for under removal. This is similar to
+the algorithm in PostScript.
+.Sh EXAMPLES
+$
+.Nm
+1.0 0.0 0.0 0.5 < image.ff > image-cmyk.ff
+.Sh SEE ALSO
+.Xr ff-matrix 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

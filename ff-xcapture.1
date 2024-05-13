@@ -1,0 +1,81 @@
+.Dd 2024-05-03
+.Dt FF-XCAPTURE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-xcapture
+.Nd farbfeld program that takes a screenshot of an X window
+.Sh SYNOPSIS
+.Nm
+<?option?>
+.Sh DESCRIPTION
+.Nm
+takes a screenshot and writes the result to stdout.
+.Pp
+This program takes a screenshot (or copy of a pixmap) from the X server
+specified by the DISPLAY environment variable.
+
+This program does not read from standard in.
+
+Note that unlike xwd, this program supports only Z format (not XY format),
+does not support adding values to every pixel, outputs only to stdout, and
+does not ring any bells (multiple commands can be put together with
+semicolons to add bells and so on if desired).
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes zero, one, or three arguments.
+
+With zero arguments, the program captures the default root window.
+
+With one argument the following options are available:
+   r -- captures the default root window (as with no arguments)
+        r followed by a number captures the root window of the specified
+        screen (e.g. r0)
+   + -- capture area using the mouse - left click (button 1) on the top left
+        corner, and then right click (button 3) on the bottom right corner of
+        the area to capture
+        a + followed by a number is the same but allows for the screen to be
+        specified
+   # -- a decimal number, or hexadecimal number starting with 0x, specifies
+        the window to capture
+
+Note that if using Xinerama, an X extension that allows for two or more
+physical displays to be viewed as one large virtual display, then there will
+typically only be one screen so the number specification for the r and +
+options will be irrelevant.
+
+With three arguments the following should be provided:
+   - the Drawable to capture (can be a Window or Pixmap)
+   - the Colormap to use
+   - the Visual to use
+
+All numbers are decimal, but hexadecimal numbers can also be used if prefixed
+with 0x.
+.Sh EXAMPLES
+$
+.Nm
+> full-desktop-capture.ff
+.Pp
+$
+.Nm
++ > area-capture.ff
+.Pp
+$
+.Nm
+48558951 > window-capture.ff
+.Pp
+$
+.Nm
+0x2e4f367 > full-window-capture.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,64 @@
+.Dd 2024-05-01
+.Dt FF-POLYGON 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-polygon
+.Nd farbfeld filter that draws a solid filled polygon onto an existing picture
+.Sh SYNOPSIS
+.Nm
+<?+options?> <colour> <x> <y> <x> <y> ... <x> <y>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the polygon filter and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes 7 or more arguments.
+
+The first argument is the colour to draw with, and the rest of the arguments
+are pairs of X and Y coordinates. The X and Y are separate arguments.
+
+The coordinates are not required to be inside the picture.
+
+The colour argument can have these patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+By default the alpha channel controls colour saturation rather than
+transparency.
+
+Optionally a leading argument that starts with a + followed by letters can be
+added before the first argument for various effects.
+
+The options available are:
+   a -- when drawing a solid polyon on top of a picture that has transparent
+        parts then do not fill the parts that are transparent, as in only draw
+        on top of that what is visible
+   i -- draws the polygon with a gradient
+   j -- affects the gradient colours when the i option is used
+   t -- enables transparency - if the colour provided has an alpha channel
+        then this option makes this represent transparency rather than
+        opacity, i.e. FF is fully transparent whereas 00 is fully visible
+   u -- start drawing from the middle of the picture rather than the far left
+        (only affects the x positions, the y positions start from the top)
+   v -- rather than straight lines this option makes the lines have arcs
+.Sh EXAMPLES
+$
+.Nm
++i FF606020 50 100 100 50 150 100 100 150 < image.ff > image-polygon.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

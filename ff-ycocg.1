@@ -1,0 +1,54 @@
+.Dd 2024-05-08
+.Dt FF-YCOCG 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-ycocg
+.Nd farbfeld program that converts between RGB and YCoCg colour format
+.Sh SYNOPSIS
+.Nm
+<?option?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts RGB to YCoCg colour format and writes the result to stdout.
+.Pp
+The program implements a variant of YCoCg (called YCoCg24, although this
+implementation can use 24-bits or 48-bits).
+.Pp
+The alpha channel is not affected by this program.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes one optional argument which is one or more letters combined
+as a string.
+
+The available options are:
+   8 -- if specified, uses 8 bits per channel instead of 16 bits per channel
+   b -- if specified, bias the Co and Cg channels, or assume the values read
+        back are biased
+        (since these values are signed, biasing them makes them unsigned)
+   d -- with this option, convert YCoCg back to RGB
+        (without this option, converts RGB to YCoCg)
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-ycocg.ff
+.Pp
+$
+.Nm
+8 < image.ff |
+.Nm
+8d > same-image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,61 @@
+.Dd 2024-03-28
+.Dt ZZT2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm zzt2ff
+.Nd creates a farbfeld screenshot from a ZZT save game file (or world file)
+.Sh SYNOPSIS
+.Nm
+<?options...?>
+.Sh DESCRIPTION
+.Nm
+reads ZZT save game file (or world file) from stdin, creates a screenshot in
+.Xr farbfeld 5
+format and writes the result to stdout.
+
+ZZT was a 1991 action-adventure puzzle video game and game creation system
+developed and published by Potomac Computer Systems for MS-DOS.
+
+Taking screenshots of popup messages is not supported.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The options (which are all optional) consists of a letter, an equal sign and then
+a number.
+
+The options are:
+.Bl -tag -width Ds
+.It b
+Zero-based board number. If not specified, uses the current or starting board.
+.It d
+If nonzero, ignore darkness.
+.It t
+If nonzero, render as the title screen instead of the game play. You still have to specify b=0
+as well.
+.It w
+Screen width; normally 80, but you can specify 60 instead.
+.El
+.Sh REFERENCES
+https://en.wikipedia.org/wiki/ZZT
+.Pp
+https://zzt.org/
+.Sh EXAMPLES
+$
+.Nm
+< save.zzt > image.ff
+.Pp
+$
+.Nm
+b=0 d=1 t=1 w=60 < save.zzt > image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

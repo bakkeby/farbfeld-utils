@@ -1,0 +1,68 @@
+.Dd 2024-05-10
+.Dt FF-NEWTON 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-newton
+.Nd farbfeld program that generates a Newton fractal
+.Sh SYNOPSIS
+.Nm
+<width> <height> <iterations> <tolerance> <root> <?root?> ...
+.Sh DESCRIPTION
+.Nm
+generates a Newton fractal
+.Xr farbfeld 5
+image and writes the result to stdout.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program starts with four arguments:
+   width
+   height
+   number of iterations
+   tolerance - a floating number, which should be positive (cannot
+               be 0 and works a bit different if negative)
+
+After those four comes three more for each root:
+   real part
+   imaginary part
+   colour (the alpha is ignored if the tolerance is positive)
+
+The coordinates are scaled so that it ranges -1 to +1 for both real and
+imaginary parts.
+
+Using only one root is technically valid, but generates a blank page - use two
+or more roots to see the fractal.
+
+If the tolerance is positive then the alpha channel of the output specifies
+how many iterations are needed to reach close enough to the root; it is more
+opaque if less iterations are needed and less opaque if more iterations are
+needed.
+
+If it is not reached in that many iterations, then it is transparent black.
+
+The colour can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+640 480 97 0.0192  0.072  0.0439 900060 \\
+                              -0.93  -0.23   609020 \\
+                               0.18  -0.72   602290 \\
+                              -0.32  -0.031  AA2244 > newton.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

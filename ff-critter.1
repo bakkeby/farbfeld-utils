@@ -1,0 +1,74 @@
+.Dd 2024-04-29
+.Dt FF-CRITTER 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-critter
+.Nd farbfeld filter that implements the Critter, Tron and other rules of
+Margolus block cellular automata
+.Sh SYNOPSIS
+.Nm
+<rule string> <steps>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the critter filter and writes the result to stdout.
+.Pp
+This program implement the Critter, Tron and other rules of Margolus block cellular automata.
+
+In the "Critters" rule, the transition function reverses the state of every cell in a block, except
+for a block with exactly two live cells which remains unchanged. Additionally, blocks with three
+live cells undergo a 180-degree rotation as well as the state reversal. This is a reversible rule,
+and it obeys conservation laws on the number of particles (counting a particle as a live cell in
+even phases and as a dead cell in odd phases) and on the parity of the number of particles along
+diagonal lines.
+
+In the "Tron" rule, the transition function leaves each block unchanged except when all four of its
+cells have the same state, in which case their states are all reversed. Running this rule from
+initial conditions in the form of a rectangle of live cells, or from similar simple straight-edged
+shapes, leads to complex rectilinear patterns. Toffoli and Margolus also suggest that this rule can
+be used to implement a local synchronization rule that allows any Margolus-neighborhood block
+cellular automaton to be simulated using an asynchronous cellular automaton.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter requires two arguments:
+   - the rule string
+   - number of steps
+
+The first argument is the rule string, which is a string of digits 0 to 7,
+which can be any length at least one. Which rule is applicable depend on the
+pixel value, where the first one is for black, last one for white, and others
+for in between.
+
+The second argument is how many steps to process.
+.Sh REFERENCES
+https://en.wikipedia.org/wiki/Block_cellular_automaton
+.Sh EXAMPLES
+$
+.Nm
+201471 4 < image.ff > image-critter.ff
+.Pp
+$
+.Nm
+7 252 < image.ff > image-critter.ff
+.Pp
+$
+.Nm
+606 15 < image.ff > image-critter.ff
+.Sh SEE ALSO
+.Xr ff-conaut 1 ,
+.Xr ff-elementary 1 ,
+.Xr ff-life 1 ,
+.Xr ff-probaut 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

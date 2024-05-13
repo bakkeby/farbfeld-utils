@@ -1,0 +1,72 @@
+.Dd 2024-04-28
+.Dt FF-ELEMENTARY 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-elementary
+.Nd farbfeld filter that implements elementary cellular automata
+.Sh SYNOPSIS
+.Nm
+<wolfram> <?wolfram?> <?wolfram?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the elementary filter and writes the result to stdout.
+.Pp
+This farbfeld filter implements elementary cellular automata.
+
+This program uses only the high bit of each channel of input, and the output
+uses only one bit per channel (the other bits copy the high bit).
+
+The top scanline is not altered by this program (except to reduce it to one
+bit per channel). For the other scanlines, it is not altered if the alpha
+channel is low, but is replaced with the calculation from the above pixels if
+the alpha channel is high. The new value is computed from the red channel of
+the above and left pixel, the green channel of the above pixel, and the blue
+channel of the above and right pixel. The left and right is considered to wrap
+around for this purpose.
+
+Tip:
+You can use
+.Xr ff-gradient 1
+with mode n to generate a random initial condition.
+
+Wrapping can be avoided by using
+.Xr ff-border 1
+to add a transparent border to the left and right edges of the picture.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one or three arguments, each of which is the Wolfram code (a number
+from 0 to 255) of the rule to use.
+
+If there are three arguments, the first is for the red output, second for green output, and
+third for blue output.
+
+If a single argument is provided then the same value is used for all output channels.
+.Sh EXAMPLES
+$
+.Nm
+11 < image.ff > elementary.ff
+.Pp
+$
+.Nm
+13 83 4 < image.ff > elementary.ff
+.Sh SEE ALSO
+.Xr ff-conaut 1 ,
+.Xr ff-critter 1 ,
+.Xr ff-life 1 ,
+.Xr ff-probaut 1 ,
+.Xr ff-gradient 1 ,
+.Xr ff-border 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

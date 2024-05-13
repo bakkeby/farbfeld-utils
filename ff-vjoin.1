@@ -1,0 +1,40 @@
+.Dd 2024-05-04
+.Dt FF-VJOIN 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-vjoin
+.Nd farbfeld filter that joins multiple pictures together vertically
+.Sh SYNOPSIS
+.Nm
+<image.ff> <?image.ff?> ... <?image.ff?>
+.Sh DESCRIPTION
+.Nm
+reads multiple
+.Xr farbfeld 5
+images, joins them together vertically in one image and writes the result to stdout.
+.Pp
+If the pictures do not all have the same width, the resulting width will be
+the largest input width and the pictures will be aligned at the centre.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The arguments are the pictures to be joined; the first picture is at the top.
+.Sh EXAMPLES
+$
+.Nm
+image1.ff image2.ff image3.ff > images-joined-vertically.ff
+.Sh SEE ALSO
+.Xr ff-hjoin 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,38 @@
+.Dd 2024-05-03
+.Dt FF-VCCAPTURE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-vccapture
+.Nd farbfeld program that takes a screenshot of a Linux virtual console screen
+.Sh SYNOPSIS
+.Nm
+<virtual console screen number>
+.Sh DESCRIPTION
+.Nm
+takes a screenshot of a Linux virtual console screen and writes the result to stdout.
+.Pp
+This program does not read from standard in and only works on Linux.
+.Pp
+To test this you can open a new TTY by hitting e.g. Ctrl+Alt+F5 and log in,
+then go back to your current session and pass 5 to the program. This may
+require sudo depending on permissions.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This program takes a single argument which is a virtual console screen number.
+.Sh EXAMPLES
+$
+.Nm
+5 > vccapture.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

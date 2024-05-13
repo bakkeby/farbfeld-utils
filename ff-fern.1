@@ -1,0 +1,86 @@
+.Dd 2024-05-07
+.Dt FF-FERN 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-fern
+.Nd farbfeld program that generates a picture by chaos game
+.Sh SYNOPSIS
+.Nm
+<width> <height> <x> <y> <steps> <options> <rule> ...
+.Sh DESCRIPTION
+.Nm
+generates a
+.Xr farbfeld 5
+picture of a fern or something else by chaos game and writes the result to stdout.
+.Pp
+Normally there is no input picture, but it is possible to use input with the i option.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This program uses coordinates where:
+   - Y is -1 at the bottom and +1 at the top
+   - X is -1 at the left and +1 at the right and
+   - the middle of the picture is zero
+
+The arguments are:
+   - width
+   - height
+   - initial X
+   - initial Y
+   - number of steps
+   - string of options; use - to indicate no options
+   - rules; one or more rules
+
+Each rule consists of seven arguments: a b c d e f p
+
+The first six are numbers that can include fractional parts, but p must be an
+integer from 0 to 32767, indicating probability weight.
+
+The rules are based on the equations:
+   x' = ax + by + c
+   y' = dx + ey + f
+
+Valid options include:
+   b -- do not use a rule if it would result in moving to out of bounds
+   c -- do not use a rule if the green channel is already at least 256
+        (also causes any pixel that is hit to immediately be set to its
+        maximum value, rather than increasing by one at a time)
+   i -- read a input picture to use as the initial state; it must have the
+        specified width and height; if not specified, all pixels are initially
+        opaque and black. When an input picture is used, it will not use any
+        rule if it would cause it to land on a transparent pixel.
+   k -- do not use the next rule as used previously to the previously used
+        rule
+   l -- do not use the same rule twice consecutively
+   m -- do not use the same rule as used previously to the previously used
+        rule
+   n -- do not use the next rule (considered the first after the last one)
+        immediately after the one just used
+   q -- if specified, decide which channels to affect based on which rule is
+        being used
+   r -- if specified, affect only one channel; it affects red if it is not
+        already maximum, or else green if it is not already maximum, or else
+        blue if it is not already maximum, or else do nothing
+   s -- if specified, affect only one channel; which one is affected depends
+        on which rule is selected
+
+If none if the q, r, s options are in use, then it affects red and green and
+blue channels equally, resulting in a grey scale picture.
+.Sh REFERENCES
+https://en.wikipedia.org/wiki/Chaos_game
+.Sh EXAMPLES
+$
+.Nm
+300 300 0 0 200 rbc -1.09 -0.01 2.5 -1.050 -0.0028 0.000000001 5000 > example.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

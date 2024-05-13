@@ -1,0 +1,54 @@
+.Dd 2024-03-26
+.Dt XPM2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm xpm2ff
+.Nd convert X pixmap image to farbfeld
+.Sh SYNOPSIS
+.Nm
+<?picture name?> <?options...?> <?palette...?>
+.Sh DESCRIPTION
+.Nm
+reads an X pixmap image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh Options
+Command-line arguments consists of any number of options followed by any
+number of key/value pairs for symbolic colours.
+
+Valid options are:
+   -f -- The next argument is a filename, which is a colour name database
+         (such as /usr/lib/X11/rgb.txt (which may be in a different directory
+         on your system) or another file of the same format). If not
+         specified, colour names other than "black" and "white" will not
+         be understood (but hex RGB colours will still work).
+   -g -- Use the grey palette
+   -m -- Use the monochrome palette
+
+The key/value pairs are pairs of arguments:
+   - The key is a symbolic name (given after "s" in a XPM palette).
+   - The value is a colour (a Farbfeld Utilities colour, not a XPM colour) to
+     use instead of the colour specified in the XPM file.
+.Sh EXAMPLES
+$
+.Nm
+< image.xpm > image.ff
+.Pp
+$
+.Nm
+-m < image.xpm > image.ff
+.Sh SEE ALSO
+.Xr ff2xpm 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

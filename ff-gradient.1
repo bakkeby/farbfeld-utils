@@ -1,0 +1,69 @@
+.Dd 2024-05-08
+.Dt FF-GRADIENT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-gradient
+.Nd farbfeld program that generates a gradient picture
+.Sh SYNOPSIS
+.Nm
+<width> <height> <mode> <colour> <?colour?> ...
+.Sh DESCRIPTION
+.Nm
+generates a gradient
+.Xr farbfeld 5
+picture and writes the result to stdout.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes four or more arguments:
+   - width
+   - height
+   - mode
+   - one or more colours that make up the gradient
+
+The colours can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+The modes available are:
+   a  = determine the colour to use according to the angle relative to the
+        centre
+   d  = diagonal gradient
+   f  = a combination horizontal and vertical gradient - the last colour forms
+        a gradient with the first colour in the leftmost column, and then that
+        forms a horizontal gradient with the rest of the colours
+   h  = horizontal gradient
+   m* = the gradient is based on the product of the X and Y coordinates - the
+        optional number is a bias amount
+   n* = random (uniform) noise - the optional number is the random number seed
+   q  = make a horziontal gradient using red and green channels, and a
+        vertical gradient using blue and alpha channels
+        (to mix the channels differently, follow this by ff-matrix)
+   r  = the gradient is based on the distance from the centre
+        (forming concentric circles)
+   v  = vertical gradient
+   y* = swirly lines emanating from the middle of the picture - the optional
+        number specifies how swirly it is (and need not be an integer)
+
+(* means you can optionally add a number after the mode letter, with no space
+ or other delimiter)
+.Sh EXAMPLES
+$
+.Nm
+640 480 y9.23 906060 609060 606090 > gradient-swirl.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

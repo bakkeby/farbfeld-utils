@@ -1,0 +1,49 @@
+.Dd 2023-10-25
+.Dt FF2SIXEL 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2sixel
+.Nd convert farbfeld image to sixel graphics
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a farbfeld image from stdin, converts it to ImageMagick format (MIFF)
+and writes the result to stdout.
+.Pp
+The tool takes no arguments and outputs the sixel data including the escape
+codes to begin and end the data.
+.Pp
+The tool does not support colour reduction and will reject the image if it has
+more than 64 colours. Consider combining with
+.Xr ff-reduce 1
+.
+.Pp
+Sixel is a raster graphics format used by some DEC terminals and printers. It
+consists of control codes and data such that, when printed to the terminal, an
+image will be displayed.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.ff
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+.Sh REFERENCES
+https://www.vt100.net/docs/vt3xx-gp/chapter14.html
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr ff-reduce 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

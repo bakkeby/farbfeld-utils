@@ -1,0 +1,57 @@
+.Dd 2024-05-02
+.Dt FF-PROBAUT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-probaut
+.Nd farbfeld filter that generates probabilistic cellular automata
+.Sh SYNOPSIS
+.Nm
+<?seed?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the probaut filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to generate probabilistic cellular automata.
+
+Takes an input picture where the pixels specify the probabilities. The output
+is only with black and white pixels (all opaque), and is same size as the
+input.
+
+It starts with random data for the row above the first scanline. After that,
+to determine the new colour of each pixel, it uses the colour up and left and
+the colour up and right (wrapping left and right) to determine which channel
+of the input specifies the probability to use, as follows:
+   - if the left pixel is black and right pixel is black, use red channel
+   - if the left pixel is white and right pixel is black, use green channel
+   - if the left pixel is black and right pixel is white, use blue channel
+   - if the left pixel is white and right pixel is white, use alpha channel
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one argument which is a random seed.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-probaut.ff
+.Pp
+$
+.Nm
+23 < image.ff > image-probaut.ff
+.Sh SEE ALSO
+.Xr ff-conaut 1 ,
+.Xr ff-critter 1 ,
+.Xr ff-elementary 1 ,
+.Xr ff-life 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

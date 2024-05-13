@@ -1,0 +1,81 @@
+.Dd 2024-05-09
+.Dt FF-TENSOR 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-tensor
+.Nd farbfeld program that creates a tensor product out of two pictures
+.Sh SYNOPSIS
+.Nm
+<image.ff> <?option?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, creates the tensor product and writes the result to stdout.
+.Pp
+One picture is given on standard in and the other as the first argument.
+.Pp
+Channels are multiplied individually.
+.Pp
+The picture given as the argument is the "inner" product, and the stdin
+picture is the "outer" product.
+.Pp
+The size of the output will be the width of the two products multiplied and
+the height of the two products multiplied.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes one or two arguments.
+
+The first argument is a picture file that is used as the inner product (the picture
+given via standard in is the outer product).
+
+The second argument is optional and consists of zero or more option letters as
+follows:
+   t -- tile the second picture instead of the tensor product
+   v -- after each scanline of the first picture, move up the second picture
+        for the computation on the next scanline
+
+(quite strictly these makes it into something other than the tensor product)
+
+One possible use of this is to make "scanline" effects. Another possibility
+is that it can be used to view the RGB channels individually.
+.Sh PRACTICAL EXAMPLE
+A practical example could be to have a picture of a flower and we want to
+create 20 of them in a grid of 4 lines having 5 flowers each.
+
+First we generate a 5x4 picture using ff-blank:
+   $ ff-blank 5 4 FFFFFFFF > grid.ff
+
+The colour is all white because we want to retain all the colours of the flower,
+but if we wanted to, say, only retain the green channel of the flower picture we
+could have used the colour of 00FF00FF.
+
+Next we call
+.Nm
+using our grid as the inner product:
+   $
+.Nm
+flower.ff < grid.ff > 5x4_flowers.ff
+
+The generated output should have repeated the flower picture five times
+horizontally and four times verticaly.
+.Sh EXAMPLES
+$
+.Nm
+inner.ff < outer.ff > image-tensor.ff
+.$
+.Nm
+inner.ff tv < outer.ff > image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

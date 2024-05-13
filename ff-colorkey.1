@@ -1,0 +1,45 @@
+.Dd 2024-04-28
+.Dt FF-COLORKEY 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-colorkey
+.Nd farbfeld filter that makes pixels of a specific colour transparent
+.Sh SYNOPSIS
+.Nm
+<colour>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, makes pixels of a specific colour transparent and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The colour can be defined through one of the following patterns:
+   r g b             three 16-bit integer values (0 to 65535)
+   rrggbb            three pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+65535 2570 43690 < image.ff > image-colorkey.ff
+.Pp
+$
+.Nm
+ff0aaa < image.ff > image-colorkey.ff
+.Pp
+$
+.Nm
+ffff0a00aa00 < image.ff > image-colorkey.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

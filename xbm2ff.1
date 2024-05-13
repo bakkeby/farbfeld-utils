@@ -1,0 +1,48 @@
+.Dd 2023-11-10
+.Dt XBM2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm xbm2ff
+.Nd convert X BitMap (XBM) image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads an X BitMap (XBM) image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+XBM is a file format for bi-level raster images, originally associated with
+the X Window System. It was, and to some extent still is, widely supported by
+graphics software.
+
+An XBM file is plain text, and doubles as a fragment of C programming code.
+The format is very inefficient in size, but it can be useful as a simple way
+to embed an image into a C program.
+
+This decoder takes no arguments. The output is the picture, where black is
+foreground and white is background.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.xbm > image.ff
+.Pp
+$
+.Nm
+< image.xbm | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr ff2xbm 1,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

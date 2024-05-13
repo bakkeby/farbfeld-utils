@@ -1,0 +1,50 @@
+.Dd 2024-03-26
+.Dt XYZ2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm xyz2ff
+.Nd convert .XYZ picture files from RPG Maker and EasyRPG to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a .XYZ picture file from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+The file format consists of:
+   - ASCII text XYZ1
+   - Small-endian 16-bit width
+   - Small-endian 16-bit height
+   - Zlib compressed data stream
+
+The zlib stream contains 256 palette entries, followed by the raster data (in
+the usual progressive television order). The palette entries consist of three
+bytes each, being red, green, and blue values. Each pixel of raster data is
+one byte which is an index into the palette.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This decoder takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.xyz > image.ff
+.Pp
+$
+.Nm
+< image.xyz | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr ff2xyz 1,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

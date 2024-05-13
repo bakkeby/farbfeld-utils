@@ -1,0 +1,41 @@
+.Dd 2024-03-28
+.Dt JPEG2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm jpeg2ff
+.Nd convert JPEG (Joint Photographic Experts Group) image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a JPEG image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+.Nm
+does not support 12-bits encoding and it does not support arithmetic coding.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This decoder takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.jpg > image.ff
+.Pp
+$
+.Nm
+< image.jpg | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr ff2jpeg 1 ,
+.Xr bzip2 1 ,
+.Xr farbfeld 5

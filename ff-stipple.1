@@ -1,0 +1,68 @@
+.Dd 2024-05-02
+.Dt FF-STIPPLE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-stipple
+.Nd farbfeld program that generates a stipple pattern
+.Sh SYNOPSIS
+.Nm
+<num horz> <num vert> <pattern> <bg> <fg> <?bg? <?fg?>
+.Sh DESCRIPTION
+.Nm
+generates a stipple pattern and writes the result to stdout.
+.Pp
+Makes a tiled stipple pattern with two colours.
+.Nm
+does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes five arguments:
+   - how many repetitions of the pattern to occur horizontally
+   - how many repetitions of the pattern to occur vertically
+   - the pattern
+   - background colour
+   - foreground colour
+   - alternating background colour (optional)
+   - alternating foreground colour (optional)
+
+Optionally two more arguments can be provided, which are additional background
+and foreground colour that are used to generate a chess stipple.
+
+The colours can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+The pattern is encoded as base64, where the first character gives one less
+than the pattern width, and the picture is encoded using the rest of the
+base64 characters, each one encoding six pixels, with the high bit on the
+left.
+
+Some example patterns:
+   - bats: PERAJIC1obWzsb07l3ve+++7v9t/Sl5KTE5CxGiEIQQQ
+   - diagonal: FBCEIQg
+   - grid: Hqv/+//7//v8
+   - tiles: PAAAAgKjqVNWo6lTVqOpU1ajqVNWo6lTVqOpU1fz//v8
+   - weave: FQXQC6C
+.Sh EXAMPLES
+$
+.Nm
+7 5 PERAJIC1obWzsb07l3ve+++7v9t/Sl5KTE5CxGiEIQQQ 906060 409040 < image.ff > stipple.ff
+.Pp
+$
+.Nm
+7 5 FQXQC6C 906060 409040 606090 404090 < image.ff > stipple.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

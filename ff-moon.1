@@ -1,0 +1,62 @@
+.Dd 2023-11-26
+.Dt FF-MOON 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-moon
+.Nd farbfeld filter that changes colours to simulate moon light
+.Sh SYNOPSIS
+.Nm
+<r> <g> <b> <c>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the moon filter and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes exactly four arguments:
+   r            red adjustment
+   g            green adjustment
+   b            blue adjustment
+   c            contrast (presumably)
+
+Note that lower values are stronger than higher values. For example if you
+want red to be the dominant colour in the output then choose a lower value for
+the red adjustment compared to the green and blue adjustments.
+.Sh FORMULA
+The colour adjustments follow this formula:
+   R = alpha * c * (c * (R + r * min) + r * max) + (1.0 - alpha) * R
+   G = alpha * c * (c * (G + g * min) + g * max) + (1.0 - alpha) * G
+   B = alpha * c * (c * (B + b * min) + b * max) + (1.0 - alpha) * B
+
+With these key references:
+   min          the minimum of r, g, and b
+   max          the maximum of r, g, and b
+   alpha        the colour opacity
+   R            the image colour red channel
+   G            the image colour green channel
+   B            the image colour blue channel
+.Sh EXAMPLES
+$
+.Nm
+65 70 80 55
+< image.ff > image-moon.ff
+.Pp
+$
+.Nm
+35 29 30 80
+< image.ff > image-moon.ff
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,66 @@
+.Dd 2024-05-08
+.Dt FF-PATTERN 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-pattern
+.Nd farbfeld filter that converts solid colours into patterns
+.Sh SYNOPSIS
+.Nm
+<?colour?> <?image.ff?> <?colour?> <?image2.ff?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the pattern filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to convert solid colours into patterns.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Command-line arguments alternate colours and pictures.
+
+Any pixel of one of the specified colours will be replaced with a pixel from
+that picture; the X and Y coordinates are modulo the size of that picture in
+order to determine what colour the resulting pixel will be.
+
+The colour can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+.Sh PRACTICAL EXAMPLE
+Here is a practical example:
+
+First we can generate a chess board that has the colour DDDDDD for white and
+222222 for black:
+   $ ff-chess 8 8 64 DDDDDD 222222 > chess.ff
+
+Then we can use
+.Nm
+to fill e.g. the black squares with a parts from
+another image by passing the colour of the black squares and an image file:
+   $
+.Nm
+222222 bananas.ff < chess.ff > image.ff
+
+We could also fill both the white and black squares by passing more arguments:
+   $
+.Nm
+222222 bananas.ff DDDDDD carrots.ff < chess.ff > image.ff
+.Sh EXAMPLES
+$
+.Nm
+906060 other.ff < image.ff > image-pattern.ff
+.Sh SEE ALSO
+.Xr ff-chess 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

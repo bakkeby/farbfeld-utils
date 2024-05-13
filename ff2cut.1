@@ -1,0 +1,57 @@
+.Dd 2023-11-05
+.Dt FF2CUT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2cut
+.Nd convert farbfeld to Dr. Halo CUT format
+.Sh SYNOPSIS
+.Nm
+<palette>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts it to Dr. Halo CUT format and writes the result to
+stdout.
+.Pp
+Dr. Halo CUT is a clipping format associated with the Dr. Halo line of raster
+image editing software for DOS.
+.Pp
+CUT is a raster image format with 8 bits per pixel, compressed with run-length
+encoding.
+.Pp
+This encoder does not support separate palette files, but the palette can be
+given as command line arguments.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh PALETTE OPTIONS
+The palette can be defined using the following patterns:
+  -                 a grey scale palette is used
+  rrggbb            three pairs of 8-bit hex values
+  rrggbbaa          four pairs of 8-bit hex values
+  rrrrggggbbbb      three pairs of 16-bit hex values
+  rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+.Pp
+If no command-line arguments are given, then zero is black and everything else
+is white.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+- < image.ff > image.cut
+.Pp
+$
+.Nm
+33F0A94F44229AA0 < image.ff > image.cut
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr cut2ff 1 ,
+.Xr farbfeld 5

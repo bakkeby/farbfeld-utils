@@ -1,0 +1,43 @@
+.Dd 2024-03-29
+.Dt FF2NRRD 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2nrrd
+.Nd convert farbfeld to Nearly Raw Raster Data (NRRD) format
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads
+.Xr farbfeld 5
+from stdin, converts it to NRRD format and writes the result to stdout.
+
+NRRD is a file format designed to support scientific visualization and image
+processing involving N-dimensional raster data.
+
+Disclaimer: this implementation has not been tested and may not produce the
+right output.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This encoder takes no command line arguments.
+.Sh REFERENCES
+https://teem.sourceforge.net/nrrd/index.html
+.br
+https://teem.sourceforge.net/nrrd/format.html
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.nrrd
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

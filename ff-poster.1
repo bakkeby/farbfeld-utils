@@ -1,0 +1,52 @@
+.Dd 2024-05-01
+.Dt FF-POSTER 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-poster
+.Nd farbfeld filter that reduces the bit depth of a picture
+.Sh SYNOPSIS
+.Nm
+<?num bits to retain?> <?channels to affect?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the poster filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to reduce bit depth of the picture.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes two arguments.
+
+The first argument is a number from 1 to 16 indicating how many significant
+bits to retain (specifying 16 has no effect). The remaining bits are copied
+from the significant bits. The default is to retain 1 bit.
+
+The second argument is optional, and consists of one or more of letters rgba
+which indicates which channels to affect; the default is affecting all
+channels.
+.Sh EXAMPLES
+$
+.Nm
+3 < image.ff > image-poster.ff
+.Pp
+$
+.Nm
+1 rb < image.ff > image-poster.ff
+.Pp
+$
+.Nm
+< image.ff > image-poster.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

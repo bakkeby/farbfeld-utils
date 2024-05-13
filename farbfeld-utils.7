@@ -1,0 +1,516 @@
+.Dd 2024-05-12
+.Dt FARBFELD-UTILS 7
+.Os farbfeld-utils
+.Sh NAME
+.Nm farbfeld-utils
+.Nd collection of utilities relating to the farbfeld image format
+.Sh DESCRIPTION
+.Xr farbfeld 5
+is a
+.Em lossless
+image format which is easy to parse, pipe and compress.
+
+The
+.Nm
+is a collection of tools, converters and filters that work with the farbfeld image format.
+
+Below are a list of items in this collection in their respective categories.
+
+.Sh CONVERTERS
+Converters converts between farbfeld and other, sometimes obscure, image formats.
+
+The naming convension for converters is to include an ff2 prefix for programs that convert from
+farbfeld to something else and to include a 2ff suffix for programs that convert to farbfeld.
+
+.Xr avs2ff 1
+<>
+.Xr ff2avs 1
+-- convert Stardent AVS X image to farbfeld and back
+.br
+.Xr bit2ff 1
+<>
+.Xr ff2bit 1
+-- converts various uncompressed headerless bitwise palette formats to farbfeld and back
+.br
+.Xr bld2ff 1
+-- convert MegaPaint BLD image to farbfeld
+.br
+.Xr bmp2ff 1
+-- convert BMP (bitmap) image to farbfeld
+.br
+.Xr cga2ff 1
+-- convert IBM PC Color Graphics Adapter (CGA) video memory dump to farbfeld
+.br
+.Xr cut2ff 1
+<>
+.Xr ff2cut 1
+-- convert Dr. Halo CUT format to farbfeld and back
+.br
+.Xr drcs2ff 1
+-- convert DEC VT320 font file to farbfeld
+.br
+.Xr fax2ff 1
+<>
+.Xr ff2fax 1
+-- convert converts Group 3 or 4 fax format to farbfeld and back
+.br
+.Xr fhm2ff 1
+-- convert Hero Mesh .IMG lump file to farbfeld
+.br
+.Xr fuun2ff 1
+-- convert Fuun RNA description to farbfeld
+.br
+.Xr gemicn2ff 1
+-- converts GEM icons to farbfeld
+.br
+.Xr gif2ff 1
+-- convert Graphics Interchange Format (GIF) image to farbfeld
+.br
+.Xr gle2ff 1
+-- convert AMI BIOS Energy Star logo image format to farbfeld
+.br
+.Xr grob2ff 1
+-- converts HP-48/HP-49 graphics object to farbfeld
+.br
+.Xr jef2ff 1
+-- convert Janome Embroidery Format image to farbfeld
+.br
+.Xr jpeg2ff 1
+<>
+.Xr ff2jpeg 1
+-- convert JPEG image to farbfeld and back (using the stb_image library)
+.br
+.Xr jpg2ff 1
+<>
+.Xr ff2jpg 1
+-- convert JPEG image to farbfeld and back (using the jpeglib library)
+.br
+.Xr kap2ff 1
+-- convert BSB/KAP nautical charts to farbfeld
+.br
+.Xr mac2ff 1
+-- convert MacPaint image to farbfeld
+.br
+.Xr maki2ff 1
+-- convert Maki-chan MKI graphics to farbfeld
+.br
+.Xr mb2ff 1
+-- convert Hero Mesh puzzle image to farbfeld
+.br
+.Xr mc2ff 1
+<>
+.Xr ff2mc 1
+-- convert Macrocell image to farbfeld and back
+.br
+.Xr ff2miff 1
+-- convert farbfeld image to ImageMagick format (MIFF)
+.br
+.Xr morse2ff 1
+<>
+.Xr ff2morse 1
+-- convert Murdoch Mysteries television show morse format to farbfeld and back
+.br
+.Xr mpp2ff 1
+<>
+.Xr ff2mpp 1
+-- convert Multi Palette Picture (Atari ST) image to farbfeld and back
+.br
+.Xr mrf2ff 1
+<>
+.Xr ff2mrf 1
+-- convert Monochrome Recursive Format (MRF) image to farbfeld and back
+.br
+.Xr mzm2ff 1
+<>
+.Xr ff2mzm 1
+-- convert MegaZeux image format to farbfeld and back
+.br
+.Xr neo2ff 1
+-- convert NEOchrome image to farbfeld
+.br
+.Xr ff2nrrd 1
+-- convert farbfeld to Nearly Raw Raster Data (NRRD) format
+.br
+.Xr ff2pam 1
+-- convert farbfeld to PAM
+.br
+.Xr pbm2ff 1
+<>
+.Xr ff2pbm 1
+-- convert Netpbm formatted image to farbfeld and back
+.br
+.Xr pmart2ff 1
+-- convert Palette Master ART image to farbfeld
+.br
+.Xr png2ff 1
+<>
+.Xr ff2png 1
+-- convert PNG to farbfeld and back (using the lodepng library)
+.br
+.Xr ps2ff 1
+-- converts PostScript to farbfeld
+.br
+.Xr psytc2ff 1
+<>
+.Xr ff2psytc 1
+-- convert Psycopathicteen Tile Compressor graphics to farbfeld and back
+.br
+.Xr qoi2ff 1
+-- convert Quite OK Image Format (QOI) to farbfeld
+.br
+.Xr rfnt2ff 1
+-- convert RawFont image format to farbfeld
+.br
+.Xr rgb2ff 1
+-- convert headerless true colour formats to farbfeld
+.br
+.Xr sinql2ff 1
+-- convert Sinclair QL screen format image to farbfeld
+.br
+.Xr ff2sixel 1
+-- convert farbfeld image to sixel graphics
+.br
+.Xr timask2ff 1
+<>
+.Xr ff2timask 1
+-- convert TeXnicard image mask to farbfeld and back
+.br
+.Xr vec2ff 1
+-- convert DRAWX Vector Graphics image to farbfeld
+.br
+.Xr xbm2ff 1
+<>
+.Xr ff2xbm 1
+-- convert X BitMap (XBM) image to farbfeld and back
+.br
+.Xr xorl2ff 1
+<>
+.Xr ff2xorl 1
+-- converts XORLINES-2 format to farbfeld and back
+.br
+.Xr xpm2ff 1
+<>
+.Xr ff2xpm 1
+-- convert X pixmap image to farbfeld and back
+.br
+.Xr xyz2ff 1
+<>
+.Xr ff2xyz 1
+-- convert .XYZ picture files from RPG Maker and EasyRPG to farbfeld and back
+.br
+.Xr xzip2ff 1
+<>
+.Xr ff2xzip 1
+-- convert XZIP picture library file to farbfeld and back
+.br
+.Xr zx2ff 1
+-- convert ZX Spectrum graphics to farbeld
+.br
+.Xr zzt2ff 1
+-- creates a farbfeld screenshot from a ZZT save game file (or world file)
+
+.Sh FILTERS
+A filter transforms, alters or changes an existing image to create various effects.
+
+.Xr ff-apclut 1
+-- applies a Hald CLUT picture
+.br
+.Xr ff-back 1
+-- applies a background colour to a picture with transparent parts
+.br
+.Xr ff-bezier 1
+-- draws one or more cubic Bezier curves
+.br
+.Xr ff-bitmask 1
+-- applies bit mask (AND/XOR) operations to each pixel
+.br
+.Xr ff-blur 1
+-- applies Gaussian blur
+.br
+.Xr ff-border 1
+-- adds an outer border to the picture
+.br
+.Xr ff-bright 1
+-- add/multiply/exponent pixel values by a constant to adjust brightness for one or more channels
+.br
+.Xr ff-channel 1
+-- combines channels from four farbfeld pictures
+.br
+.Xr ff-circle 1
+-- draws a filled circle or pie slices onto a picture
+.br
+.Xr ff-cloud 1
+-- applies turbulence to random data to make clouds
+.br
+.Xr ff-colorkey 1
+-- makes pixels of a specific colour transparent
+.br
+.Xr ff-composite 1
+-- composes one or more pictures over a background picture
+.br
+.Xr ff-conaut 1
+-- implements continuous cellular automata for the transparent parts of an image
+.br
+.Xr ff-convolve 1
+-- applies a convolution matrix for effects like blur, sharpening, edge detection, emboss and more
+.br
+.Xr ff-crack 1
+-- creates maze-like cracked lines
+.br
+.Xr ff-critter 1
+-- implements the Critter, Tron and other rules of Margolus block cellular automata
+.br
+.Xr ff-crop 1
+-- crops a picture
+.br
+.Xr ff-distort 1
+-- distorts a picture by applying distortions to positions for each pixel
+.br
+.Xr ff-dntsc 1
+-- program that decodes NTSC colours, can be used to create a CRT look
+.br
+.Xr ff-elementary 1
+-- implements elementary cellular automata
+.br
+.Xr ff-enlarge 1
+-- enlarges a picture by duplicating each pixel into a rectangular area
+.br
+.Xr ff-erosion 1
+-- generates erosion by raining
+.br
+.Xr ff-errdif 1
+-- applies a two-level error diffusion, individually per channel
+.br
+.Xr ff-false 1
+-- changes colours in the picture to a specified 8-bit gradient
+.br
+.Xr ff-false16 1
+-- changes colours in the picture to a specified 16-bit gradient
+.br
+.Xr ff-flood 1
+-- applies flood fill
+.br
+.Xr ff-frhs 1
+<>
+.Xr ff-tohs 1
+-- farbfeld filter that converts HSV colours to RGB and back
+.br
+.Xr ff-interleave 1
+-- interleaves two pictures
+.br
+.Xr ff-life 1
+-- generates life-like cellular automata
+.br
+.Xr ff-lineskew 1
+-- skews a picture horizontally by pixels per scanline
+.br
+.Xr ff-lowpass 1
+-- generates a simple IIR low pass filter to each scanline
+.br
+.Xr ff-matrix 1
+-- multiplies each pixel (considered as a vector) by a matrix
+.br
+.Xr ff-maxrgb 1
+-- used to keep only one channel
+.br
+.Xr ff-moon 1
+-- changes colours to simulate moon light
+.br
+.Xr ff-mux 1
+-- uses bits of one picture to select between two other pictures
+.br
+.Xr ff-noise 1
+-- adds random noise to a picture
+.br
+.Xr ff-outline 1
+-- adds a transparent outline around areas of different translucency
+.br
+.Xr ff-paeth 1
+-- performs Paeth prediction
+.br
+.Xr ff-pattern 1
+-- converts solid colours into patterns
+.br
+.Xr ff-plasma 1
+-- applies a randomized plasma effect to a picture
+.br
+.Xr ff-polygon 1
+-- draws a solid filled polygon onto an existing picture
+.br
+.Xr ff-poster 1
+-- reduces the bit depth of a picture
+.br
+.Xr ff-probaut 1
+-- generates probabilistic cellular automata
+.br
+.Xr ff-quantile 1
+-- computes a median or other quantile
+.br
+.Xr ff-reduce 1
+-- reduces a picture to a specified palette
+.br
+.Xr ff-rephase 1
+-- randomizes the phase of the frequency domain of the picture
+.br
+.Xr ff-rotate 1
+-- rotates an image by three shears
+.br
+.Xr ff-scale2x 1
+-- enlarges an image using the Scale2x algorithm
+.br
+.Xr ff-shadow 1
+-- generates shadows
+.br
+.Xr ff-shrink 1
+-- shrinks an image by ignoring some pixels
+.br
+.Xr ff-slew 1
+-- applies two dimensional slew rate limiting on a picture
+.br
+.Xr ff-slur 1
+-- applies a random melting like filter
+.br
+.Xr ff-solar 1
+-- negates pixels above a threshold
+.br
+.Xr ff-sql 1
+-- program that allows for SQL statements to be used to alter a picture
+.br
+.Xr ff-swizzle 1
+-- alters, swaps or removes channels
+.br
+.Xr ff-thresh 1
+-- makes pixels black or white based on a specified threshold
+.br
+.Xr ff-tocmyk 1
+-- converts RGB colours to CMYK
+.br
+.Xr ff-turn 1
+-- flip, mirror, and/or rotate a picture
+.br
+.Xr ff-wood 1
+-- uses random turbulence data to make wood or marble
+.br
+.Xr ff-worley 1
+-- applies partition by Worley/Voronoi noise
+.br
+.Xr ff-ycocg 1
+-- converts between RGB and YCoCg colour format
+
+.Sh GENERATORS
+A generator typically takes no input but generates images based on certain rules, an example would
+be a program that renders a fractal image.
+
+.Xr ff-blank 1
+-- creates a blank farbfeld picture with a solid colour
+.br
+.Xr ff-chess 1
+-- creates an empty chess board of arbitrary size
+.br
+.Xr ff-fern 1
+-- generates a picture by chaos game
+.br
+.Xr ff-gradient 1
+-- generates a gradient picture
+.br
+.Xr ff-hopalong 1
+-- draws a picture using HOPALONG attractors
+.br
+.Xr ff-icgrid 1
+-- generates an interleaved colours grid
+.br
+.Xr ff-icosa 1
+-- psychedelic icosahedral fractal picture generator
+.br
+.Xr ff-idclut 1
+-- generates an identity Hald CLUT with a precision of 8-bits per channel
+.br
+.Xr ff-mapgrid 1
+-- generates a map grid
+.br
+.Xr ff-newton 1
+-- generates a Newton fractal
+.br
+.Xr ff-padsynth 1
+-- generates a randomized picture using a two-dimensional PADsynth algorithm
+.br
+.Xr ff-pasart 1
+-- generates art from Pascal's triangle and variants
+.br
+.Xr ff-probgen 1
+-- generates an image using a probabilistic random generator
+.br
+.Xr ff-psycho 1
+-- generates psychedelic art or soft gradients
+.br
+.Xr ff-simplex 1
+-- generates OpenSimplex noise
+.br
+.Xr ff-specsynth 1
+-- generates a randomized picture using spectral synthesis
+.br
+.Xr ff-stipple 1
+-- generates a stipple pattern
+.br
+.Xr ff-tartan 1
+-- generates a tartan pattern
+
+.Sh TOOLS
+A tool is a program that helps solve certain tasks and does not fit into the other categories.
+
+.Xr ff-dice 1
+-- dice a picture into many slices, and execute a command for each one
+.br
+.Xr ff-glfrag 1
+-- executes an OpenGL fragment program to generate a farbfeld image
+.br
+.Xr ff-hjoin 1
+-- joins multiple pictures together horizontally
+.br
+.Xr ff-info 1
+-- prints the height and/or width of a farbfeld image
+.br
+.Xr ff-lossypng 1
+-- reduces the quality of an image in an attempt to allow for smaller PNG files due to improved compression
+.br
+.Xr ff-palette 1
+-- generates a suitable palette for a picture
+.br
+.Xr ff-printf 1
+-- converts a picture into a text representation of each pixel
+.br
+.Xr ff-scanf 1
+-- converts text representation pixels into a picture
+.br
+.Xr ff-strip 1
+-- change the number of tiles per row in a tile strip
+.br
+.Xr ff-tensor 1
+-- creates a tensor product out of two pictures
+.br
+.Xr ff-text 1
+-- renders fix-pitch (monospaced) text tiles
+.br
+.Xr ff-transopt 1
+-- clears transparent pixels
+.br
+.Xr ff-uniq 1
+-- delete duplicate tiles from a vertical strip
+.br
+.Xr ff-vccapture 1
+-- takes a screenshot of a Linux virtual console screen
+.br
+.Xr ff-vjoin 1
+-- joins multiple pictures together vertically
+.br
+.Xr ff-xcapture 1
+-- takes a screenshot of an X window
+.br
+.Xr ff-xdraw 1
+-- program that can make a drawing using an X server
+.br
+.Xr ff-xwin 1
+-- program that displays a picture on an X server
+.br
+.Xr ff-xwina 1
+-- program that displays a picture on an X server with transparency

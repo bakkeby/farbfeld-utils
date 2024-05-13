@@ -1,0 +1,42 @@
+.Dd 2024-05-08
+.Dt FF-PASART 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-pasart
+.Nd farbfeld filter that generates art from Pascal's triangle and variants
+.Sh SYNOPSIS
+.Nm
+<size> <mode> <colour> <colour> <?colour?> ...
+.Sh DESCRIPTION
+.Nm
+generates art from Pascal's triangle and variants and writes the result to stdout.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes four or more arguments.
+
+The arguments are:
+   size - the width and height are equal
+   mode - one of 1, 2, 3 or 4
+   colour - the rest of the arguments are the colours
+
+The value used are the modulo of how many colurs are specified, used to decide
+what colour to use for each pixel.
+.Sh EXAMPLES
+$
+.Nm
+512 4 906060 609060 606090 909060 906090 609090 > pasart.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

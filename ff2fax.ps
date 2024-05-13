@@ -1,0 +1,61 @@
+% Farbfeld to fax
+% Public domain
+
+true setpacking
+
+/stdin (%stdin) (r) file def
+/stdout (%stdout) (w) file def
+/stderr (%stderr) (w) file def
+
+/Parameters << >> def
+
+%errordict /handleerror {stderr (PostScript error\n) writestring quit} bind put
+
+ARGUMENTS {
+  (=) search {
+    exch pop exch token pop exch pop exec Parameters 3 1 roll put
+  } {
+    stderr (Invalid argument\n) writestring quit
+  } ifelse
+} forall
+
+stdin 8 string readstring pop (farbfeld) ne {
+  stderr (Not farbfeld\n) writestring quit
+} if
+
+/Rows
+  stdin read pop 24 bitshift
+  stdin read pop 16 bitshift
+  stdin read pop 8 bitshift
+  stdin read pop
+  or or or
+def
+
+/Columns
+  stdin read pop 24 bitshift
+  stdin read pop 16 bitshift
+  stdin read pop 8 bitshift
+  stdin read pop
+  or or or
+def
+
+Parameters /Rows Rows put
+Parameters /Columns Columns put
+
+/faxfile stdout Parameters /CCITTFaxEncode filter def
+
+/buf 8 string def
+
+/dopixel {1 bitshift stdin buf readstring pop 0 get -7 bitshift or} def
+
+Rows {
+  Columns -3 bitshift {
+    faxfile 0 8 //dopixel repeat write
+  } repeat
+  Columns 7 and 0 ne {
+    faxfile 0 Columns 7 and //dopixel repeat
+    8 Columns 7 and sub bitshift write
+  } if
+} bind repeat
+
+faxfile closefile stdout flush quit

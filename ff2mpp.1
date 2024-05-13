@@ -1,0 +1,139 @@
+.Dd 2023-11-07
+.Dt FF2MPP 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2mpp
+.Nd convert
+.Xr farbfeld 5
+image to Multi Palette Picture (Atari ST) format.
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a farbfeld image from stdin, converts it to MPP format and writes the result to stdout.
+.Pp
+MPP is a raster graphics format designed to be used with Atari ST and STE
+computers. The MPP file format supports different kinds of images. It has a
+modular-based structure, making the format easily expandable by adding source
+or binary plugins into the file viewer.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh FORMAT DETAILS
+An MPP file consists of a 12-byte header providing the image encoding, palette format
+and number of images.
+.Pp
+The header format is the following.
+.Pp
+  3 bytes : the three "MPP" ASCII characters
+  1 byte  : pre-defined image mode (possible values: 0-3, other values reserved)
+  1 byte  : flags
+    bit 0: STE palette       (12-bit, otherwise 9-bit)
+    bit 1: extra palette bit (only in STE palette, extends the palette to 15-bit)
+    bit 2: double image      (required on very colorful images)
+    bits 3-7: reserved, currently always zero.
+  3 bytes : reserved, currently always zero.
+  4 bytes : extra_len : length of extra header data.
+
+If extra_len is different from zero, then a block of extra_len bytes follows. The extra_len value
+must be an even number.
+.Pp
+Then follows the palette data. The length of this block depends on the image mode and flags.
+Its value (in bits) is the number of bits per palette entry multiplied by the total number of
+palette entries. The resulting value is rounded to the smallest multiple of 16 not less than it.
+To get the size in bytes you must divide the computed value by 8. Note that because of the rounding
+to a multiple of 16 bits, the palette size in bytes is always a multiple of 2.
+.Pp
+Finally, comes the image data. It corresponds to unpacked bitplanes of the image. The size of the
+image in bytes is the image width rounded to the closest higher or equal multiple of 16, multiplied
+by the image height, and divided by two.
+.Pp
+In the case of double image mode, follows a second palette and image pair.
+.Pp
+Refer to https://github.com/zerkman/mpp for more details on the format.
+.Sh EXTRA HEADER INFORMATION
+If the extra_len header value is not zero, then a MPPH block follows. It is very similar to what
+the SNDH header information is for Atari SND files. It consists of the four MPPH characters, a list
+of tag/value pairs, and a final even-aligned HPPM four-character string.
+.Pp
+Below follows the list of the different supported tags. The order of the tags is not important.
+.Bl -tag -width Ds
+  ┌───────────────────────────────────────────────────────────────────────────────┐
+  │ TAG   Description      Example                                    Termination │
+  ├───────────────────────────────────────────────────────────────────────────────┤
+  │ TITL  Title of Picture dc.b 'TITL','The Persistence of Memory',0  0 (Null)    │
+  │ ARTT  Artist Name      dc.b 'ARTT','Salvador Dali',0              0 (Null)    │
+  │ RIPP  Ripper Name      dc.b 'RIPP','Me the hacker',0              0 (Null)    │
+  │ CONV  Converter Name   dc.b 'CONV','Me the converter',0           0 (Null)    │
+  │ YEAR  Year of release  dc.b '1931',0                              0 (Null)    │
+  │ HPPM  End of Header    dc.b 'HPPM'                                None        │
+  │                                                   Must be on an EVEN boundary │
+  └───────────────────────────────────────────────────────────────────────────────┘
+.Sh PRE-DEFINED IMAGE MODES
+
+  Mode 0: 320x199, CPU based, displays 54 colors per scanline with non-uniform
+                   repartition of color change positions.
+  Mode 1: 320x199, CPU based, displays 48 colors per scanline with uniform
+                   repartition of color change positions.
+  Mode 2: 320x199, blitter based (STE only), displays 56 colors per scanline with
+                   uniform repartition of color change positions.
+  Mode 3: 416x273, CPU based, displays 48+6 colors per scanline with overscan and
+                   non-uniform repartition of color changes.
+
+.Sh OPTIONS
+
+Command-line arguments may be either - followed by one or more switches, or key=value, or
+a number 0 to 9 to specify the optimization level (3 by default).
+.Pp
+Possible switches are:
+  0 = Select mode 0 (default).
+  1 = Select mode 1.
+  2 = Select mode 2.
+  3 = Select mode 3.
+  d = Enable double mode. Two pictures are stored, in order that when they are
+      averaged (e.g. by rapidly switching between them), the result is the original.
+  e = Enable STE mode.
+  h = Enable the extended header (which contains metadata).
+  r = Use raw output format, omitting the header. (This also causes a different
+      format for the palette.)
+  x = Enable extra mode.
+  z = Display some extra details about the conversion algorithm on stderr.
+.Pp
+Possible keys for key=value are:
+  artt = Set the value of the ARTT field in the extended header.
+  conv = Set the value of the CONV field in the extended header (the default value
+         is "Farbfeld Utilities").
+  ripp = Set the value of the RIPP field in the extended header.
+  seed = Set the random number seed (an integer). The default value is 42.
+  titl = Set the value of the TITL field in the extended header.
+  year = Set the value of the YEAR field in the extended header (the default value
+         is the current AD year number).
+.Pp
+All command-line arguments are optional.
+.Pp
+Mode 0, 1, and 2 are 320x200; mode 3 is 416x274. The input picture must be of the correct size
+corresponding to the selected mode.
+.Pp
+Note: This conversion is lossy; the output is for use with Atari ST, which does not represent
+all 16-bits-per-channel RGB colours.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.mpp
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+-2 -x year="2023" > image.mpp
+.Sh SEE ALSO
+.Xr mpp2ff2 1,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,42 @@
+.Dd 2024-05-08
+.Dt FF-OUTLINE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-outline
+.Nd farbfeld filter that adds a transparent outline around areas of different translucency
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the outline filter and writes the result to stdout.
+.Pp
+The value in the alpha channel of each pixel specifies what country it belongs
+to, and then the alpha value is changed to zero to make an outline between
+regions or maximum if it is the inside of the region.
+.Pp
+Combine with
+.Xr ff-back 1
+to make the colour of the lines.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-outline.ff
+.Sh SEE ALSO
+.Xr ff-back 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

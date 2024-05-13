@@ -1,0 +1,36 @@
+.Dd 2024-04-02
+.Dt FF-BITMASK 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-bitmask
+.Nd farbfeld filter that applies bit mask (AND/XOR) operations to each pixel
+.Sh SYNOPSIS
+.Nm
+<AND mask> <XOR mask>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies bit mask (AND/XOR) operations to each pixel and writes the
+result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter needs two arguments; the AND mask and then the XOR mask.
+Both masks are hexadecimal in "rrrrggggbbbbaaaa" format.
+.Sh EXAMPLES
+$
+.Nm
+FFFFFFFF0F0FFFFF 0000000000000000 < image.ff > image-masked.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

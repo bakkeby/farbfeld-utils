@@ -1,0 +1,96 @@
+.Dd 2024-03-28
+.Dt FF2JPEG 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2jpeg
+.Nd convert farbfeld to JPEG (Joint Photographic Experts Group) image format
+.Sh SYNOPSIS
+.Nm
+<?quality?> <?options...?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts it to JPEG (8-bit RGB) and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The encoder takes an optional argument, which is the quality setting and can be specified
+as one of:
+   - A number from 0 to 3 (the default, and best quality, is 3). Put a plus sign after the
+     quality (with no space) to optimize the Huffman tree (this reduces file size without
+     reducing quality).
+   - Custom quality, given by a comma, followed by a number from 1 (best compression) to 17701
+     (best quality). You can optionally give another comma and number if you want to use a
+     different quality for luma and chroma (the second number is chroma). This mode always
+     optimizes the Huffman tree.
+
+After the quality setting, you can optionally specify zero or more of the options consisting
+of the letter and then a number (nothing between the letter and number):
+
+.Bl -tag -width Ds
+.It C
+Maximum number of DCT components of chroma to use per MCU, from 1 to 63. The default is 63.
+.It D
+If set to 1, displays the quantization tables on stderr.
+.It d
+Dots per inch. If not specified, defaults to 96 DPI.
+.It f
+If nonzero, reduces the change in DC components between consecutive MCUs to zero if the absolute
+value of the difference of the quantized value is less than the specified number. Larger numbers
+worsen quality somewhat, but usually result in smaller file sizes.
+.It g
+If nonzero, specifies how often to avoid the "f" optimization and emit the proper DC component
+anyways; larger numbers do so less often.
+.It h
+Kind of heuristic to use for unused pixels (if the width or height is not a multiple of eight):
+0=nearest (default), 1=mirror, 2=bit correlation of position, 3=zero. Which way is best depend
+on the picture.
+.It J
+JPEG subformat. If nonzero, the JFIF header is omitted, where: 1=YCbCr, 2=RGB.
+.It L
+Maximum number of DCT components of luma to use per MCU, from 1 to 63. The default is 63.
+.It q
+If nonzero, codes only a single quantization table for both luma and chroma. Values are further
+limited to be no more than the specified number (up to 255).
+.It r
+Rounding mode, from 0 to 4. Mode 0 is the default, mode 2 tends to result in smaller file sizes
+but worse quality, and mode 3 is a compromise. Mode 4 is similar to mode 3 but has special
+optimization for DC components.
+.It s
+Specify 1 to use the chroma quantization table from the spec instead of from the paper; only
+applies to quality settings 1 and 2, and to custom quality. In the case of quality setting 3,
+can be a number up to 254 to reduce the quality of the chroma by that amount.
+.It V
+If set to nonzero, allows the quality of the picture to vary according to the alpha channel of
+the input, where larger alpha values result in lower quality.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.jpg
+.Pp
+$
+.Nm
+3+ d300 < image.ff > image.jpg
+.Pp
+$
+.Nm
+,17701,5008 < image.ff > image.jpg
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+> image.jpg
+.Sh SEE ALSO
+.Xr jpeg2ff 1 ,
+.Xr bzip2 1 ,
+.Xr farbfeld 5

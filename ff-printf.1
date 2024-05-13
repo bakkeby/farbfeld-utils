@@ -1,0 +1,74 @@
+.Dd 2024-05-02
+.Dt FF-PRINTF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-printf
+.Nd farbfeld program that converts a picture into a text representation of each pixel
+.Sh SYNOPSIS
+.Nm
+<?format string?> <?+?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin and prints each pixel as text to stdout.
+.Pp
+Output the contents of the picture as text.
+.Pp
+Refer to
+.Xr ff-scanf 1
+for how to convert it back again.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This program takes two optional arguments.
+
+The first argument is the format string; by default "%d %d %d %d\\n".
+
+Each pixel is output using this format. See
+.Xr printf 3
+for details. Also you may use shell operator to expand backslash escapes, as it
+is not done automatically by this program. Note that you shouldn't change the
+number of decimals in the format string unless you know what you are doing.
+
+The second argument is optional and controls how many bits per channel is
+used. By default 16 bits per channel is used. If a + is given as the argument
+then this indicates that 8 bits per channel should be used.
+
+The width and height information are lost on output; only pixel values are
+printed.
+
+A text representation of each pixel can make it easier to perform bespoke
+alterations using simple scripts and convert it back to a picture again.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > 16-bits-per-channel.txt
+.Pp
+$
+.Nm
+"" + < image.ff > 8-bits-per-channel.txt
+.Pp
+$
+.Nm
+"%d %d %d %d
+.br
+" + < image.ff
+.Pp
+$
+.Nm
+"$(echo -e '%d-%d-%d-%d\\n_')" + < image.ff
+.Sh SEE ALSO
+.Xr ff-scanf 1 ,
+.Xr printf 3 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

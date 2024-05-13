@@ -1,0 +1,61 @@
+.Dd 2024-05-04
+.Dt FF-SPECSYNTH 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-specsynth
+.Nd farbfeld program that generates a randomized picture using spectral synthesis
+.Sh SYNOPSIS
+.Nm
+<size> <?opt=value?> ... <?opt=value?>
+.Sh DESCRIPTION
+.Nm
+generates a randomized
+.Xr farbfeld 5
+texture pattern using spectral synthesis and writes the result to stdout.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes the following arguments:
+   - size - must be a power of two and maximum size is 32768 (the output is a
+            square image, i.e. providing 16 will give an image that is 16x16)
+   - option - zero or more options on the form of letter followed by equal
+              sign and then a number (which can include fractions)
+
+The following options are available:
+   a -- (-1.0) if nonnegative, specifies the minimum value for normalization
+        zero makes the picture dark and higher numbers make it brighter
+   h -- (-0.5) defines zoom level, where lower numbers are zoomed in more
+   j -- (0.0) this parameter has various effects on the output
+   m -- (1.0) this parameter has various effects on the output
+   n -- (4.0) number of times to add together uniform random numbers; this
+        controls the distribution of the random number generator
+   s -- (1.0) random number seed
+   v -- (-1.0) affects the distribution of shades during normalization
+   z -- (-1.0) if nonnegative, specifies the minimum value for normalization
+        zero makes the picture bright and higher numbers make it darker
+.Sh EXAMPLES
+$
+.Nm
+512 > image-specsynth.ff
+.Pp
+$
+.Nm
+512 h=-0.1 > image-specsynth.ff
+.Pp
+$
+.Nm
+512 s=0.1944 j=0.21 > image-specsynth.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

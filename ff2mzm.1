@@ -1,0 +1,118 @@
+.Dd 2023-11-23
+.Dt FF2MZM 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2mzm
+.Nd convert
+.Xr farbfeld 5
+image to MegaZeux image format.
+.Sh SYNOPSIS
+.Nm
+<font> <palette> <?opt#?> <?opt#,#?> ...
+.Sh DESCRIPTION
+.Nm
+reads a farbfeld image from stdin, converts it to MZM format and writes the result to stdout.
+.Pp
+MZM is a character-based graphics format used originally in MegaZeux. There
+are two formats; "layer-mode" and "board-mode".
+
+This program outputs a layer-mode MZM (MZM2 format only). The first two
+arguments are the font file (which must support seeking) and the palette file;
+both are required, but in both cases you can give . instead if there is no
+file.
+
+Specifying the colours as command-line arguments is not available.
+
+The rest of the arguments is each specifies a letter (case sensitive) followed
+by a number (with nothing in between), and optionally also a comma and another
+number.
+
+Valid options are:
+.Bl -tag -width Ds
+
+.It c
+Minimum free character code (if not specified, the font remains unchanged). The second number is
+the maximum free character code (default 255).
+.It C
+Minimum character code to use in output (default 0). The second number is the maximum character
+code to use in output (default 255).
+.It h
+This setting is only used if no font is input (in which case this is mandatory). It can range
+from 1 to 16, giving the font height.
+.It i
+If set to nonzero, it will avoid generating tiles where the high bit of the background colour
+is set.
+.It o
+If set to nonnegative, outputs a Hamster archive instead of the MZM file by itself (this setting
+can be used if you want the changed fonts and palettes output as well as the MZM file). The number
+is used as the base name for the lumps.
+.It p
+Minimum free colour code (palette remains unchanged if not specified). The second number is the
+maximum free colour code (default 15).
+.It P
+Minimum colour code to use in output (default 0). The second number is the maximum colour code to
+use in output (default 15).
+.El
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh FORMAT DETAILS
+All numbers are small-endian. There are two modes, board mode and layer
+mode. Only layer mode is described here.
+
+Version 2:
+
+Offset (hex)     Length (dec)    Description
+.br
+──────────────────────────────────────────────────────────────────────────
+  00                   4         Identification "MZM2"
+  04                   2         Width
+  06                   2         Height
+  08                   5         Robot info (always zero)
+  0D                   1         Storage mode (1 for layer mode)
+  0E                   1         Save game mode (always zero)
+  0F                   1         Padding (ignored)
+  10                w*h*2        Data
+
+Version 3:
+
+Offset (hex)     Length (dec)    Description
+.br
+──────────────────────────────────────────────────────────────────────────
+  00                   4         Identification "MZM3"
+  04                   2         Width
+  06                   2         Height
+  08                   5         Robot info (always zero)
+  0D                   1         Storage mode (1 for layer mode)
+  0E                   1         Save game mode (always zero)
+  0F                   2         World version (should be ignored)
+  11                   3         Padding (ignored)
+  14                w*h*2        Data
+
+The data is stored in the same format as PC text mode. That is, they are
+stored in progressive television order, with each tile being first the
+character code and then the colour code (the background is high 4-bits).
+
+When writing out such a file, version 2 is recommended. When reading, only
+the identification, width, height, and storage mode are relevant.
+.Sh EXAMPLES
+$
+.Nm
+pc.font . h16 < image.ff > image.mzm
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+pc.font my.palette > image.mzm
+.Sh SEE ALSO
+.Xr mzm2ff 1 ,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

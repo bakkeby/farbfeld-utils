@@ -1,0 +1,82 @@
+.Dd 2024-03-29
+.Dt FF-BORDER 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-border
+.Nd farbfeld filter that adds an outer border to the picture
+.Sh SYNOPSIS
+.Nm
+<border style> <size> <?size?> <?size?> <?size?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, adds an outer border and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes up to five arguments.
+
+The first argument is the border style and the rest are the border size.
+
+The border style can be one of three kinds:
+   - a colour (to make a solid colour border)
+   - a single letter (see list below)
+   - a single letter followed by an equal sign and a number (applicable if an
+     option in the list below takes any parameters)
+
+The colour can be defined using any of the following patterns:
+   hh                single pair of 8-bit hex values; the same value is used
+                     for all channels and alpha is fully opaque
+   hhaa              two pairs of 8-bit hex values; the first is used for all
+                     channels and the second value is used for the alpha
+   rrggbb            three pairs of 8-bit hex values, alpha is fully opaque
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values, alpha is fully opaque
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+The single letter options are:
+   e -- edge; just copy the edge colour
+   o -- offset; takes an extra parameter being the offset into the picture
+        raster data, and then the border just copies the pixels disregarding
+        the width and using the specified offset to start with
+   t -- tiled; repeat the picture from the other side to be wrapped around
+   x -- transparent (same as \"00000000\")
+
+The size can be given as one, two, three, or four numbers:
+   1 -- top=bottom=left=right
+   2 -- top=bottom, left=right
+   3 -- top, left=right, bottom
+   4 -- top, right, bottom, left
+.Sh EXAMPLES
+$
+.Nm
+FF9090 12 < image.ff > image-border.ff
+.Pp
+$
+.Nm
+e 10 < image.ff > image-border.ff
+.Pp
+$
+.Nm
+o=10 5 8 < image.ff > image-border.ff
+.Pp
+$
+.Nm
+t 50 < image.ff > image-border.ff
+.Pp
+$
+.Nm
+x 10 10 10 10 < image.ff > image-border.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

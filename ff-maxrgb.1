@@ -1,0 +1,69 @@
+.Dd 2023-11-27
+.Dt FF-MAXRGB 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-maxrgb
+.Nd farbfeld filter that is used to keep only one channel
+.Sh SYNOPSIS
+.Nm
+[?rgbam?]
+<?colour?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the maxrgb filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to keep only one channel; the channel that has
+the highest value or optionally the channel that has the lowest value.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter has two optional arguments.
+
+The first argument is up to five letters: r, g, b, a and/or m.
+   r -- red channel
+   g -- green channel
+   b -- blue channel
+   a -- alpha channel
+   m -- minimum - use the channel with the lowest value
+
+The default is "rgb" if no arguments are specified.
+Only the channels specified will be considered for checking highest/lowest and
+for altering; other channels will remain untouched.
+
+If "m" is specified then the channel with the lowest value is kept.
+Otherwise, by default, the channel with the highest value is kept.
+
+The second argument is a number 0 to 65535, specifying the colour value to use
+for channels that are altered rather than kept. The default value is zero.
+
+In some scenarios there may be more than one channel that has the highest (or
+lowest) value. In such a case all of those channels are kept and the rest (if
+any) are altered.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-maxrgb.ff
+.Pp
+$
+.Nm
+rgbm < image.ff > image-minrgb.ff
+.Pp
+$
+.Nm
+rb 124 < image.ff > image-maxrb.ff
+.Pp
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

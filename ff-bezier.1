@@ -1,0 +1,49 @@
+.Dd 2024-04-02
+.Dt FF-BEZIER 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-bezier
+.Nd farbfeld filter that draws one or more cubic Bezier curves
+.Sh SYNOPSIS
+.Nm
+<colour> <x-pos> <y-pos> <x-pos> <y-pos> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, draws one or more connected cubic Bezier curves on top of the image and
+writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The first argument is the colour to draw. After that gives the coordinates of
+each point, with one argument for X coordinate, one argument for Y coordinate,
+and then again another X coordinate, another Y coordinate, etc.
+
+The coordinate can have decimal values.
+
+At least four points are needed. Any multiple of three points can be added
+afterwards because the end points of each piece are shared, but the control
+points are not shared.
+
+The colour can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+FF9090 0 50 40 30 80 20 120 140 < image.ff > image-bezier.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

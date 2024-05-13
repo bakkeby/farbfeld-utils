@@ -1,0 +1,49 @@
+.Dd 2024-05-08
+.Dt FF-TOHS 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-tohs
+.Nd farbfeld filter that converts RGB colours to HSV.
+.Sh SYNOPSIS
+.Nm
+<mode>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts RGB colours to HSV and writes the result to stdout.
+.Pp
+HSV is short for hue, saturation and value.
+.Pp
+See
+.Xr ff-frhs 1
+for converting back to RGB.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes exactly one argument which is the mode.
+
+The available modes are:
+   i --
+   l --
+   v --
+   - -- no mode (do not use any of the above modes)
+
+The modes affect how the RGB input is converted to HSV.
+.Sh EXAMPLES
+$
+.Nm
+l < image.ff > image-hs.ff
+.Sh SEE ALSO
+.Xr ff-frhs 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

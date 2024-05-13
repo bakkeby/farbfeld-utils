@@ -1,0 +1,60 @@
+.Dd 2024-03-29
+.Dt FF2FAX 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2fax.ps
+.Nd converts farbfeld to Group 3 or 4 fax format
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads
+.Xr farbfeld 5
+from stdin, converts it to Group 3 or 4 fax format and writes the result to stdout.
+
+Unlike other farbfeld programs this is written in PostScript and require a interpreter to use.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Each argument consists of the name and then equal sign and then the value.
+
+Values can either be integers, or they can be the word "true" or "false" for boolean parameters.
+
+The possible parameters are:
+.Bl -tag -width Ds
+.It BlackIs1
+If true, results in reverse video; the default is false, meaning not reverse video.
+.It EncodedByteAlign
+If true, specifies to read or write extra bits at the end of each scanline so that each scanline
+begins at a byte boundary. If false (the default) then it does not do this.
+.It EndOfBlock
+If true (the default), then it will automatically add a end-of-block mark at the end when encoding,
+and expects such a mark when decoding. If false, then it doesn't use a end-of-block mark.
+.It EndOfLine
+If true, emits or requires a end-of-line pattern. If false (default), then it doesn't.
+.It K
+Type of encoding scheme. If zero (the default), then it uses Modified Huffman format. If positive,
+then it uses Modified READ, where the number specifies the maximum number of scanlines that are
+allowed to be encoded by a single Modified READ block. If negative, then it uses Modified Modified
+READ (Group 4).
+.It Uncompressed
+If true, then it might use uncompressed encoding if advantageous (although some fax machines do not
+implement uncompressed encoding). If false (the default), then it always uses compressed encoding.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > fax.format
+.Sh SEE ALSO
+.Xr fax2ff 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

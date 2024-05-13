@@ -1,0 +1,66 @@
+.Dd 2024-04-03
+.Dt FF-CHESS 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-chess
+.Nd creates an empty chess board of arbitrary size
+.Sh SYNOPSIS
+.Nm
+<columns> <rows> <tile size> <colour> <colour>
+.Sh DESCRIPTION
+.Nm
+creates an empty
+.Xr farbfeld 5
+chess board of arbitrary size and writes the result to stdout.
+.Pp
+.Nm
+does not read any data from stdin.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes five arguments:
+   - the number of columns (files)
+   - the number of rows (ranks)
+   - tile size (in pixels)
+   - first tile colour
+   - second tile colour
+
+The colours can have the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+A normal chess board has 8 files and 8 ranks, and the first tile colour will
+be white (or a light colour).
+
+It is possible to use
+.Xr ff-composite 1
+and
+.Xr ff-text 1
+(together with sed) in order to draw the pieces on a chess board, see the example below.
+.Sh EXAMPLES
+$
+.Nm
+8 8 64 DDDDDD 222222 > chess.ff
+.Pp
+$
+.Nm
+8 8 32 E5E5D7 001000 \\
+ | ff-composite <(pngff < pieces.png \\
+ | ff-text +PNBRQKpnbrqk 32 32 `sed 's.7.43.g;s.6.33.g;s.5.32.g;s.4.22.g;s.3.21.g;s.2.11.g;s./. .g' < board.fen`) 0,0,0 \\
+ | ff-border 0020FF 8
+.Sh SEE ALSO
+.Xr ff-composite 1 ,
+.Xr ff-text 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

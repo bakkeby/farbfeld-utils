@@ -1,0 +1,70 @@
+.Dd 2024-05-08
+.Dt FF-PADSYNTH 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-padsynth
+.Nd farbfeld program that generates a randomized picture using a two-dimensional PADsynth algorithm
+.Sh SYNOPSIS
+.Nm
+<size> <?-options?> <harmonics> <?harmonics?> ...
+.Sh DESCRIPTION
+.Nm
+generates a
+.Xr farbfeld 5
+image using the bespoke PADsynth algorithm and writes the result to stdout.
+.Pp
+This program implements the PADsynth algorithm, which is designed for audio,
+but this is a two-dimensional version that is designed for graphics.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one or more arguments.
+
+The first argument is the picture size, which must be a power of two (256,
+512, 1024, etc).
+
+Then follows a series of options, which is defined as a - followed by one or
+more lowercase characters.
+
+The available options are:
+   u -- alters the output by skipping some transformations
+   p -- increases colour intensitiy
+   q -- significantly increases colour intensitiy, combine with p for even
+        greater effect
+   s -- makes the program use an alternate seed for random number generation
+   x -- use an alternate formula for generating the output
+   r -- reduce red channel output strenght by 50%
+   g -- reduce green channel output strenght by 50%
+   b -- reduce blue channel output strenght by 50%
+
+The rest of the arguments define the harmonics.
+
+Each harmonic is specified as seven numbers (fractional parts are allowed)
+with commas in between:
+   - horizontal frequency
+   - vertical frequency
+   - horizontal bandwidth
+   - vertical bandwidth
+   - red amplitude
+   - green amplitude
+   - blue amplitude
+.Sh REFERENCES
+https://zynaddsubfx.sourceforge.io/doc/PADsynth/PADsynth.htm
+.Sh EXAMPLES
+$
+.Nm
+512 -ps 0.44,0.32,0.78,0.80,0.98,0.68,0.48 > padsynth.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,67 @@
+.Dd 2024-05-07
+.Dt FF-DNTSC 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-dntsc
+.Nd farbfeld filter program that decodes NTSC colours
+.Sh SYNOPSIS
+.Nm
+<?opt=value?> ... <?opt=value?>
+.Sh DESCRIPTION
+.Nm
+reads NTSC colour information from stdin, converts it to
+.Xr farbfeld 5
+RGB and writes the result to stdout.
+.Pp
+This program does not decode the NTSC frame.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes zero or more arguments that set values for options.
+
+Arguments consist of a single letter or number, followed by a equal sign,
+followed by the value. The value can be a number, which may be positive or
+negative, and some options may include a fractional part.
+
+Only the red channel of the input is used to make the colours of the output;
+the alpha channel of input is just copied to output, while the green and blue
+channels of input are ignored.
+
+Valid options include:
+   1 to 6 = coefficients for the equation to convert YIQ to RGB
+            (0.966882, 0.623557, -0.274788, -0.635691, -1.108545, 1.709007)
+   a = border voltage (0.0)
+   c = total contrast amount (0.009574) (all outputs are multiplied by this)
+   f = phase finetune (in radians) (0.0)
+   h = the voltage that a white pixel represents (92.0)
+   i = amount of spread of the I component (24)
+   l = the voltage that a black pixel represents (-11.0)
+   m = initial phase (0.0)
+   p = phase adjust per scanline (0.0) (should be nonzero for Famicom)
+   q = amount of spread of the Q component (24)
+   s = saturation amount (0.8)
+   t = colour subcarrier width (12.0)
+   v = quadrature shift (3/4 of the value of t)
+   y = amount of spread of the Y component (12.0)
+   z = if nonzero, the output format is YIQ instead of RGB (0)
+
+NB: there is no option to detect a burst signal.
+
+Unclear if it is the intended usage, but you can try passing a normal image
+through this filter for interesting effects.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-ntsc.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,138 @@
+.Dd 2024-05-04
+.Dt FF-WORLEY 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-worley
+.Nd farbfeld filter that apply partition by Worley/Voronoi noise
+.Sh SYNOPSIS
+.Nm
+<seed> <points> <metric> <arrangement> <colour> <alpha>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the worley filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to apply partition by Worley/Voronoi noise.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes exactly six arguments.
+
+The first argument is the random number seed.
+
+The second argument is one to three numbers with commas in between:
+   - how many closest points to consider; the farthest of them is used
+   - as above, but a secondary number (used in some cases)
+   - the amount of noise to add to the distance (fractions are allowed)
+
+The third argument is the metric to use:
+   a --
+   b -- biased manhattan; horizontal distances are multiplied by the parameter
+        to define the bias amount
+   c -- chebyshev
+   d -- diagonal
+   e -- euclidean - optionally specify parameters which are the amount to add
+        to the horizontal distance, and the amount to add to the vertical
+        distance, before making the calculation (e.g. e,4,5)
+   m -- manhattan
+   p -- product - the optional parameter is used for biasing
+   r -- random
+
+The fourth argument is the method of arranging the Voronoi points:
+   b -- make a grid, taking four parameters:
+        - cell width (horizontal cell size)
+        - cell height (vertical cell size)
+        - the minimum number of points per cell
+        - the maximum number of points per cell
+        It then places that many points inside the cell at random.
+   c -- arrange points in concentric circles, taking four parameters:
+        - number of points per circle
+        - number of circles
+        - third parameter is 1 to add a centre point or 0 otherwise
+        - how far out to make the circles
+   e -- put one random point per scanline
+   g -- make a grid with one point in the middle of each cell, parameters:
+        - cell width (horizontal cell size)
+        - cell height (vertical cell size)
+        - maximum amount to disturb the point position at random from the
+          middle (horizontally)
+        - maximum amount to disturb the point position at random from the
+          middle (vertically)
+        - optional - can be used to make a staggered grid in order to emulate
+          a hex grid
+        - as above
+   r -- place points entirely at random, parameters:
+        - how many points to randomly place
+
+The fifth argument is the function to determine the colour of the pixel:
+   a -- copy the colour of the point half way between the actual point and the
+        nearest Voronoi point
+   b --
+   c --
+   d --  average this point and the half way point
+   e --
+   f --  use the alpha channel to determine what fraction of the distance from
+         the actual to the Voronoi point to go, to determine what pixel to
+         copy, optional parameters:
+         - amount of extra adding
+         - take the actual distance into account
+   g --
+   h --  copy the colour of the actual point
+   m --  copy the colour of the Voronoi point, unless it is too far away in
+         which case copy the colour of the actual point instead, parameters:
+         - how much is too far away (by a factor of twenty)
+   n --  copy the colour of the Voronoi point
+   o --  adjust the colour of the actual point by the distance, using the
+         first parameter as a multiplier for the distance
+   q --
+   s --
+   u --
+   v --
+   w --
+   x --  use the X coordinate of the nearest Voronoi point and the Y
+         coordinate of the actual point
+   y --  use the X coordinate of the actual point and the Y coordinate of the
+         nearest Voronoi point
+   z --  one of the XY coordinates is taken from the actual point and the
+         other from the Voronoi point, in order to decide which pixel to copy
+         (each pixel alternates between which X/Y is in use)
+
+The sixth argument is the function to determine the alpha value of the pixel:
+   c --
+   d --
+   g --
+   h --  do not change the alpha value
+   i --  use the index number of the nearest point as the alpha value
+         (this can be used with
+.Xr ff-outline 1
+and
+.Xr ff-back 1
+to outline each Voronoi region)
+   j --
+   k --
+   n --  copy the alpha value from the nearest Voronoi point
+   x --
+   y --
+
+For the third to sixth arguments, after the letter can specify the parameters
+to those modes by putting a comma and then a number (must be an integer); this
+can be uses multiple times for multiple parameters (e.g. a,4,2).
+.Sh EXAMPLES
+$
+.Nm
+3911 29,42,0.95 b r,500 d h < image.ff > image-worley.ff
+.Sh SEE ALSO
+.Xr ff-back 1 ,
+.Xr ff-outline 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

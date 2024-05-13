@@ -1,0 +1,43 @@
+.Dd 2024-03-23
+.Dt FF-UNIQ 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-uniq
+.Nd delete duplicate tiles from a vertical strip
+.Sh SYNOPSIS
+.Nm
+<height>
+.Sh DESCRIPTION
+.Nm
+takes a vertical strip as input and produces as output the vertical strip with all duplicate tiles
+removed.
+If the input is not a vertical strip then use
+.Xr ff-strip 1 ,
+to make it so.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Takes exactly one argument, which is the height of one tile.
+.Sh EXAMPLES
+$
+.Nm
+14 < vertical_strip.ff > vertical_strip_unique.ff
+.Pp
+$ ff-strip 14 14 1 < tile_set.ff |
+.Nm
+14
+> vertical_strip_unique.ff
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr ff-strip 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

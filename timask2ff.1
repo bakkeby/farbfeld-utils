@@ -1,0 +1,48 @@
+.Dd 2023-11-10
+.Dt TIMASK2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm timask2ff
+.Nd convert TeXnicard image mask to farbfeld
+.Sh SYNOPSIS
+.Nm
+<?width?> <?height?>
+.Sh DESCRIPTION
+.Nm
+reads a TeXnicard image mask from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+TeXnicard image mask format is a file format for storing compressed monochrome transparency masks
+for pictures. It uses a variant of a combination of 2D RLE with Elias gamma.
+
+All output is black, but the alpha channel is set according to the input. The X/Y offset in the
+input file is ignored.
+
+.Nm
+takes two optional arguments that allows for the height and width of the output image to be
+overridden. By default the height and width are taken from the farbfeld image itself.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.mask > image.ff
+.Pp
+$
+.Nm
+200 180 < image.mask | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr ff2timask 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,68 @@
+.Dd 2024-05-11
+.Dt FF-DICE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-dice
+.Nd farbfeld program that can dice a picture into many slices, and execute a command for each one
+.Sh SYNOPSIS
+.Nm
+<slice width> <slice height> <?shell command?> <?env prefix?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, splits it into many slices, executes a command for each slice, and writes the
+result to stdout.
+.Pp
+.Xr ff-hjoin 1
+and
+.Xr ff-vjoin 1
+can be used to glue pictures together again after processing.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes up to four arguments:
+   - width of one slice
+   - height of one slice
+   - shell command to execute for each slice (optional)
+   - prefix for environment variable names (optional)
+
+The height and width will be capped by the maximum size of the input file, so
+if you want slices 300 pixels wide and the full height then you can just give
+a very high number for the height.
+
+The specified shell command is required to consume the entire input. If no
+shell command is specified, it acts like "cat" was specified (although it
+is more efficient).
+
+When executing the command, the picture is given on stdin, and anything from
+stdout is forwarded to this program's stdout. If the error code is nonzero,
+then this program also terminates with the same error code.
+
+Also some environment variables are set:
+   X = zero-based horizontal number of the slice in its row
+   Y = zero-based vertical number of the slice in its column
+   Z = zero-based slice number
+   W = width of this slice
+   H = height of this slice
+
+(W and H are provided for convenience to avoid having to copy the input to
+find this information)
+.Sh EXAMPLES
+$
+.Nm
+300 40000 'cat > SLICE_$Z.ff' < iamge.ff
+.Sh SEE ALSO
+.Xr ff-hjoin 1 ,
+.Xr ff-vjoin 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

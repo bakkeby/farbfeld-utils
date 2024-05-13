@@ -1,0 +1,50 @@
+.Dd 2024-05-03
+.Dt FF-ROTATE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-rotate
+.Nd farbfeld filter that rotates an image by three shears
+.Sh SYNOPSIS
+.Nm
+<degrees>
+.Nm
+<horz shear amount> <vertical shear amount>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the three shears rotate filter and writes the result to stdout.
+.Pp
+For simple flip or 90 degree rotation refer to
+.Xr ff-turn 1 .
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one or two arguments:
+   - with one argument, it is the angle in degrees
+   - with two arguments, they are the horizontal and vertical shear amounts
+.Sh EXAMPLES
+$
+.Nm
+90.0 < image.ff > image-rotate-3shears.ff
+.Pp
+$
+.Nm
+-400.0 < image.ff > image-skewed.ff
+.Pp
+$
+.Nm
+0 400.0 < image.ff > image-vertical-skew.ff
+.Sh SEE ALSO
+.Xr ff-turn 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

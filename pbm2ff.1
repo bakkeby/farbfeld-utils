@@ -1,0 +1,55 @@
+.Dd 2023-11-25
+.Dt PBM2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm pbm2ff
+.Nd convert Netpbm formatted image to farbfeld
+.Sh SYNOPSIS
+.Nm
+<?page number?>
+.Sh DESCRIPTION
+.Nm
+reads a Netpbm formatted image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+The Netpbm formats are a family of simple uncompressed raster image file
+formats, associated with the Netpbm library and suite of image processing
+utilities.
+
+There are five Netpbm formats:
+   - PBM (portable bitmap) - a bi-level image format
+   - PGM (portable graymap) - a grayscale image format
+   - PPM (portable pixmap) - a colour image format
+   - PNM (portable anymap) - a collective name for PBM, PGM, and PPM
+     A .pnm file may use any of these formats.
+   - PAM (portable array map) - a colour image format with transparency (RGBA)
+
+This decoder does not support the PAM format.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The decoder takes an optional argument which if specified is a zero-based page
+number (the default is zero). Text based encodings does not support page numbers.
+.Sh EXAMPLES
+$
+.Nm
+< image.pbm > image.ff
+.Pp
+$
+.Nm
+< image.pbm | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr ff2pbm 1,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

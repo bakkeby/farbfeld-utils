@@ -1,0 +1,52 @@
+.Dd 2024-03-29
+.Dt PS2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ps2ff
+.Nd convert PostScript to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads PostScript from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+This decoder uses the Ghostscript (libgs) library to process the data.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The command line arguments are the same as in Ghostscript, although some (such
+as -q) are already set.
+
+If no filename is specified, then it will read a PostScript program from stdin
+and execute it (use -dBATCH to suppress this).
+
+Only the first page will be rendered. You can use -sPageList= to specify which
+page you want.
+
+Use -g and -r to set the picture size and dots per inch.
+
+Changing the output file with -sOutputFile= or -o has no effect; it will
+always write to stdout.
+
+If the PostScript program writes to stdout, it will write that data to stderr
+instead; this way, stdout is used only for the picture itself.
+.Sh REFERENCES
+https://ghostscript.readthedocs.io/en/latest/Use.html
+.Sh EXAMPLES
+$
+.Nm
+< postscript > image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

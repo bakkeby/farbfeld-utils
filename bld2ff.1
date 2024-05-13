@@ -1,0 +1,70 @@
+.Dd 2023-10-26
+.Dt BLD2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm bld2ff
+.Nd convert MegaPaint BLD image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a MegaPaint BLD image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+MegaPaint BLD is the main native raster graphics format of MegaPaint. There were editions of
+MegaPaint for Atari ST, MS-DOS, and Windows.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh FORMAT DETAILS
+
+The BLD format.
+.Bd -literal -offset left
+┌────────┬─────────────────┬──────────────────────────────────────────────────┐
+│ Offset │ Type            │ Details                                          │
+├────────┼─────────────────┼──────────────────────────────────────────────────┤
+│    0   │ signed int16 BE │ Code for the image width and compression scheme. │
+│        │                 │ Actual width is 1 + the a┐bsolute value of this  │
+│        │                 │ field. If negative, image is compressed.         │
+│    2   │ signed int16 BE │ Code for the image height. Actual height is 1 +  │
+│        │                 │ the value of this field.                         │
+│    4   │ bytes           │ The pixel data. After decompression if necessary │
+│        │                 │ the format is 1 bit/pixel, white-is-zero. Rows   │
+│        │                 │ are padded to the next byte boundary.            │
+└────────┴─────────────────┴──────────────────────────────────────────────────┘
+.Ed
+.Pp
+.Sh DECOMPRESSION ALGORITHM
+.br
+Read the next byte, follow the instructions below, repeat.
+.Bd -literal -offset left
+┌───────────────┬─────────────────────────────────────────────────────────────┐
+│ Code byte (N) │ Instructions                                                │
+├───────────────┼─────────────────────────────────────────────────────────────┤
+│ N=0 or N=255  │ Read the next byte (C). Emit C+1 bytes of value N.          │
+│ Any other     │ Emit 1 byte of value N.                                     │
+└───────────────┴─────────────────────────────────────────────────────────────┘
+.Ed
+.Sh OPTIONS
+The program takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.bld > image.ff
+.Pp
+$
+.Nm
+< image.bld │ bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

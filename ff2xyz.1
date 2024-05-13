@@ -1,0 +1,101 @@
+.Dd 2024-03-28
+.Dt FF2XYZ 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2xyz
+.Nd convert farbfeld to .XYZ picture files to use with RPG Maker and EasyRPG
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts it to .XYZ and writes the result to stdout.
+
+The file format consists of:
+   - ASCII text XYZ1
+   - Small-endian 16-bit width
+   - Small-endian 16-bit height
+   - Zlib compressed data stream
+
+The zlib stream contains 256 palette entries, followed by the raster data (in
+the usual progressive television order). The palette entries consist of three
+bytes each, being red, green, and blue values. Each pixel of raster data is
+one byte which is an index into the palette.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The encoder can optionally take command-line arguments.
+
+Each argument is a separate setting. Each setting consists of one letter (or other character)
+followed by the value (with no delimiter).
+
+Valid settings are:
+
+.Bl -tag -width Ds
+.It +
+No value is used. All remaining arguments specify the palette. This palette does not support
+16-bits per channel. Mandatory if c3 is specified; otherwise it is only a suggested palette.
+.It b
+Specify zero to disable DEFLATE compression. You can also specify one to use a fixed Huffman tree.
+The default setting is two.
+.It e
+Some extra settings (using an unofficial version of LodePNG). These are up to five numbers with
+commas in between. The first number is the DEFLATE block size (specify -1 to use a single block),
+the second number is the max chain length, the third number is the max lazy match, the fourth
+number is a bit field described below, and the fifth number is the maximum distance for matches
+of length 3 (default 4096). For the first three settings, 0 means use default.
+.It f
+Specify palette strategy. Either 0 (default) or 1 (alternative). The palette strategy is unused if you the
+palette is specified. It is always lossless regardless of which palette strategy is specified,
+although some pictures might compress better with one or the other palette strategy.
+.It l
+Specify zero to disable lazy matching, or one to enable lazy matching (the default setting). Lazy
+matching result better compression but is slower.
+.It m
+Minimum LZ77 length, normally 3. Some pictures will compress better if it is 6 instead.
+.It n
+Specify the maximum LZ77 length to search; stop after searching this length. The default is 128,
+and the maximum is 258.
+.It u
+Specify zero to disable LZ77 compression.
+.It w
+The window size for LZ77 compression, which is a power of two from 1 to 32768. The default value
+is 2048, although using 32768 can usually result in improved compression.
+.El
+
+Note that it will automatically set the bit depth and/or palette as needed in order to encode the
+picture losslessly. Which settings result in best compression can depend on the picture, and are
+not necessarily the same as the recommendations specified above.
+
+The bit field described for the fourth number for "e" is as follows:
+
+.Bl -tag -width Ds
+.It 1
+Consider strings of zeros (default).
+.It 2
+Make the final block larger so that a small block isn't encoded.
+.El
+.Sh REFERENCES
+https://lodev.org/lodepng/
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.png
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+> image.png
+.Sh SEE ALSO
+.Xr xyz2ff 1 ,
+.Xr bzip2 1 ,
+.Xr farbfeld 5

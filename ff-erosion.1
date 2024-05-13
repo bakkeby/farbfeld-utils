@@ -1,0 +1,61 @@
+.Dd 2024-04-30
+.Dt FF-EROSION 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-erosion
+.Nd farbfeld filter that generates erosion by raining
+.Sh SYNOPSIS
+.Nm
+<?opt=value?> <?opt=value?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the erosion filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to generate erosion by raining.
+
+Only the red channel of the input is used; the output is same red, green, blue
+channels, and all pixels are opaque.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes zero or more arguments, where each argument is a letter
+followed by an equal sign and a value. Many values can be floating numbers,
+but not all.
+
+The possible options are:
+   b -- output level (default 1.0)
+   c -- output colours (default 0)
+   d -- deposit speed (default 0.2)
+   e -- threshold for random directions (default 1.0e-8)
+   g -- gravity (default 40.0)
+   i -- inertia (default 0.1)
+   m -- slope limit (default 0.05)
+   n -- number of iterations (default 1)
+   q -- carrying capacity (default 10.0)
+   r -- erosion speed (default 0.9)
+   s -- random number seed (default 1)
+   w -- water evaporation speed (default 0.001)
+   x -- erosion multiplier (default 0.1591549430918953)
+   z -- maximum steps per iteration (default 4 * MAX(width,height))
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-erosion.ff
+.Pp
+$
+.Nm
+c=1 b=1.5 < image.ff > image-erosion.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

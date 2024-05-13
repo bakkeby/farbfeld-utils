@@ -1,0 +1,59 @@
+.Dd 2023-11-09
+.Dt PMART2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm pmart2ff
+.Nd convert Palette Master ART image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a Palette Master ART image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+Palette Master is an obscure paint program for the Atari ST, developed by
+Kevin Cowtan. It uses palette switching to display more than 16 colors at a
+time. It has a native .ART image format.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh FORMAT DETAILS
+The files are exactly 36864 bytes in length and consists of two areas. First is the picture area,
+which is 32768 bytes long. Second is the palette area, which is 4096 bytes long. All numbers are in
+big-endian format.
+.Pp
+The picture is stored in television order with no gaps between scanlines, and is always 320x200.
+Each 16x1 area of pixels is stored as four 16-bit words, where the high-bit of each 16-bit word
+corresponds to the left pixel; each 16-bit word is one plane, where the low plane comes first.
+.Pp
+Note: There are 768 unused bytes at the end of the picture.
+.Pp
+The palette area stores the palettes. The first one stores sixteen colours in the format described
+for Atari ST color palette. The others are the same except that colour index 0 is not stored (it is
+the same for the entire picture); instead, the first 16-bit number is the (zero-based) scanline
+number to start using this palette (it is then used until it is changed again). They are stored in
+monotonic increasing order by scanline number; at the end, scanline number -1 (or 65535) means there
+are no more palettes.
+.Sh OPTIONS
+The program takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.avs > image.ff
+.Pp
+$
+.Nm
+< image.avs | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

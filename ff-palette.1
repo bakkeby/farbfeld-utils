@@ -1,0 +1,66 @@
+.Dd 2024-05-08
+.Dt FF-PALETTE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-palette
+.Nd farbfeld program that generates a suitable palette for a picture
+.Sh SYNOPSIS
+.Nm
+<mode> <palette size> <?colour?> <?colour?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, generate a suitable palette and writes the result to stdout.
+.Pp
+The output of this program is a textual representation of an RGB palette.
+.Pp
+The alpha channel is not included in the output.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes at least two arguments:
+   mode - the method used to generate the palette, followed by comma separated
+          list of options (with a leading comma)
+   size - the number of colours to produce for the palette
+   colour - zero or more colours to manually add to the palette, referred to
+            as palette fixes - manually specified colours will be included in
+            addition to the number of colours that the program is asked to
+            produce
+
+The available modes are:
+   p -- generates the palette
+
+Additionally the p mode must be followed by a comma and up to five values:
+   box value 1 - The box values must be integers and greater than zero,
+   box value 2   otherwise a box size out of range error will occur. These
+   box value 3   seem to controls the pixels that are to be read to work out
+                 the palette.
+   deduction - unclear what this is for; it is a fixed value that is deducted
+               from the value of every palette fix, but doesn't seem to affect
+               the output
+   repeat    - how many times the algorithm runs to work out the best colours
+
+The colours can be defined using any of the following patterns:
+   hh                single pair of 8-bit hex values; the same value is used
+                     for all channels
+   hhhh              single pair of 16-bit hex values; the same value is used
+                     for all channels
+   rrggbb            three pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+p,9,3,3,9,2 24 906060 < image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

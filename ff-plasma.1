@@ -1,0 +1,50 @@
+.Dd 2024-04-30
+.Dt FF-PLASMA 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-plasma
+.Nd farbfeld filter that applies a randomized plasma effect to a picture
+.Sh SYNOPSIS
+.Nm
+<seed> <depth> <?depth per pass?> <?opacity?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the plasma filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to apply a randomized plasma effect to a picture,
+with varying colours.
+.Pp
+The alpha channel of the input contains the probability that a pixel will be
+changed. The alpha channel is left unchanged on output.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes two, three or four arguments:
+   - random number seed
+   - total depth, can be 0 to calculate it based on the picture size
+   - amount of extra depth per pass; the default value is 1 and the minimum
+     value is 0
+   - opacity (floating point number in the range 0 to 1.0); the default value
+     is 1.0 which means fully opaque
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-plasma.ff
+.Pp
+$
+.Nm
+23 0 1 0.7 < image.ff > image-plasma.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,64 @@
+.Dd 2024-04-29
+.Dt FF-CRACK 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-crack
+.Nd farbfeld filter that creates maze-like cracked lines
+.Sh SYNOPSIS
+.Nm
+<?opt=int?> <?opt=int?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the crack filter and writes the result to stdout.
+.Pp
+Opaque pixels of the input are considered as walls, and it makes new walls
+branching from them, of the same colour. At least one pixel of the input must
+be opaque.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The arguments is a letter and then equal sign and then an integer number. All
+options are optional.
+
+The following options are available:
+   b -- maximum allowed number of opaque pixels in the clearing (as set by c)
+   c -- amount of space of clearing required
+   d -- constrain direction of branches:
+          0 = normal
+          1 = horizontal/vertical
+          2 = downward
+          3 = upward
+          4 = toward centre
+          5 = mostly horizontal
+          6 = mostly vertical
+          7 = spiral
+   e -- how much to darken new branches - from 0 to 255
+   k -- the probability to break a line early - out of 1024
+   o -- together with "c", if this is nonzero then use a circular clearing
+        instead of a square clearing
+   q -- queue length - this sets how much shorter the lines can be from the
+        next wall
+   s -- random number seed
+   u -- maximum dead cycles
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-crack.ff
+.Pp
+$
+.Nm
+s=142 u=33 d=7 q=2 < image.ff > image-crack.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,47 @@
+.Dd 2024-03-29
+.Dt FF-BLUR 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-blur
+.Nd farbfeld filter that applies Gaussian blur to the input picture
+.Sh SYNOPSIS
+.Nm
+<kernel size> <standard deviation>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies Gaussian blur and writes the result to stdout.
+.Pp
+Tip: use
+.Xr ff-border 1
+to add a border if you want the output of the Gaussian blur to be the same size as the input.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes two arguments, which are the kernel size (a positive
+integer), and the standard deviation (a nonzero real number).
+
+The kernel size is the amount that each edge of the picture is cropped, as
+well as setting the filter quality; larger numbers will result better quality
+filter.
+
+If the standard deviation is x, then the recommended kernel size is (3x+1),
+rounded up.
+.Sh EXAMPLES
+$
+.Nm
+9 2.399 < image.ff > image-blur.ff
+.Sh SEE ALSO
+.Xr ff-border 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

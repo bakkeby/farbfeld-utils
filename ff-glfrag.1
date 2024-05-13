@@ -1,0 +1,51 @@
+.Dd 2024-05-07
+.Dt FF-GLFRAG 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-glfrag
+.Nd farbfeld program that executes an OpenGL fragment program
+.Sh SYNOPSIS
+.Nm
+<width> <height> <options> <?file?> ...
+.Sh DESCRIPTION
+.Nm
+reads an OpenGL fragment program from stdin, executes it and writes the resulting
+.Xr farbfeld 5
+image to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes three or more arguments:
+   width - output image width
+   height - output image height
+   options - one or more letters (no spaces)
+   file - zero or more texture files to load
+
+The availble options are:
+   D -- disable OpenGL dither
+   M -- disable OpenGL multisample
+   S -- enable OpenGL smooth points - draw points with proper filtering
+        (by default draw aliased points)
+   U -- disable the use of shader (option provided for performance testing)
+   g -- enable maglinear (use GL_LINEAR for GL_TEXTURE_MAG_FILTER rather than
+        GL_NEAREST)
+   n -- enable minlinear (use GL_LINEAR for GL_TEXTURE_MIN_FILTER rather than
+        GL_NEAREST)
+   r -- enable rectangle textures
+        (use GL_TEXTURE_RECTANGLE rather than GL_TEXTURE_2D)
+.Sh EXAMPLES
+$
+.Nm
+640 480 DSg texture.ff < shader.gl > image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

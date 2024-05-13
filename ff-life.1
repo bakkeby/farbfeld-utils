@@ -1,0 +1,79 @@
+.Dd 2024-03-29
+.Dt FF-LIFE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-life
+.Nd farbfeld program that generates life-like cellular automata
+.Sh SYNOPSIS
+.Nm
+<?rule?> <?steps?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, generates life-like cellular automata and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes up to two arguments:
+   - rule to use, in BS notation (default is B3/S23 which is Game of Life)
+   - the number of steps (default 1)
+
+Black cells are off, white cells are on, and transparent cells are permanently
+off.
+.Sh REFERENCES
+https://en.wikipedia.org/wiki/Life-like_cellular_automaton
+.br
+https://www.jeremykun.com/2012/07/29/the-cellular-automaton-method-for-cave-generation/
+.Sh PRACTICAL EXAMPLE
+One example is cave generation, see the reference for some details about this.
+
+Use
+.Xr ff-gradient 1
+with "n" mode for random data, then use
+.Xr ff-poster 1
+to change to 1-bit-per-level.
+
+This looks like:
+   $ ff-gradient 800 800 n42 000000 FFFFFF | ff-poster 1 > life-data.ff
+
+Now you can apply the cellular automata.
+
+The buttons described may be like the following:
+   - Apply B678/S345678:
+.Nm
+B678/S345678 20
+   - Apply B5678/S5678:
+.Nm
+B5678/S5678 1
+   - Increase Resolution: ff-enlarge
+
+Combining the above:
+   $
+.Nm
+B678/S345678 20 < life-data.ff |
+.Nm
+B5678/S5678 | ff-enlarge > output.ff
+.Sh EXAMPLES
+$
+.Nm
+B678/S345678 20 < data.ff > life.ff
+.Sh SEE ALSO
+.Xr ff-conaut 1 ,
+.Xr ff-critter 1 ,
+.Xr ff-elementary 1 ,
+.Xr ff-probaut 1 ,
+.Xr ff-gradient 1 ,
+.Xr ff-poster 1 ,
+.Xr ff-enlarge 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

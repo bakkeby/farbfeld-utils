@@ -1,0 +1,58 @@
+.Dd 2024-03-28
+.Dt XZIP2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm zxip2ff
+.Nd converts XZIP picture library file to farbfeld
+.Sh SYNOPSIS
+.Nm
+<bgcolor> <fgcolor> <picture no> <?filename?>
+.Sh DESCRIPTION
+.Nm
+reads a Z-machine XZIP picture library file from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+The format was documented together with XZIP, but was not given a particular
+name. For the purpose of this documentation we refer to it as the XZIP
+picture library format. It is not the same format as the more common "YZIP
+picture library" format, of which there are several variants.
+
+The version of the file format with the index table is not implemented.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+.Nm
+takes three or four arguments.
+
+The first and second arguments are the background and foreground colours,
+which can have these patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+The third argument is the picture number.
+
+In place of the picture number you may also specify "a" or "n". If "a"
+is specified, then this is only valid if the picture library is a "character
+set", and causes it to output all of them in a vertical strip. If "n" is
+specified, a fourth argument gives the case-sensitive DOS filename of the
+picture (may have the extension .qqq).
+.Sh EXAMPLES
+$
+.Nm
+A06060 222222 0 < image.xzip > image.ff
+.Sh SEE ALSO
+.Xr ff2xzip 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

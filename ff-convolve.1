@@ -1,0 +1,67 @@
+.Dd 2024-05-05
+.Dt FF-CONVOLVE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-convolve
+.Nd farbfeld filter that applies a convolution matrix
+.Sh SYNOPSIS
+.Nm
+<divide amount> <bias amount> <matrix data>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the convolve filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to apply a convolution matrix.
+.Pp
+A convolution matrix can be used for blurring, sharpening, embossing, edge
+detection and more.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The first argument is the divide amount; if zero, then it will select the
+pixel in range that has the largest value when multiplied by the element in
+the convolution matrix.
+
+The second argument is the bias amount, which is added to the result of the
+convolution (after division) to determine the output value. They can be
+positive or negative or zero. It is irrelevant if the divide amount is zero.
+
+The rest of the arguments is the matrix data, which is one integer each (they
+can be positive or negative or zero).
+
+Valid sizes are:
+   3x3 matrix
+   5x5 matrix
+   7x7 matrix
+
+Other sizes are not acceptable.
+
+Note that the edges of the input picture will be cropped, since there is not
+enough data near the edges to compute the convolution. Use
+.Xr ff-border 1
+to add a
+border first if you want to end up having the same size; in this case the type
+of border will specify the data to use at the edges.
+.Sh EXAMPLES
+$
+.Nm
+1 0 0 1 0 1 -4 1 0 1 0 < image.ff > edge-detect.ff
+.Pp
+$
+.Nm
+2 0 -2 -1 0 -1 1 1 0 1 2 < image.ff > emboss.ff
+.Sh SEE ALSO
+.Xr ff-border 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

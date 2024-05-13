@@ -1,0 +1,47 @@
+.Dd 2024-04-03
+.Dt FF-ICOSA 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-icosa
+.Nd psychedelic icosahedral fractal picture generator
+.Sh SYNOPSIS
+.Nm
+<width> <height> <scale amount> <?seed?> <?option?>
+.Sh DESCRIPTION
+.Nm
+generates psychedelic icosahedral fractal pictures in
+.Xr farbfeld 5
+image format and writes the result to stdout.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes up to five arguments:
+   - width
+   - height
+   - scale amount (not necessarily an integer)
+   - random seed (optional)
+   - option (integer from 0 to 127)
+
+The option defaults to 0 and has various effects.
+.Sh EXAMPLES
+$
+.Nm
+640 480 68.83 1.49 > image-icosa.ff
+.Pp
+$
+.Nm
+640 480 281.83 41.49 89 > image-icosa.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

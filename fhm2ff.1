@@ -1,0 +1,56 @@
+.Dd 2024-03-26
+.Dt FHM2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm fhm2ff
+.Nd convert Hero Mesh .IMG lump file to farbfeld
+.Sh SYNOPSIS
+.Nm
+<picture number>
+.Sh DESCRIPTION
+.Nm
+reads a .IMG lump from a Free Hero Mesh file via stdin, extracts pictures and converts them to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+Free Hero Mesh is a free/open-source puzzle game engine where you can define your own classes of
+objects using the Free Hero Mesh programming language.
+.Pp
+A Free Hero Mesh .xclass file is a Hamster archive containing lumps with extension .IMG and .DEP
+and .MUL and .WAV.
+.Pp
+Pass only the contents of the .IMG lump on stdin; not the entire .xclass file.
+You can use har to extract the lump you want.
+.Pp
+The .DEP lumps cannot be read by this program.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh Options
+The command-line argument is the picture number from 0 to 15; the different
+pictures are alternative sizes of the same thing.
+
+Also see:
+   - http://fileformats.archiveteam.org/wiki/Free_Hero_Mesh_class_resource_file
+   - http://zzo38computer.org/fossil/heromesh.ui/index
+   - https://chiselapp.com/user/zzo38/repository/freeheromesh/info/27aef9b
+.Sh EXAMPLES
+$
+.Nm
+3 < lump.IMG > image.ff
+.Pp
+$
+.Nm
+0 < lump.IMG > image.ff
+.Sh SEE ALSO
+.Xr mb2ff 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

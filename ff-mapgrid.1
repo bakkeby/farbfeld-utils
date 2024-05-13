@@ -1,0 +1,104 @@
+.Dd 2024-05-12
+.Dt FF-MAPGRID 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-mapgrid
+.Nd farbfeld program that generates a map grid
+.Sh SYNOPSIS
+.Nm
+<def_file.txt> <map_file.txt>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+tile set from stdin, places tiles according to the instructions and writes the
+result to stdout.
+.Pp
+This program takes as input a picture with the map tiles.
+.Pp
+The general idea is that the program takes a tile set and uses input rules to
+place those tiles before writing the output picture to standard out.
+.Pp
+It should be noted that this program is documented being untested.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes two arguments:
+   - the definition file name
+   - the map file name
+
+The general format of these two files is an option letter followed by a number
+value, optionally followed by a space and another number value. Then one or
+more lines of options.
+.Sh DEFINITION FILE FORMAT OPTIONS
+The definition file format options are:
+   D -- initialise all pieces; arguments are width followed by space followed
+        by height - if only one value is provided then that will be used for
+        both the width and height
+   P -- sets the priority modes to the first value and the priority shift to
+        the second value - the following modes are available:
+           1 -- al-=oy>>priority_shift
+           2 -- al-=(oheight-oy-h)>>priority_shift
+           3 -- al-=ox>>priority_shift
+           4 -- al-=(owidth-ox-w)>>priority_shift
+           5 -- a=y<<priority_shift
+           6 -- a=(gheight-y-1)<<priority_shift
+           7 -- a=x<<priority_shift
+           8 -- a=(gwidth-x-1)<<priority_shift
+           9 -- al = random number out of 255
+        (al is probably short for alignment)
+   T -- sets up to 8 X/Y transformation values
+   W -- sets the wrap mode; takes one argument which is one or two letters:
+           h -- enable horizontal wrapping
+           v -- enable vertical wrapping
+   r -- sets the rule for the given piece, the characters that follows are the
+        rule option, which is a single character:
+           n --
+           m --
+           - -- neither of the above
+   a -- sets the current rule act - if the value is starts with ^ then the
+        value that follows will have an xor 64 applied
+   d -- set the size of the current piece; arguments are width followed by
+        space followed by height - if only one value is provided then that
+        will be used for both the width and the height
+   m -- check if the current rule matches, the matching type should be one of:
+           ^ -- value xor 64
+           - -- value or 128
+           ? -- set match to 255
+   n -- sets the current rule act to the given value
+   o -- sets the current piece option and associated value, the available
+        options are:
+           0 -- if phase goto next
+           1 -- if not phase goto next
+           a --
+           c -- do connection
+           r -- random
+           C --
+   p -- sets the current rule probability to the given value
+   x -- sets the piece x position to the given value
+   y -- sets the piece y position to the given value
+   @ -- select the piece with the given value - if the value starts with ^
+        the value that follows will have xor 64 applied
+        (this also unsets the current rule)
+.Sh MAP FILE FORMAT OPTIONS
+The map file format options are:
+   g -- sets the grid size; argument values are the width followed by space
+        followed by height
+   s -- sets the seed value based on the given argument
+   - -- start a new row
+.Sh EXAMPLES
+$
+.Nm
+def_file.txt map_file.txt < tileset.ff > image-mapgrid.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

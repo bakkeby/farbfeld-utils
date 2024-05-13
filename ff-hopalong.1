@@ -1,0 +1,51 @@
+.Dd 2024-05-08
+.Dt FF-HOPALONG 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-hopalong
+.Nd farbfeld program that draws a picture using HOPALONG attractors
+.Sh SYNOPSIS
+.Nm
+<width> <height> <count> <xmin> <xmax> <ymin> <ymax> <A> <B> <C> <X> <Y>
+.Sh DESCRIPTION
+.Nm
+generates a
+.Xr farbfeld 5
+image using HOPALONG attractors and writes the result to stdout.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes exactly 12 arguments:
+   width
+   height
+   count
+   xmin
+   xmax
+   ymin
+   ymax
+   A
+   B
+   C
+   X
+   Y
+
+The above arguments affects the algorithm and have no clear description. All
+of the arguments from xmin to Y can be float values.
+.Sh EXAMPLES
+$
+.Nm
+640 480 33360 0 640 0 480 43 12 19 320 240 < image.ff > image-hopalong.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

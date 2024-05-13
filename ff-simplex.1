@@ -1,0 +1,77 @@
+.Dd 2024-05-04
+.Dt FF-SIMPLEX 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-simplex
+.Nd farbfeld filter that generates OpenSimplex noise
+.Sh SYNOPSIS
+.Nm
+<width> <height> <X scale> <Y scale> <?seed?>
+.Nm
+<width> <height> <X scale> <Y scale> <seed> <z> <z> <z>
+.Nm
+<width> <height> <X scale> <Y scale> <seed> <z> <z> <w> <w>
+.Nm
+<width> <height> <X scale> <Y scale> <seed> <z> <w> <z> <w> <z> <w> <float> <float>
+.Sh DESCRIPTION
+.Nm
+program generates OpenSimplex noise as a
+.Xr farbfeld 5
+image and writes the result to stdout.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes several arguments.
+
+The first five arguments are:
+   - width
+   - height
+   - X scale (a floating number)
+   - Y scale (a floating number)
+   - seed (optional)
+
+If there are no further arguments, the result has 4D noise in the red channel,
+3D noise in the green channel, and 2D noise in the blue channel; the Z and W
+coordinates are always zero in all cases.
+
+If there are three additional arguments, they are floating numbers giving Z
+coordinates of each channel; all channels are then 3D noise.
+
+If there are four additional arguments, they are floating numbers; it makes
+grey scale 2D noise, using the numbers to perturb the noise with itself.
+
+If there are six additional arguments, they are pairs of Z and W coordinates
+for each channel; all channels are then 4D noise.
+
+If there are eight additional arguments, then 2D noise is used as input
+coordinates for other 2D noise. The red channel is the final output, the green
+channel is the intermediate Y output, and the blue channel is the intermediate
+distance output.
+
+The seed is mandatory if any additional arguments are given.
+.Sh EXAMPLES
+$
+.Nm
+640 480 0.9 1.32 > image-simplex.ff
+.Pp
+$
+.Nm
+640 480 1.2 0.0 443 > image-simplex.ff
+.Pp
+$
+.Nm
+640 480 1.0 1.0 313 0.5 0.9 1.3 > image-simplex.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

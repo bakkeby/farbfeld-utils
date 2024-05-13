@@ -1,0 +1,36 @@
+.Dd 2024-03-29
+.Dt XORL2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm xorl2ff
+.Nd converts XORLINES-2 format to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads XORLINES-2 format from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+The context around the XORLINES-2 format is not documented.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This decoder takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.xorl > image.ff
+.Sh SEE ALSO
+.Xr ff2xorl 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

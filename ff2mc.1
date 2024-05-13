@@ -1,0 +1,94 @@
+.Dd 2023-10-25
+.Dt FF2MC 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2mc
+.Nd convert farbfeld to Macrocell image
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts it to Macrocell and writes the result to stdout.
+.Pp
+The Macrocell format is used for storing cellular automata. Its structure
+mirrors that of the HashLife algorithm, and is accordingly efficient for
+storing large, complex patterns.
+
+The format is used by the open source cross-platform application Golly for
+exploring Conway's Game of Life and many other types of cellular automata.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh FORMAT DETAILS
+The size of an Extended RLE file is frequently proportional to the number of cells it contains, yet
+Golly supports universes that can contain trillions of cells or more, using hashlife-based
+algorithms. The storage of these huge universes, for which Extended RLE is not feasible, is done by
+essentially dumping the in-memory compressed representation of the universe in "Macrocell format".
+Since little translation need be done between external and internal representation, this format is
+also used to store backups of universes at certain points in Golly's operation when using one of the
+hashlife-based algorithms.
+
+The macrocell format has two parts: the header, and the tree. The first portion of the file is the
+header; this contains the format identifier, the rule, the generation count (if non-zero), and any
+comments associated with this file. The format identifier is a line that starts with "[M2]" and
+contains the name and version of the program used to write it:
+
+      [M2] (golly 2.0)
+
+Following this is any comment lines, which are lines that begin with '#'. If the first two
+characters of a line are '#R', then the remainder of the line (after intervening whitespace) is the
+rule for the pattern. If the first two characters are '#G', then the remainder of the line is the
+current generation count. Any other line starting with a '#' is treated as an ordinary comment line.
+
+Following the header is is a child-first textual representation of a canonicalized quadtree. Each
+line is either a leaf node, or a non-leaf node. For two-state algorithms, the leaf nodes contain an
+8x8 pixel array in a simplified raster format, left-to-right, then top-down, with "." representing
+an empty cell, "*" representing a live cell, and "$" representing the end of line; empty cells at
+the end of each row are suppressed. No whitespace is permitted; lines representing leaf nodes for
+two-state algorithms are recognized because they start with ".", "*", or "$". A sample leaf node
+containing a glider is:
+
+      $$..*$...*$.***$$$$
+
+For algorithms with more than two states, leaf nodes represent a two-by-two square of the universe.
+They contain five integers separated by single spaces; the first integer is 1, and the next four are
+the state values for the northwest, northeast, southwest, and southeast values of the square.
+
+Nodes with children are represented by lines with five integers. The first integer is the logarithm
+base 2 of the size of the square this node representes; for two-state patterns, this must be 4 or
+larger; for multi-state patterns, this must be 2 or larger. The next four values are the node
+numbers of the northwest, northeast, southwest, and southeast child nodes. Each of these child nodes
+must be the appropriate size; that is, a square one fourth the area of the current node.
+
+All nodes, both leaf and non-leaf, are numbered in the order they occur in the file, starting with
+1. No node number can point to a node that has yet been defined. The special node number "0" is used
+to represent all squares that have no live cells.
+
+The total universe represented by a macrocell file is that of the last node in the file (the root
+node), which also must be the single node with the largest size. By convention, the upper left cell
+of the southeast child of the root node is at coordinate position (x=0,y=1).
+
+Macrocell files saved from two-state algorithms and from multi-state algorithms are not compatible.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.mc
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+> image.mc
+.Sh SEE ALSO
+.Xr mc2ff 1,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

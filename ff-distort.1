@@ -1,0 +1,171 @@
+.Dd 2024-04-30
+.Dt FF-DISTORT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-distort
+.Nd farbfeld filter that distorts a picture by applying distortions to positions for each pixel
+.Sh SYNOPSIS
+.Nm
+<?+size?> <interpolation> <width> <height> <?distortion?> <?distortion?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the distort filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to distort a picture by applying distortions to
+positions for each pixel.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes at least four or five arguments:
+   size -- reduces (crops) the size of the input by size pixels, specified by
+           a + followed by the number of pixels
+   interpolation mode -- affects how the input data is read
+   output width -- output size, does not have to match aspect ratio
+   output height -- as above
+   distortion modes -- 0 or more distortion modes to apply to the output data
+
+The interpolation modes available are:
+   a -- average interpolation (creates dots) - takes one value:
+        exponent - e.g. 1.0
+   c -- cubic interpolation, takes no values
+   l -- linear interpolation, takes no values
+   m -- multivariate interpolation (creates blur) - takes up to 5 arguments:
+        total exponent
+        total
+        x adjustment - in pixels
+        y adjustment - in pixels
+        exponent
+   n -- not-a-number (NaN) interpolation, takes no values
+   t -- triangular interpolation, takes 2 values:
+        minimum size restriction
+        y multiplier
+
+Interpolation is a method of estimating values between known data points, and
+decrease the amount of data required to describe curves and surfaces.
+
+The distortion modes available are:
+   a -- angle (skew) - takes 6 or 7 decimal values:
+        x adjustment - x multiplier
+        x adjustment - y multiplier
+        x adjustment - fixed value to add
+        y adjustment - x multiplier
+        y adjustment - y multiplier
+        y adjustment - fixed value to add
+        x & y adjustment - output y multiplier (optional)
+   b -- ?? - takes 5 or 6 decimal values:
+        x adjustment - fixed value
+        y adjustment - fixed value
+        radius - 3x hypotenuse multiplier
+        radius - 2x hypotenuse multiplier
+        radius - 1x hypotenuse multiplier
+        radius - fixed value to add (defaults to 1.0 - the three hypotenuse
+                 multiplier values)
+   c -- ?? (rotate and warp) - takes 3 or 6 decimal values:
+        multiplier
+        multiplier
+        multiplier
+        multiplier
+        multiplier
+        multiplier
+   d -- repeats the edge pixels to create a streaked frame, takes 2 values:
+        horizontal frame width (in pixels)
+        vertical frame width (in pixels)
+   i -- ?? (some warping effect) - takes 3 decimal values:
+        x position to start at
+        y position to start at
+        exponent
+   m -- multiplier - multiplies each x and y position with a fixed value:
+        multiplier - x and y multiplier
+   p -- repeats the top edge pixels circularly creating something that may
+        look like the rings of saturn - takes 4 or 5 decimal values:
+        value to divide x by
+        value to divide y by
+        fixed value to subtract from width
+        fixed value to subtract from height
+        multiplier (optional, defaults to 1.0)
+   q -- repeats pixels creating vertical lines, takes 4 or 5 values:
+        x multiplier
+        y multiplier
+        x offset - determines which column of the picture to start with
+        y offset - determines what line of the picture to start with
+        TAU divider - affects sinus and cosinus curves (defaults to 1)
+   r -- radial distortion? - takes three optional values:
+        degrees - can be negative, affects sinus and cosinus curves
+        x adjustment
+        y adjustment
+   s -- spacial distortion - takes 2 or 3 values:
+        multiplier - affects rotational warp
+        exponent - affects rotational warp
+        fixed value - affects rotational warp
+   t -- distortion through resize, takes no values
+   v -- as t, but source image can be cropped - takes up to 2 values:
+        horizontal cropping - must be a negative value to have an effect
+        vertical cropping - as above (defaults to the value above)
+   w -- distortion that looks like spikes, takes six values:
+        x adjustment
+        x sinus multiplier
+        x sinus y adjustment
+        y adjustment
+        y sinus multiplier
+        y sinus x adjustment
+   x -- creates a pixelated look when resizing an image, takes 2 values:
+        x multiplier
+        y multiplier
+   y -- affects the roughness of edges on an image with transparency
+        x multiplier (0 to 65535)
+
+Some interpolation and distortion modes can take one or more decimal input
+values that can have various effects. These can be specified by adding a : or
+a , character followed by a decimal value. Additional values can be added by
+adding another colon or comma followed by another decimal.
+E.g. "ai:0,0,0.97" or "d,40,40".
+.Sh EXAMPLES
+$
+.Nm
++330 l 640 480 y < image.ff > image-distort.ff
+.Pp
+$
+.Nm
+l 640 480 d:40,40 < image.ff > image-distorted-frame.ff
+.Pp
+$
+.Nm
+l 640 480 i:0,0,0.97 < image.ff > image-distorted.ff
+.Pp
+$
+.Nm
+l 640 480 p:1.5,1.5,0,0 < image.ff > image-circles.ff
+.Pp
+$
+.Nm
+l 640 480 q:1,1,500,1440,2 < image.ff > vertical-lines.ff
+.Pp
+$
+.Nm
+l 640 480 r:336,100,40 < image.ff > image-distorted.ff
+.Pp
+$
+.Nm
+l 640 480 s:40,0.75,40 < image.ff > rotated-warped.ff
+.Pp
+$
+.Nm
+l 640 480 w:30,1.0,0,10,1.0,0 < image.ff > rotated-warped.ff
+.Pp
+$
+.Nm
+m:1.25,15,100,0,1.5 800 400 y:20000 < image.ff > blur.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

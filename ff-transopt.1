@@ -1,0 +1,50 @@
+.Dd 2024-05-04
+.Dt FF-TRANSOPT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-transopt
+.Nd farbfeld program that clears transparent pixels
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the transopt program and writes the result to stdout.
+.Pp
+This farbfeld program changes transparent pixels to zero (for optimization).
+.Pp
+If the alpha channel is zero, then the red, green, and blue channels also are
+set to zero.
+.Pp
+Doing this may allow for better compression.
+.Pp
+Optionally a threshold value can be specified; if the alpha channel is less or
+equal to the threshold value then all channels are set to zero.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes one optional argument which is the threshold value.
+.Pp
+If the alpha channel is less or equal to the threshold value then all channels
+are set to zero.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-transopt.ff
+.Pp
+$
+.Nm
+24000 < image.ff > image-transopt.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

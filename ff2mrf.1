@@ -1,0 +1,49 @@
+.Dd 2023-11-09
+.Dt FF2MRF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2mrf
+.Nd convert farbfeld image to Monochrome Recursive Format (MRF)
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts it to Monochrome Recursive Format (MRF) and writes the result to stdout.
+.Pp
+MRF is a bi-level raster image file format developed by Russell Marks. MRF
+images are always compressed. The compression scheme is somewhat unusual, and
+involves recursively subdividing tiles until each is a single color.
+.Pp
+Only the high bit of the red channel of the input is used.
+.Pp
+Refer to
+.Xr mrf2ff 1
+for details on the MRF format.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.mrf
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+> image.mrf
+.Sh SEE ALSO
+.Xr mrf2ff 1,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

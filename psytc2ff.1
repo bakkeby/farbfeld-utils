@@ -1,0 +1,59 @@
+.Dd 2024-03-23
+.Dt PSYTC2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm psytc2ff
+.Nd convert Psycopathicteen Tile Compressor graphics to farbfeld
+.Sh SYNOPSIS
+.Nm
+<?palette?>
+.Sh DESCRIPTION
+.Nm
+reads a psytc file from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+Psycopathicteen Tile Compressor is a experimental format for compressing 4
+bits per pixel indexed colours picture (such as using on Super Nintendo).
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh Options
+The arguments are the colours to use for the palette.
+
+If the palette is stored in the picture file then no arguments are allowed,
+otherwise the palette must be specified.
+
+The palette consists of 16 colours, where each colour can have one of these
+patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+If the only argument is - then it will output text (with ANSI colours) instead
+of the picture; this text is an explanation of the compression used.
+
+Also see:
+   - http://zzo38computer.org/fossil/farbfeld.ui/wiki?name=ffpsytc
+   - https://forums.nesdev.org/viewtopic.php?p=206353#p206353
+.Sh EXAMPLES
+$
+.Nm
+< image.bin > image.ff
+.Pp
+$
+.Nm
+- < image.bin > image.ff
+.Sh SEE ALSO
+.Xr ff2psytc 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

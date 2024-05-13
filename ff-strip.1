@@ -1,0 +1,58 @@
+.Dd 2024-03-23
+.Dt FF-STRIP 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-strip
+.Nd change the number of tiles per row in a tile strip
+.Sh SYNOPSIS
+.Nm
+<width> <height> <number of tiles per row>
+.Sh DESCRIPTION
+.Nm
+converts a tile set into the specified number of tiles per row.
+
+The input can have any number of tiles per row; the tool will automatically
+determine this.
+
+The input size must be an exact multiple of a tile to be valid.
+
+This can be used when converting tile sets with
+.Xr bit2ff 1 ,
+and
+.Xr ff2bit 1 ,
+.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Takes three arguments, all mandatory:
+   - tile width
+   - tile height
+   - number of tiles per row of output
+
+If the tile width or tile height are negative, then the total width or height
+of the input picture is divided by the absolute value of the specified numbers
+to find the tile width or tile height.
+.Sh EXAMPLES
+$
+.Nm
+20 20 5 < tile_set.ff > five_tiles_per_row.ff
+.Pp
+$
+.Nm
+14 14 1 < tile_set.ff | ff-uniq 14 > vertical_strip_unique.ff
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr ff-uniq 1 ,
+.Xr bit2ff 1 ,
+.Xr ff2bit 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

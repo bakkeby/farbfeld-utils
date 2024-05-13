@@ -1,0 +1,60 @@
+.Dd 2024-04-28
+.Dt FF-CONAUT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-conaut
+.Nd farbfeld filter that implements continuous cellular automata
+.Sh SYNOPSIS
+.Nm
+<int> <?int?> <?int?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the conaut filter and writes the result to stdout.
+.Pp
+This farbfeld filter implements continuous cellular automata.
+
+Technically this creates pseudo continuous automaton which is actually using
+discrete values, but act like continuous values.
+
+This is similar to
+.Xr ff-elementary 1 ,
+but the automata is different in that:
+   - all bits of each input channel are used, and not only the high bit (they
+     are not reduced to one bit per channel)
+   - the one or three arguments are not Wolfram codes but are the number 0 to
+     65535 to add to the average pixel value
+   - opaque pixels are unchanged while transparent pixels are altered, which
+     is opposite to ff-elementary
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one or three arguments which are the number 0 to 65535 to add
+to the average pixel value for the red, green and blue channels.
+
+If only one value is passed then that same value will be used for all three channels.
+.Sh EXAMPLES
+$
+.Nm
+2750 < image.ff > image-conaut.ff
+.Pp
+$
+.Nm
+52750 13921 52 < image.ff > image-conaut.ff
+.Sh SEE ALSO
+.Xr ff-critter 1 ,
+.Xr ff-elementary 1 ,
+.Xr ff-life 1 ,
+.Xr ff-probaut 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

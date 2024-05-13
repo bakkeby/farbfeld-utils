@@ -1,0 +1,72 @@
+.Dd 2023-11-08
+.Dt GLE2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm gle2ff
+.Nd convert AMI BIOS Energy Star logo image format to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a GLE image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+GLE is a simple monochrome graphics format used for storing the Energy Star
+logo in AMI BIOS images.
+.Pp
+This decoder takes no arguments and the implementation is experimental and
+remains untested.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh FORMAT DETAILS
+The layout of a GLE file is as follows.
+  ┌───────────────────────────────────────────────────────────────────────────────┐
+  │ Name     Length           Description                                         │
+  ├───────────────────────────────────────────────────────────────────────────────┤
+  │ magic    3 bytes          Always contains 'G' 'L' 'E', i.e. 47 4c 45.         │
+  │ ???      1 byte           Always equal to 1 in files known to the author.     │
+  │                           It is unknown whether it should be considered a     │
+  │                           part of the magic number, format version number,    │
+  │                           bit depth, set of flags or some other indicator.    │
+  │ width    1 byte           Image width, in character cells; usually 11. One    │
+  │                           cell is 8 pixels wide.                              │
+  │ height   1 byte           Image height, in character cells; usually 3. One    │
+  │                           cell is 14 pixels high.                             │
+  │ fgcolor  1 byte           CGA colour number of foreground (1) pixels; usually │
+  │                           10 (light green).                                   │
+  │ bgcolor  1 byte           CGA colour number of background (0) pixels; usually │
+  │                           0 (black).                                          │
+  │ data     width × height   The image data itself. The pixel data is stored in  │
+  │          × 14 bytes       a way identical to the EPAv1 format: character cell │
+  │                           by character cell, left to right, top to bottom.    │
+  │                           Each character cell occupies 14 bytes: the first    │
+  │                           byte corresponds to the first row of the cell, and  │
+  │                           the most significant bit corresponds to the         │
+  │                           leftmost pixel.                                     │
+  └───────────────────────────────────────────────────────────────────────────────┘
+.Pp
+Also refer to:
+   - https://en.wikipedia.org/wiki/Color_Graphics_Adapter#Color_palette
+   - http://justsolve.archiveteam.org/wiki/GLE
+.Sh EXAMPLES
+$
+.Nm
+< image.gle > image.ff
+.Pp
+$
+.Nm
+< image.gle | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

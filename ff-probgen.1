@@ -1,0 +1,65 @@
+.Dd 2024-05-09
+.Dt FF-PROBGEN 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-probgen
+.Nd farbfeld program that generates an image using a probabilistic random generator
+.Sh SYNOPSIS
+.Nm
+<width> <height> <global conf> <conf> <conf> <conf> <?conf?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the probgen filter and writes the result to stdout.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes six or seven arguments:
+   - width of picture
+   - height of picture
+   - global configuration
+   - lowest configuration
+   - low configuration
+   - high configuration
+   - highest configuration (optional)
+
+Each configuration consists of alternating letters and the numeric value of
+that field.
+
+Global configurations are:
+   s = random seed (default 42)
+   w = window size (must be less than the width) (default 5)
+
+Non-global configurations are:
+   c = clip/wrap mode, where bit0 means negative wrapping, and bit1 means
+       positive wrapping
+   d = division factor (fourths)
+   j = minimum random value to add (out of 65535)
+   k = maximum random value to add (out of 65535)
+   m = multiplication factor (fourths)
+   r = probability (out of 256) to make this pixel automatically blackened
+
+Note that many of these numbers can be negative or positive or zero, but some
+are not meaningful to be negative (and the division cannot be zero).
+.Sh EXAMPLES
+$
+.Nm
+640 480 s91w5 c0d005j1000k10000m0.18r004 \\
+                           c0d010j1500k32000m0.21r010 \\
+                           c1d030j3000k54000m0.30r030 \\
+                           c1d050j4500k62000m0.45r080 > image-probgen.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,781 @@
+.Dd 2024-05-06
+.Dt FF-XDRAW 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-xdraw
+.Nd farbfeld program that can make a drawing using an X server
+.Sh SYNOPSIS
+.Nm
+<?option?> ... <?option?>
+.Sh DESCRIPTION
+.Nm
+can be used to make a drawing using a X server, and then outputs the
+.Xr farbfeld 5
+picture that it has drawn to stdout.
+.Pp
+The instructions are taken from stdin in text format.
+Refer to the input section below.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Command-line arguments can be one of two formats:
+   - a number 0 to 9 followed by : and a font name, to preset that font number
+   - a letter A to Z followed by = and a number, to preset that register
+
+There are 27 registers, from A to Z, and @. They are initialized to zero unless
+specified otherwise by command-line arguments. Only integers can be stored.
+.Sh INPUT
+The instructions are taken from stdin in a text format.
+
+Each line consists of the following parts (leading and trailing spaces are
+ignored):
+   - opcode (one character)
+   - zero or more modifiers (each one character; cannot be spaces)
+   - one or more spaces
+   - up to 64 operands, with spaces in between
+   - optionally, a colon followed by some text; spaces are allowed before
+     and/or after this colon (no escapes can be used)
+   - an optional comment with # at first; not allowed if a colon is included
+
+An operand is one of the following formats:
+   - a register name, to use the value of that register
+   - a number in decimal form (integers only), with an optional plus or minus
+     sign at first
+   - a hexadecimal number (uppercase) with $ at first
+
+Example:
+
++D B @
+.br
+││ │ └─ operand
+.br
+││ └─ operand
+.br
+│└─ modifier
+.br
+└─ opcode
+
+A line can also be blank or contain only a comment.
+.Sh TEXT SYNTAX
+The current text string (of 16-bit characters) can be set by using the " special opcode; enter
+a string in quotation marks.
+
+Escapes are allowed:
+   \\\\ represents a backslash.
+   \\" represents a quotation mark.
+   \\x followed by two hex digits (uppercase) represents the 8-bit character with that code.
+   \\X followed by four hex digits (uppercase) represents the 16-bit character with that code.
+
+The buffer storing this is called a quotation buffer, and does not use the stack.
+.Sh INITIALISATION AND PALETTE
+[!] (initialise picture)
+
+This takes two or three operands:
+   - width
+   - height
+   - depth (optional, defaults to 1)
+
+This command is mandatory before any drawing or GC commands and must occur exactly once.
+
+(note that it can occur up to once in nested groups too; see the section about stack operation)
+
+If the depth is 1 to 8, the output uses indexed colour; the palette determines the output.
+If the depth is 16, the low and high bytes are added together to determine the palette
+index to use for output. If the depth is 24, it is true colours in rrggbb format (with only
+8-bits per channel), and the palette is not in use.
+
+The depth cannot be larger than the largest depth supported by the X server, although it can
+otherwise be a number that isn't supported by the X server.
+
+It must be at least 1 though; zero is not allowed.
+
+The picture is created with background zero.
+.Pp
+---
+.Pp
+[Z] (clear)
+
+Changes the entire picture into the specified colour (as the first operand), ignoring GC.
+.Pp
+---
+.Pp
+[$] (define palette)
+
+Takes four or five operands. The first operand is the palette index from 0 to 255.
+The rest are the channel values, from 0 to 65535, which are red, green, blue, alpha
+(alpha is optional and defaults to 65535).
+
+You can optionally use the b and f modifiers the same as the , command as a shortcut.
+.Sh ARITHMETIC
+[=] (assignment)
+
+The value of the register specified by the modifier (@ if no modifier) is set to the value of
+the first operand (if omitted, set to the value of the @ register).
+.Pp
+---
+.Pp
+[+] (add)
+
+Adds together two numbers and stores the result in the register specified by the modifier
+(@ if there is no modifier).
+
+Takes zero, one, or two operands:
+   - zero operands: add one
+   - one operand: adds it to the existing value of the register
+   - two operands: adds together the two operands
+.Pp
+---
+.Pp
+[-] (subtract)
+
+Subtract two numbers and stores the result in the register specified by the modifier
+(@ if there is no modifier).
+
+Takes zero, one, or two operands:
+   - zero operands: subtract one
+   - one operand: subtracts it from the existing value of the register
+   - two operands: subtracts the second operand from the first
+.Pp
+---
+.Pp
+[*] (multiply)
+
+Multiply two numbers and stores the result in the register specified by the modifier
+(@ if there is no modifier).
+
+Takes zero, one, or two operands:
+   - zero operands: multiply by two
+   - one operand: multiply this number by the existing value of the register
+   - two operands: multiply together the two operands
+.Pp
+---
+.Pp
+[/] (divide)
+
+Divide two numbers and stores the result in the register specified by the modifier
+(@ if there is no modifier).
+
+Fractions are dropped; the result is always an integer.
+
+Takes zero, one, or two operands:
+   - zero operands: divide by two
+   - one operand: divide the existing value of the register by the operand
+   - two operands: divide the first operand by the second
+.Pp
+---
+.Pp
+[%] (modulo)
+
+Similar to / but store the remainder instead.
+.Pp
+---
+.Pp
+[<] (minimum)
+
+Stores the least operand (must be at least one) into the register specified by the modifier
+(@ if no modifier).
+.Pp
+---
+.Pp
+[>] (maximum)
+
+Stores the greatest operand (must be at least one) into the register specified by the modifier
+(@ if no modifier).
+.Pp
+---
+.Pp
+[|] (arithmetic if)
+
+Has two, three, or four operands, and stores the result in the register specified by the
+modifier (@ if no modifier).
+
+Checks if the first operand is positive, negative, or zero, and the result will be the value
+of one of the other operands depending on that.
+
+Can have two, three, or four operands:
+   - two operands: zero if first operand is nonzero, otherwise second operand
+   - three operands: third operand if first operand is nonzero, otherwise second operand
+   - four operands: second operand if first operand is negative, third operand if first
+     operand is zero, fourth operand if first operand is positive
+.Pp
+---
+.Pp
+[b] (bitwise operations)
+
+Modifiers the @ register as specified by the modifiers and the first operand.
+If the second operand is specified, first sets @ to that value.
+
+Possible modifiers can be:
+   & (AND)
+   | (OR)
+   ^ (XOR)
+   ~ (NOT (may be combined with any one of the other three))
+
+Note that NOT by itself ignores the first operand.
+.Sh FONTS AND METRICS
+There are 256 font registers, numbered 0 to 255. Each can store up to one font, and these
+registers do not use the stack.
+
+There is also a single font metrics register, which also does not use the stack.
+
+All font registers and the metrics register are initially unset. The graphics context also
+stores a font, which does not have to be a font in any register; you can replace a font in
+the register that the GC was loaded from and still keep the same font in the GC, instead
+of the new font in the font register.
+.Pp
+---
+.Pp
+[F] (load font)
+
+Takes one operand, which is a font register number.
+
+If it has colon text, it loads the named font into that register; otherwise the font in
+the specified register is loaded into the GC.
+.Pp
+---
+.Pp
+[?] (question font)
+
+Questions the current font in the graphics context and stores the result in the @ register,
+using either the colon text or the quotation buffer as the text to measure.
+
+Use one or more of the following modifiers:
+   - l = left bearing
+   - r = right bearing
+   - L = minus left bearing
+   - R = minus right bearing
+   - w = width
+   - a = text ascent
+   - d = text descent
+   - A = font ascent
+   - D = font descent
+
+If you use more than one modifier, the results are added together.
+
+You can also add the / modifier to divide the result by two.
+.Pp
+---
+.Pp
+[Q] (load metrics)
+
+Optionally takes one operand, which is a font register number; if none is specified,
+uses the current GC font.
+
+Loads the metrics register with the specified font, unless the Z modifier is specified
+in which case the metrics register is cleared.
+.Pp
+---
+.Pp
+[p] (get font property)
+
+Reads a numeric font property from the metrics register into the @ register.
+The colon text is the name of the property, and the first operand is the default value
+to use if the font property is not set.
+.Pp
+---
+.Pp
+[I] (read metrics)
+
+Reads font metrics from the metric register into the @ register. For global metrics,
+the first operand is ignored and may be omitted (unless the second operand is needed).
+For character metrics, the first operand is the character code, unless one of the mMC
+modifiers is specified.
+
+For global metrics, the following modifiers can be used:
+   - c for the default character code
+   - i for the text direction hint
+   - a (+) for font ascent
+   - d (+) for font descent
+
+For character metrics, either it is the metrics for the character code in the first operand,
+or if one of the following modifiers is used (do not use more than one of these),
+uses that instead:
+   - m for minimum bounds
+   - M for maximum bounds
+   - C for the default character
+
+For character metrics, the following modifiers can be used:
+   - F for the character attributes (flags)
+   - A (+) for the character ascent
+   - D (+) for the character descent
+   - W (+) for the character width
+   - L (+) for the left bearing
+   - R (+) for the right bearing
+
+In the lists above, (+) specifies additive modifiers; you can have more than one, and can
+optionally specify a second operand to add to it too (the default is zero).
+.Pp
+---
+.Pp
+[w] (text width)
+
+Determines the width of the colon text or quotation buffer based on the current font
+metric register. Stores the result in the @ register.
+.Pp
+---
+.Pp
+[H] (horizontal alignment)
+
+Uses the font metric register to compute the position of horizontally aligned text from
+the quotation buffer, and stores the result into the @ register.
+
+The first operand is the alignment to use, where 0 is right alignment, 500 is centre
+alignment, and 1000 is left alignment (numbers in between are also valid; higher numbers
+move the text more to the right). The second operand is the position where that point is at;
+if omitted, the value of the @ register is used in its place.
+.Sh GRAPHICS CONTEXT SETTINGS
+Note that the !$F commands can also set graphic context.
+.Pp
+---
+.Pp
+[,] (set colours and plane mask)
+
+Sets based on modifiers (you can have one or more modifiers):
+   - f sets the foreground value to the first operand.
+   - b sets the background value to the first operand.
+   - m sets the plane mask to the first operand.
+   - - clears the plane mask.
+.Pp
+---
+.Pp
+[l] (line attributes)
+
+The first operand is mandatory. If negative then the line attributes are not modified;
+if zero or positive then it is the line thickness and the modifiers can also be used.
+
+The attributes other than line thickness are:
+   - dashing: the default is solid; use attribute o for transparent
+              dashing and d for opaque dashing
+   - capping: the default is butt capping; use attribute p for projecting,
+              r for round, and n for not last
+   - joining: the default is miter; use attribute j for round and v for bevel
+
+Optionally you can specify additional operands, where the second operand is the dash
+offset, and the third and subsequent operands are the list of dashes (all must be non-zero).
+.Pp
+---
+.Pp
+[r] (set clip rectangle)
+
+Set the clip rectangle to the four operands: x, y, width, height.
+
+Use M with no operands or modifiers to clear the clip mask.
+.Pp
+---
+.Pp
+[&] (set function)
+
+Set the function to the operand value (default 3).
+
+Choose from:
+    0 = clear
+    1 = src AND dst
+    2 = src AND NOT dst
+    3 = src
+    4 = dst AND NOT src
+    5 = dst
+    6 = src XOR dst
+    7 = src OR dst
+    8 = src NOR dst
+    9 = src NXOR dst
+   10 = NOT dst
+   11 = src OR NOT dst
+   12 = NOT src
+   13 = dst OR NOT src
+   14 = src NAND dst
+   15 = set
+.Pp
+---
+.Pp
+[a] (arc fill mode)
+
+Set the arc fill mode. If the modifier is ( or ) then it uses chord mode,
+if < or > then it uses pie slice mode.
+.Pp
+---
+.Pp
+[f] (fill style)
+
+Program the fill style.
+
+Select up to one of the following modifiers to set fill style:
+   - = for solid fill
+   - t to use the tile picture to tile the fill
+   - s to use the stipple bitmap with a transparent background
+   - S to use the stipple bitmap with opaque background
+
+Select up to one of the following modifiers to set polygon fill rule:
+   - e for even/odd rule
+   - w for winding rule
+
+If any operands are given, they are the X and Y coordinates for the tile/stipple origin.
+.Sh DRAWING
+[.] (points)
+
+Draw one or more points, each given as a pair of coordinates as operands.
+You can use the r modifier to make each pair other than first pair to be
+relative to the previous pair.
+.Pp
+---
+.Pp
+[L] (lines)
+
+Draw one or more lines, given a pair of coordinates as operands for each point.
+You can use the r modifier to make each pair other than first pair to be relative
+to the previous pair.
+
+You may also specify the f modifier to fill a polygon instead of draw the outline.
+.Pp
+---
+.Pp
+[R] (rectangle)
+
+Draw a rectangle using the four operands: x, y, width, height.
+
+If the f modifier is given, fill instead of outline.
+.Pp
+---
+.Pp
+[A] (arcs)
+
+Draw a circle, ellipse, or arc.
+
+Takes four or six operands. The first four are the x, y, width, height, of the bounding
+rectangle. The next two are the start angle and size angle, in units of 1/64 degrees.
+
+If the f modifier is used, fills the arc (using the current arc mode) instead of outline.
+.Pp
+---
+.Pp
+[T] (draw text)
+
+Draw text, from the colon text or the quotation buffer. The operands are the X and Y
+coordinate to draw the leftmost baseline at.
+
+If the i modifier is given, uses an opaque background.
+
+If the q modifier is given, the new X position after the text is saved to the @ register.
+.Pp
+---
+.Pp
+[c] (draw single character)
+
+Draw a single character at the X and Y coordinates specified by the first and second
+operands. The third operand is the 16-bit character code.
+
+If the i modifier is given, uses an opaque background.
+.Sh STACK OPERATORS
+The stack stores the current graphics context and current values of all numeric registers.
+Sometimes it also stores a picture.
+.Pp
+---
+.Pp
+"[" (push)
+
+Pushes the graphics context and numeric registers to stack, entering a new group,
+initially with the same values for registers and GC.
+
+You can optionally specify some operands which will be treated like a ! command has
+been used at first in this new group; in this case the old picture is also pushed.
+.Pp
+---
+.Pp
+"]" (pop)
+
+Pops the graphics context and numeric registers from the stack. If a new picture was
+created in the group, the picture is also popped.
+
+You may have optionally a t or s modifier (or both, if both pictures have depth 1) to
+use the inner picture as a tile and/or stipple pattern in the graphics context for the
+outer picture. In this case you may further optionally specify the tile/stipple origin
+with two operands.
+.Pp
+---
+.Pp
+[^] (copy registers out)
+
+All numeric registers specified by the modifiers are copied from inside this group to
+the outside of this group. You must specify a modifier.
+.Pp
+---
+.Pp
+[v] (copy registers in)
+
+All numeric registers specified by the modifiers are copied from the outside of this
+group to the inside of this group. You must specify a modifier.
+.Pp
+---
+.Pp
+[i] (copy picture in)
+
+Acts like C (or like P if the p modifier is given) but copy from the outside picture
+to the inside instead.
+.Pp
+---
+.Pp
+[o] (copy picture out)
+
+Acts like C (or like P if the p modifier is given) but copy from the inside picture
+to the outside instead.
+.Pp
+---
+.Pp
+[m] (clip mask)
+
+Set the clip mask for the outer picture to this one. Also specify as operands the X and Y origin.
+.Sh COPYING AREAS
+[C] (copy area)
+
+Copy an area within the current picture.
+
+The six operands are:
+   - source X
+   - source Y
+   - width
+   - height
+   - destination X
+   - destination Y
+.Pp
+---
+.Pp
+[P] (copy plane)
+
+Copy a plane within the current picture (using XCopyPlane).
+
+The seven operands are:
+   - source X
+   - source Y
+   - width
+   - height
+   - destination X
+   - destination Y
+   - plane number, from 0 up to one less than the depth
+.Sh REGIONS
+There are eight region registers numbered 0 to 7, each of which contains a region
+(set of points), to be usable as a clip mask. Region registers do not use the stack.
+.Pp
+---
+.Pp
+[g] (create new region)
+
+Creates a new region in the region register specified by the modifier (register 0 by default).
+
+You can specify any even number of operands (including zero), to make a polygon using the
+even/odd rule, to initialize the region.
+.Pp
+---
+.Pp
+[y] (set clip region)
+
+Sets the clip region to a copy of the region register specified by the modifier
+(register 0 by default).
+.Pp
+---
+.Pp
+[;] (combine regions)
+
+Combines regions; the first and second arguments are input regions and the third
+argument is the output region; all are mandatory (there are no defaults).
+
+You should use one of the following four modifiers:
+   i -- intersection
+   u -- union
+   s -- subtract
+   x -- xor
+
+You can also optionally specify one of the following two modifiers to
+write a result into the @ register:
+   ? -- to write 0 if the output region is now empty, or 1 if it isn't
+   = -- to write 0 if the two input regions match, or 1 if it doesn't match
+.Pp
+---
+.Pp
+[O] (offset/shrink region)
+
+Modifies the region specified by the modifier (default is to use register zero) by
+offset and/or shrink.
+
+The first two operands are mandatory, and are X and Y offsets.
+
+Optionally, you can specify one or two more operands, which are shrink amounts;
+if both are specified, the first is X and second is Y, otherwise uses the same number
+for both. Use positive numbers to shrink and negative numbers to grow.
+.Pp
+---
+.Pp
+[u] (add rectangle to region)
+
+Add a rectangle to the region specified by the modifier (default is region register zero
+if no modifier), by four operands in order:
+   - x
+   - y
+   - width
+   - height
+.Sh EXTERNAL OPERATORS
+[X] (copy external)
+
+Copies part of another pixmap or window in the X server into the current picture.
+
+The seven operands are:
+   - source X
+   - source Y
+   - width
+   - height
+   - destination X
+   - destination Y
+   - source XID
+.Pp
+---
+.Pp
+[x] (read cut buffer)
+
+Reads a cut buffer into the current quotation buffer. Which cut buffer is specified
+by the first operand; if omitted, cut buffer 0 is used.
+
+If the n modifier is specified, the length of the string is loaded into the @ register.
+.Pp
+---
+.Pp
+[M] (external clip mask)
+
+Set the clip mask to an external picture with XID given by the operand.
+
+If the operand is omitted, clears the clip mask (so this mode isn't an external operator).
+.Sh MISCELLANEOUS
+[h] (set byte1)
+
+Set the byte1 of each character of the quotation buffer to the first operand.
+.Pp
+---
+.Pp
+[j] (adjust byte2)
+
+Add the operand value (0 to 255) to each byte2 in the quotation buffer.
+If the c modifier is specified, then it carries into the byte1 also.
+.Pp
+---
+.Pp
+[:] (conditional skip).
+
+Conditionally skips (or does nothing if no operand is given).
+
+If colon text is given, then skips up to the next colon line with that text as the
+modifiers. Otherwise, the operand tells how many lines to skip.
+
+Valid modifiers (for use when colon text is given) are:
+   - + to skip if positive
+   - - to skip if negative
+   - ! to invert the condition
+   - no modifiers means skip if zero
+.Pp
+---
+.Pp
+[~] (debug output)
+
+Used for debug output. Can be used to list valid depths and to display values of registers.
+.Sh EXAMPLES
+$
+.Nm
+< instructions.txt > image-xdraw.ff
+.Pp
+$
+.Nm
+"0:lucidasans-bold-24" A=50 B=100 < instructions.txt > image-xdraw.ff
+
+The first argument sets lucidasans-bold-24 in font register 0. The font name is in xfont pattern.
+You can use xlsfonts to list available fonts in this pattern.
+
+The second and third arguments sets the internal registers of A and B to 50 and 100 respectively.
+This is to demonstrate how setting registers via arguments can influence what is drawn where, as in
+the following example instructions that draws the text "Hello World" with background text and a
+line underneath.
+.Sh EXAMPLE INSTRUCTIONS
+# Example ff-xdraw input that draws the text "hello world"
+
+# Initialises the window at dimensions of 940x780 with a depth of 16
+.br
+! 940 780 16
+
+# Defines the palette at index 0 to be a soft colour
+.br
+$ 0 23000 16402 17000 0
+
+# Fills the background with the colour of palette index 0
+.br
+Z 0
+
+# Defines the palette at index 1 to be an all black colour,
+.br
+# also set foreground colour to that colour
+.br
+$f 1 0 0 0 48000
+
+# Defines the palette at index 2 to be a light blue colour,
+.br
+# also set background colour to that colour
+.br
+$b 2 40000 40000 54000
+
+# Load font in font register 0
+.br
+F 0
+
+# Store the text "Hello World" in the quotation buffer
+.br
+"Hello World"
+
+# Draw the text (T) using an opaque background (i) and store the x
+.br
+# position after the text in the @ register (q). The text is to be
+.br
+# drawn at the position x and y stored in register A and B respectively.
+.br
+Tiq A B
+
+# Store the end position of the text, currently stored in the @ register,
+.br
+# in register C
+.br
+=C
+
+# Question font (?) about the descent (D), the result is stored in the @ register.
+.br
+# Used font descent as that seemed to match the font height while testing.
+.br
+?D
+
+# Increment the register D (has by default a value of 0) with the value of
+.br
+# register B (which was used for the y position of the text) and the value
+.br
+# of register @ which contains the height of the font.
+.br
++D B @
+
+# Add another 5 pixel gap
+.br
++D 5
+
+# Define the palette at index 3 to be a yellow colour,
+.br
+# also set the foreground colour to that colour
+.br
+$f 3 48000 48000 0
+
+# Draw a line (L) from the start of the text (A) and slightly below the text (D)
+.br
+# to the end of the text (C) slightly below the text (D).
+.br
+L A D C D
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

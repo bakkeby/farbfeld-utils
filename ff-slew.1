@@ -1,0 +1,76 @@
+.Dd 2024-05-04
+.Dt FF-SLEW 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-slew
+.Nd farbfeld filter that applies two dimensional slew rate limiting on a picture
+.Sh SYNOPSIS
+.Nm
+<slew rate>
+.Nm
+<horzontal slew rate> <vertical slew rate>
+.Nm
+<pos horz rate> <neg horz rate> <pos vert rate> <neg vert rate>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the slew filter and writes the result to stdout.
+.Pp
+This farbfeld filter applies two dimensional slew rate limiting on a picture.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one, two or four arguments.
+
+With one argument:
+   - slew rate
+
+With two arguments:
+   - horizontal slew rate
+   - vertical slew rate
+
+With four arguments:
+   - positive horizontal slew rate
+   - negative horizontal slew rate
+   - positive vertical slew rate
+   - negative vertical slew rate
+
+The maximum slew rate is 65535 which is normal (no change), while lower
+numbers result in pixels with less changing.
+
+The pixels on the top and left edges have nothing to compare to so are assumed
+to start with those values. The ones on the left edge can still be limited
+relative to the pixels above, and the ones on the top edge can still be
+limited relative to the pixels to left. Use
+.Xr ff-border 1
+to add a border with
+different initial values if so desired.
+
+Note that even though it says "positive" and "negative" above, all of the
+numbers should nevertheless be positive, in the range from 0 to 65535.
+.Sh EXAMPLES
+$
+.Nm
+240 < image.ff > image-slew.ff
+.Pp
+$
+.Nm
+240 4000 < image.ff > image-slew.ff
+.Pp
+$
+.Nm
+240 90 4000 5100 < image.ff > image-slew.ff
+.Sh SEE ALSO
+.Xr ff-border 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

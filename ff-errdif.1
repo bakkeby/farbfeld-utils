@@ -1,0 +1,47 @@
+.Dd 2024-04-30
+.Dt FF-ERRDIF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-errdif
+.Nd farbfeld filter that applies a two-level error diffusion, individually per channel
+.Sh SYNOPSIS
+.Nm
+<diffusion 1> ... <diffusion 12> <?divisor?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the errdif filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to apply a two-level error diffusion, individually per channel.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes twelve arguments and optionally a custom divisor.
+
+   . . * A B
+   C D E F G
+   H I J K L
+
+The twelve arguments are numbers named A to L in the above grid and these
+indicate the amount of diffusion in that position. The asterisk indicates the
+current position.
+
+The divisor is normally equal to the sum of these numbers, but optionally a thirteenth argument
+can be added to specify the divisor.
+.Sh EXAMPLES
+$
+.Nm
+1.0 1.0 5.0 1.0 1.0 1.0 1.0 5.0 1.0 1.0 1.0 1.0 < image.ff > image-errdif.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

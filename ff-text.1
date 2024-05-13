@@ -1,0 +1,71 @@
+.Dd 2024-05-12
+.Dt FF-TEXT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-text
+.Nd farbfeld program that renders fix-pitch text
+.Sh SYNOPSIS
+.Nm
+<?+font encoding?> <tile width> <tile height> <text> <?text?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+fix-pitch-font image from stdin, tiles characters based on text and writes the result to stdout.
+.Pp
+This farbfeld program is used to render fix-pitch text.
+.Pp
+The input is the font picture.
+.Pp
+Fix-pitch text referes to a style of typography where each character occupies
+the same amount of horizontal space regardless of the character's width - more
+commonly known as monospaced or fixed-width text.
+.Pp
+In this context the "font" is an image where the letters are drawn in
+designated spaces and their placement is determined by the given character
+height and width. The "rendering" of these characters is merely a matter of
+tiling the individual character tiles based on the given input text.
+.Pp
+Note that the input font picture must have a width and height that fits
+exactly with the modulo of the given tile width and height. If there are
+leftover pixels then the program will complain.
+.Pp
+Tip: it would be possible to generate such a fix-pitch font picture based
+on an actual font by using
+.Xr ff-xdraw 1 .
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes the following arguments:
+   - optionally, the font encoding with a plus sign at first and then the
+     characters of the font (all as a single argument) - if not specified,
+     byte values 0 to 255 are represented in order in the font (although a
+     null byte cannot actually be used as a character)
+   - the character tile width
+   - the character tile height
+   - one or more lines of text (one line per argument) - encoding is always
+     bytes, rather than UTF-8 or other encodings
+
+The font is encoded as a tile set with any integer number of tiles per row,
+with no padding.
+
+If some lines of text are longer than others, the remaining lines are left
+aligned and are padded on the right with transparent pixels. Any characters
+that are not in the specified encoding are also transparent.
+.Sh EXAMPLES
+$
+.Nm
+"+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- .:;" \\
+          18 16 "Hello world" < fix-pitch-font.ff > image-text.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

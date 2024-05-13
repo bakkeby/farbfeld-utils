@@ -1,0 +1,48 @@
+.Dd 2024-04-02
+.Dt FF-BACK 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-back
+.Nd farbfeld filter that applies a background colour to a picture with transparent parts
+.Sh SYNOPSIS
+.Nm
+<colour>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies a background colour and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one argument, which is a colour without alpha. The picture is then
+composed onto the background of that colour, making it fully opaque.
+
+The colour can be defined through one of the following patterns:
+   r g b             three 16-bit integer values (0 to 65535)
+   rrggbb            three pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+FF9090 < image.ff > image-back.ff
+.Pp
+$
+.Nm
+FF0090009000 < image.ff > image-back.ff
+.Pp
+$
+.Nm
+65280 36864 36864 < image.ff > image-back.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

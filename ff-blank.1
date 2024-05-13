@@ -1,0 +1,66 @@
+.Dd 2024-04-02
+.Dt FF-BLANK 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-blank
+.Nd creates a blank farbfeld picture with a solid colour
+.Sh SYNOPSIS
+.Nm
+<width> <height> <?colour?>
+.Sh DESCRIPTION
+.Nm
+creates a blank
+.Xr farbfeld 5
+image with a solid colour and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The first two arguments are width and height. You can have zero, one, three,
+or four more arguments.
+
+With no extra arguments the picture is fully transparent.
+
+One extra argument specifies the background colour which can be defined using
+one of these patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+Three or four extra arguments specifies the individual 16-bit values for the
+red, green, blue, and the alpha channel.
+If the alpha channel is not specified then 65535 is used.
+
+This program does not read from standard in.
+.Sh EXAMPLES
+$
+.Nm
+640 480 > image-transparent.ff
+.Pp
+$
+.Nm
+640 480 FF9090 > image-blank.ff
+.Pp
+$
+.Nm
+640 480 FFFF90009000FFFF > image-blank.ff
+.Pp
+$
+.Nm
+640 480 65535 36864 36864 > image-blank.ff
+.Pp
+$
+.Nm
+640 480 65535 36864 36864 65535 > image-blank.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

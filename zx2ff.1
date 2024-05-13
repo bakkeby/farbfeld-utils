@@ -1,0 +1,54 @@
+.Dd 2024-03-28
+.Dt ZX2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm zx2ff
+.Nd convert ZX Spectrum graphics to farbeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads ZX Spectrum graphics from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+The original ZX Spectrum computer produces a one bit per pixel, bitmapped
+colour graphics video output. A composite video signal is generated through an
+RF modulator, and was designed for use with contemporary 1980s television
+sets.
+
+The image size of the framebuffer is 256x192 pixels, with a palette of 15
+non-modifiable colours, where the entire colour palette is extremely
+saturated. The resolution of the colour output is 64 times lower than the
+resolution of the pixel bitmap. The extremely low colour resolution was used
+to conserve memory, totaling just 768 bytes for colour attributes. Colour is
+stored separate from the pixel bitmap, as a 32x24 cell grid, using one byte
+per each of the character cells. One character cell is composed of 8x8 pixels.
+In practice, this means any character cell can only use two selected colours
+for colouring the contained 64 pixels.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This decoder takes no arguments.
+
+zx2ff can decode three ZX Spectrum graphics modes and will auto-detect which
+mode is used. It will write an error if the detected graphics mode is not
+supported.
+.Sh REFERENCES
+https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes
+.Sh EXAMPLES
+$
+.Nm
+< zx_spectrum.source > image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

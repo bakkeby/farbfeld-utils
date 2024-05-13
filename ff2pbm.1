@@ -1,0 +1,67 @@
+.Dd 2023-11-25
+.Dt FF2PBM 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2pbm
+.Nd convert farbfeld image to Netpbm formatted image
+.Sh SYNOPSIS
+.Nm
+ <format> <?depth?>
+.Sh DESCRIPTION
+.Nm
+reads a farbfeld image from stdin, converts it to Netpbm formatted image and
+writes the result to stdout.
+.Pp
+The Netpbm formats are a family of simple uncompressed raster image file
+formats, associated with the Netpbm library and suite of image processing
+utilities.
+
+There are five Netpbm formats:
+   - PBM (portable bitmap) - a bi-level image format
+   - PGM (portable graymap) - a grayscale image format
+   - PPM (portable pixmap) - a colour image format
+   - PNM (portable anymap) - a collective name for PBM, PGM, and PPM
+     A .pnm file may use any of these formats.
+   - PAM (portable array map) - a colour image format with transparency (RGBA)
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This encoder takes one or two arguments.
+
+First argument is the format, from 1 to 7:
+   1 = Mono text
+   2 = Greyscale text
+   3 = RGB text
+   4 = Mono binary
+   5 = Greyscale binary
+   6 = RGB binary
+   7 = Portable Arbitrary Map (RGBA binary)
+
+The second argument is the number of bits per channel (depth), from 1 to 16
+(the default is 16).
+.Sh EXAMPLES
+$
+.Nm
+2 < image.ff > image.pgm
+.Pp
+$
+.Nm
+6 < image.ff > image.ppm
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+4 > image.miff
+.Sh SEE ALSO
+.Xr pbm2ff 1 ,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

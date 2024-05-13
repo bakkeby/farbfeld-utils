@@ -1,0 +1,70 @@
+.Dd 2024-05-10
+.Dt FF-SQL 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-sql
+.Nd farbfeld program that allows for SQL statements to be used to alter a picture
+.Sh SYNOPSIS
+.Nm
+<sql>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, runs SQL to alter the colour data and writes the result to stdout.
+.Pp
+The program uses sqlite3 under the hood.
+.Pp
+There are two virtual tables named F and G.
+
+Both have the following columns:
+   X -- X coordinate (zero-based, starting from left)
+   Y -- Y coordinate (zero-based, starting from top)
+   R -- red
+   G -- green
+   B -- blue
+   A -- alpha
+
+The F table uses float numbers 0 to 1, and the G table uses integer numbers 0
+to 65535, for the colours. The X and Y coordinates are always integers.
+
+Writing values out of range in the colours will be clipped in range.
+
+Also provides SQL functions. The functions W() and H() are the width and
+height of the picture. The functions atan2, cos, exp, fmod, log, pow, sin,
+sqrt, tan are like the corresponding C functions having the same name.
+
+DELETE is not allowed, but you can use INSERT or UPDATE; using INSERT replaces
+the pixel with the same coordinates as the inserted record. You can also
+create your own tables; such tables are temporary and are discarded after your
+SQL statements are executed. SELECT is allowed but currently has no use
+because no output is produced.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one argument which is the SQL string. That string can contain
+more than one SQL statement.
+.Sh EXAMPLES
+$
+.Nm
+"update G set G=R, B=R;" < image.ff > grayscale.ff
+.Pp
+$
+.Nm
+"update G set R=0 where X>W()/2 and Y>H()/2" < image.ff > example.ff
+.Pp
+$
+.Nm
+"update F set B=sin(R)*cos(G)" < image.ff > example.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

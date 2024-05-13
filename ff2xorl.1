@@ -1,0 +1,45 @@
+.Dd 2024-03-29
+.Dt FF2XORL 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2xorl
+.Nd converts farbfeld to XORLINES-2 format
+.Sh SYNOPSIS
+.Nm
+<?palette?>
+.Sh DESCRIPTION
+.Nm
+reads
+.Xr farbfeld 5
+from stdin, converts it to XORLINES-2 format and writes the result to stdout.
+
+The context around the XORLINES-2 format is not documented.
+
+Restrictions:
+   - only images with even width size are valid
+   - the picture can't be too big
+   - the picture can't contain more than 16 colours
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Optionally, specify up to sixteen triples of hex (RGB) to make the palette.
+If you do not specify the full palette, it will automatically add the rest to
+make sixteen (or however many colours are in the picture). Their order can
+affect how good the compression is.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.xorl
+.Sh SEE ALSO
+.Xr xorl2ff 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

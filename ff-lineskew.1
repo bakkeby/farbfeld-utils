@@ -1,0 +1,39 @@
+.Dd 2024-04-04
+.Dt FF-LINESKEW 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-lineskew
+.Nd farbfeld filter that skews a picture horizontally by pixels per scanline
+.Sh SYNOPSIS
+.Nm
+<?pixels?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, skews the picture horizontally by an integer number of
+pixels per scanline and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The argument is how many pixels to skew additionally per each scanline.
+.Sh EXAMPLES
+$
+.Nm
+1 < image.ff > image-lineskew.ff
+.Pp
+$
+.Nm
+-2 < image.ff > image-lineskew.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

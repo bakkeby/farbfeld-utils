@@ -1,0 +1,75 @@
+.Dd 2024-05-03
+.Dt FF-XWIN 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-xwin
+.Nd farbfeld program that displays a picture on an X server
+.Sh SYNOPSIS
+.Nm
+<?opt?> <?value?> <?opt?> <?value?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin and displays it in an X window.
+.Pp
+This program will display a picture in a window on the X server specified by
+the DISPLAY environment variable.
+.Pp
+A left click (button 1) will write the coordinate number into the window
+title, and a right click (button 3) will write one line to stdout with the
+clicked coordinates with a space in between. A middle click (button 2) will
+exit the program. The space bar can also be pushed to exit the program.
+Using the b and k options can alter this.
+.Pp
+Holding shift and doing a left click will draw ruler lines; use numbers 0 to 7
+to adjust the colour of lines to draw, and push = to clear the ruler lines.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Specify zero or more options by key/value pairs, with alternating the keys and
+values as arguments. Only the first letter of the key is significant, and
+values must be specified even if it isn't in use (but a blank value is OK,
+which is not the same as not specifying the option at all).
+
+Valid options include:
+   b -- if set (value is irrelevant), causes any mouse button to output the
+        coordinates and button number (with spaces in between) and then exit
+   c -- specify the class hint (the default is "Farbfeld")
+   k -- if set (value is irrelevant), causes any letter or number key to exit;
+        the return code is the ASCII code of that letter or number (lowercase
+        letters are converted to uppercase)
+   m -- specify the atom name for a standard-colormap, which should be either
+        RGB_DEFAULT_MAP or RGB_BEST_MAP
+        (must be defined by another program in order to use it)
+   n -- specify the window title to use
+   o -- set the override redirect flag to indicate to window managers that
+        the program manages the window
+   s -- select which screen number to use, rather than the default screen for
+        this X server
+   t -- if set, sets the transient hint to the specified window ID
+   v -- override which visual ID to use, instead of using the default
+   x -- specify X position of window
+   y -- specify Y position of window
+
+A TrueColor visual or a standard-colormap must be used.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff
+.Pp
+$
+.Nm
+b 1 < image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

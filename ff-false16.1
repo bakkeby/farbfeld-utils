@@ -1,0 +1,58 @@
+.Dd 2024-05-04
+.Dt FF-FALSE16 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-false16
+.Nd farbfeld filter that changes colours in the picture to a specified gradient
+.Sh SYNOPSIS
+.Nm
+<0> <colour> <#> <colour> ... <65535>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the false16 filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to change colours in the picture to a specified gradient.
+.Pp
+This is the 16-bit version of the false filter, for 8-bit gradients refer to
+.Xr ff-false 1 .
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes at a minimum five arguments.
+
+Specify a gradient by a sequence alternating 16-bit numbers and colours, with
+a 16-bit number as the first and last argument; these should be 0 and 65535,
+although it is not required. It represents a gradient with several components,
+and interpolated in between. Changes colours of the picture to the
+corresponding value of the channel of the gradient.
+
+The colour can be defined through one of the following patterns:
+   hh                one pair of 8-bit hex value (applies to all channels)
+   hhhh              one pair of 16-bit hex value (applies to all channels)
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+0 000000 20000 0000FF 65535 < image.ff > false16.ff
+.Pp
+$
+.Nm
+0 000000 20000 FF0000 40000 00FF00 60000 0000FF 65535 < image.ff > false16.ff
+.Sh SEE ALSO
+.Xr ff-false 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

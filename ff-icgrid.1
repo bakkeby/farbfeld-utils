@@ -1,0 +1,42 @@
+.Dd 2024-04-03
+.Dt FF-ICGRID 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-icgrid
+.Nd program that generates an interleaved colours grid
+.Sh SYNOPSIS
+.Nm
+<number> <number> ... <number>
+.Sh DESCRIPTION
+.Nm
+generates an interleaved colours grid in
+.Xr farbfeld 5
+image format and writes the result to stdout.
+.Pp
+It does not read data from stdin.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Arguments are a list of 12-bit hexadecimal numbers (values 0 to 4095).
+.Pp
+The maximum number of arguments are 255.
+.Sh EXAMPLES
+$
+.Nm
+$(shuf -i1-4095 -n255 -r -z | xargs -0) > icgrid.ff
+.Pp
+$
+.Nm
+$(for I in $(seq 85); do printf '950 21 9 '; done) > icgrid.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

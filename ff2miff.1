@@ -1,0 +1,52 @@
+.Dd 2023-10-25
+.Dt FF2MIFF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2miff
+.Nd convert farbfeld image to ImageMagick format (MIFF)
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a farbfeld image from stdin, converts it to ImageMagick format (MIFF)
+and writes the result to stdout.
+.Pp
+Magick Image File Format (MIFF) is a raster image file format associated with
+the image processing software ImageMagick. It was originally named Machine
+Independent File Format.
+.Pp
+It is designed to support all of the metadata and pixel formats supported
+internally by ImageMagick. For example, it supports floating-point samples and
+high dynamic range.
+.Pp
+There is no formal MIFF specification. Each copy of the ImageMagick software
+includes a copy of the MIFF documentation, and each new version of ImageMagick
+may add new features to the format.
+.Pp
+Despite the potential instability and ambiguity of the format, it is portable
+enough to be usable by other applications. But it is primarily useful for
+temporary files, and should be avoided for long term storage or public
+distribution.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.miff
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+> image.miff
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

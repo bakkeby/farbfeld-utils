@@ -1,0 +1,48 @@
+.Dd 2024-05-11
+.Dt FF-MUX 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-mux
+.Nd farbfeld program that uses bits of one picture to select between two other pictures
+.Sh SYNOPSIS
+.Nm
+<image1.ff> <image2.ff>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, decides what parts of the other two images to include and writes the result
+to stdout.
+.Pp
+This farbfeld program uses bits of one picture to select between two other
+pictures.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes exactly two arguments, which must be two files that have the
+same size. The picture passed via standard in also have to have the same size.
+.Sh PRACTICAL EXAMPLE
+As a practical example you could use
+.Xr ff-chess 1
+to generate a chess board, then pass that via standard in along with two other images of the same
+size as arguments.
+
+The result is a chess board with parts of the other two images in each square. In practice it may
+look like the all three images are merged together. Which image is passed via standard in and the
+the order of the arguments do play a part and generates different results.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-mux.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

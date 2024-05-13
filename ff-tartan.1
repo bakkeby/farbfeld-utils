@@ -1,0 +1,68 @@
+.Dd 2024-05-04
+.Dt FF-TARTAN 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-tartan
+.Nd farbfeld program that generates a tartan pattern
+.Sh SYNOPSIS
+.Nm
+<width> <height> <mixing list> <thread> ... <?thread?>
+.Sh DESCRIPTION
+.Nm
+generates the tartan filter and writes the result to stdout.
+.Pp
+Notations like "K4 R24 K24 Y4" are not implemented. A single code in this
+pattern typically have multiple RGB colours associated with it which makes it
+problematic to implement.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes four or more arguments.
+
+The command line arguments are:
+   - width of the picture
+   - height of the picture
+   - mixing list
+   - the remaining arguments are the thread counts (up to 64)
+
+The mixing list consists of digits 0 to 8 to define the mixing levels of the
+warp/weft, here are some descriptions of each:
+   0 -- hard vertical lines (no horizontal mixing)
+   1 -- 25% mixed horizontal lines
+   2 -- 50% mixed horizontal lines
+   3 -- 75% mixed horizontal lines
+   4 -- evenly mixed colours
+   5 -- 75% mixed vertical lines
+   6 -- 50% mixed vertical lines
+   7 -- 25% mixed vertical lines
+   8 -- hard horizontal lines (no vertical mixing)
+
+The mixing list is a list of digits with no separators, e.g. 4014 can be used.
+
+Each thread count argument is given the number of pixels and then "x" and
+then the colour of the thread.
+
+The colours can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+.Sh EXAMPLES
+$
+.Nm
+640 480 4014 50x906060 100x609060 50x606090 30xFF2250 > tartan.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

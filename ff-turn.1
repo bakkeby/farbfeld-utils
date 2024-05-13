@@ -1,0 +1,40 @@
+.Dd 2024-05-02
+.Dt FF-TURN 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-turn
+.Nd farbfeld filter that can flip, mirror, and/or rotate a picture
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+<mode>
+reads a
+.Xr farbfeld 5
+image from stdin, applies the turn filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to flip, mirror, and/or rotate a picture.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one argument which is a number from 0 to 7 specifying what to
+do, as a sum of the following:
+   1 -- reverse Y axis
+   2 -- reverse X axis
+   4 -- swap X with Y axis (rotate 90 degrees)
+.Sh EXAMPLES
+$
+.Nm
+3 < image.ff > image-rotated-180-degrees.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

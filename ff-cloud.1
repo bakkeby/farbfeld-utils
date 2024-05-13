@@ -1,0 +1,71 @@
+.Dd 2024-04-28
+.Dt FF-CLOUD 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-cloud
+.Nd farbfeld filter that applies turbulence to random data to make clouds
+.Sh SYNOPSIS
+.Nm
+<?zoom levels?> <?smoothing type?> <?exponent?> <?options?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the cloud filter and writes the result to stdout.
+.Pp
+Requires a picture containing random data as input which is used to generate
+turbulence in order to create clouds. Optionally various filters can be
+applied to preprocess the random data for special effects, if desired.
+
+The input can be grey scale or colours. Normally it will cycle through the
+channels for each zoom level. The output is always grey scale unless the c
+option is specified.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes the following optional arguments:
+   zoom levels -- number of zoom levels, positive integer (defaults to 1)
+   smoothing function type -- from 0 to 6, outlined below (defaults to 2)
+   exponent -- a floating number (defaults to 1.0)
+   options -- one letter each (no default value)
+
+The possible smoothing function types are:
+   0 -- no smoothing; just truncate the coordinates to an integer, resulting
+        blocky output
+   1 -- linear interpolation
+   2 -- cubic interpolation
+   3 -- similar to 2 but using different factors per zoom level
+   4 -- linear interpolation, but ignores zoom level and always uses all
+        channels
+   5 -- uses positive cubic for red input, negative cubic for green input, and
+        positive linear for blue input.
+   6 -- cubic interpolation, but ignores zoom level and always uses all
+        channels (except alpha)
+
+Options:
+   c -- use colours output. Positive samples are red, negative samples are
+        green, and far negative samples are cyan
+   i -- some smoothing function types will use this to shift the zoom level
+        numbers for each pixel, resulting in a striped output
+   j -- lock the channel
+   r -- adjust the zooming levels according to the alpha channel
+.Sh EXAMPLES
+$
+.Nm
+< random.ff > image-cloud.ff
+.Pp
+$
+.Nm
+3 4 0.92 ci < random.ff > image-cloud.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

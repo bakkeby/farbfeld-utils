@@ -1,0 +1,49 @@
+.Dd 2024-04-04
+.Dt FF-INTERLEAVE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-interleave
+.Nd program that interleaves two pictures
+.Sh SYNOPSIS
+.Nm
+<image> <image> <?option?>
+.Sh DESCRIPTION
+.Nm
+interleaves two
+.Xr farbfeld 5
+pictures and writes the result to stdout.
+.Pp
+No data is read from stdin, and both pictures must be of the same size.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The first two arguments are the files that should be interleaved.
+.Pp
+An optional third argument specifies the mode of interleaving:
+  w -- interleave individual channels
+  x -- interleave columns
+  y -- interleave scanlines (default)
+.Sh EXAMPLES
+$
+.Nm
+image1.ff image2.ff > image-interleaved.ff
+.Pp
+$
+.Nm
+image1.ff image2.ff w > image-interleaved.ff
+.Pp
+$
+.Nm
+image1.ff image2.ff x > image-interleaved.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

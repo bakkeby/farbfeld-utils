@@ -1,0 +1,47 @@
+.Dd 2024-04-30
+.Dt FF-ENLARGE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-enlarge
+.Nd farbfeld filter that enlarges a picture by duplicating each pixel into a rectangular area
+.Sh SYNOPSIS
+.Nm
+<?x factor?> <?y factor?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, enlarges the picture and writes the result to stdout.
+.Pp
+This filter works by making "large pixels", i.e. it does not interpolate.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes up to two optional arguments:
+   X factor (defaults to 2)
+   Y factor (defaults to value of X factor)
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-enlarged-2x.ff
+.Pp
+$
+.Nm
+3 < image.ff > image-enlarged-3x.ff
+.Pp
+$
+.Nm
+1 3 < image.ff > image-stretched.ff
+.Sh SEE ALSO
+.Xr ff-shrink 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

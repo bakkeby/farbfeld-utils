@@ -1,0 +1,51 @@
+.Dd 2023-10-25
+.Dt JEF2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm jef2ff
+.Nd convert Janome Embroidery Format image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a Janome Embroidery Format image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+These are files that are used with the Janome embroidery machine models such
+as the Janome Memory Craft range, e.g. MC200, MC300, MC350, MC9500, MC9700,
+MC11000 and MC12000.
+.Pp
+Each pixel represents 0.1mm and places where there are no stitches will be
+transparent pixels (use
+.Xr ff-back 1
+to add an opaque background). The colours may
+be wrong in some pictures; it is unsure what exactly is the reason (possibly
+different thread numbers from different manufacturers; official files from
+Jenome show correct colours).
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.jef > image.ff
+.Pp
+$
+.Nm
+< image.jef | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr ff-back 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

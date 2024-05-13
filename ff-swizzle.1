@@ -1,0 +1,57 @@
+.Dd 2024-05-09
+.Dt FF-SWIZZLE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-swizzle
+.Nd farbfeld filter that alters, swaps or removes channels
+.Sh SYNOPSIS
+.Nm
+<rgba>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the swizzle filter and writes the result to stdout.
+.Pp
+Swizzle in this context means changing the channels of a picture, which may
+involve swapping, removing or altering channels.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes one argument, which consists of 4 characters, one for each of
+the red, green, blue and alpha output.
+
+The character options are:
+   - a lowercase letter r, g, b, a: copy that channel of input
+   - an uppercase letter R, G, B, A: copy that channel of input, but negated
+   - number 0: all bits clear
+   - number 1: all bits set
+
+It is also possible to alter the width of the picture less or more than four
+characters are used. It can be one, two, or a multiple of four.
+
+With one character, each pixel of input becomes one channel of one pixel of
+output.
+
+Example combinations:
+   rgba - straight copy (no change)
+   bgra - red and blue channels are swapped
+   0gba - red channel is removed
+   00b1 - keep blue channel and make image fully opaque
+   RGBa - invert the image
+.Sh EXAMPLES
+$
+.Nm
+r001 < image.ff > red-channel.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

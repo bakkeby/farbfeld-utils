@@ -1,0 +1,66 @@
+.Dd 2024-04-28
+.Dt FF-NOISE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-noise
+.Nd farbfeld filter that adds random noise to a picture
+.Sh SYNOPSIS
+.Nm
+<seed> <probability> <min> <max> <?options?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the noise filter and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes the following arguments:
+   seed -- a random number
+   probability -- probability of adding noise to each pixel (0 to 32767)
+   min -- minimum mixture (0 to 256)
+   max -- maximum mixture (0 to 256)
+   options -- (one letter each) (optional)
+
+The option letters are:
+   r -- affect red channel
+   g -- affect green channel
+   b -- affect blue channel
+   a -- affect alpha channel
+   d -- noise values are mandatorily less than half
+   l -- noise values are mandatorily greater than half
+   p -- force the noise to be either minimum or maximum rather than numbers in
+        between
+   i -- the mixture amount is the same for all channels rather than
+        independent per channel
+   s -- keep brightness approximately the same
+   y -- the noise colour is the same for all channels rather than independent
+        per channel
+   q -- sets the noise colour to that of the previous colour rather than a
+        random colour - can affect other options such as p (it is unclear what
+        the intended use for this option is as it is not documented)
+   u -- sets previous colour to that of the noise colour instead of the actual
+        input colour - this affects the q option and has no effect without it
+
+If the channels are not specified then it will default to affect red, green
+and blue channels, but not alpha.
+.Sh EXAMPLES
+$
+.Nm
+5912 23982 2 255 l < image.ff > image-noise.ff
+.Pp
+$
+.Nm
+4233 19292 30 248 si < image.ff > image-noise.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

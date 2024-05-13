@@ -1,0 +1,112 @@
+.Dd 2023-11-04
+.Dt CGA2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm cga2ff
+.Nd convert IBM PC Color Graphics Adapter (CGA) video memory dump to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Op 0-F
+.Op X
+.Op Y
+.Op Z
+.Sh DESCRIPTION
+.Nm
+reads raw CGA video memory dump data from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+Use of this tool assumes intimate familiarity with the CGA graphics format and hardware.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh OPTIONS
+.Pp
+Arguments are all in hex, each three characters long.
+.Bl -tag -width Ds
+.It 0-F
+for one of the 6845 registers
+.It X
+the CGA "mode control" register
+.It Y
+the CGA "color select" register
+.It Z
+additional options (see below)
+
+.El
+.Pp
+X - Mode Control Register:
+.Bl -tag -width Ds
+.It bit0
+0 = Select 40x25 Text Mode, 1 = Select 80x25 Text Mode
+.It bit1
+0 = Select Text Mode, 1 = Select Graphics Mode
+.It bit2
+0 = Select Color on Composite Display, 1 = Select B&W on Composite Display
+.It bit3
+0 = Disable Video Signal, 1 = Enable Video Signal
+.It bit4
+0 = Select 320x200 Graphics, 1 = Select 640x200 Graphics
+.It bit5
+0 = Blinking Enabled, Character Cell can Select from 8 Background Colors, 1 = Blinking Disabled, Character Cell can Select from 16 Background Colors
+.El
+.Pp
+Y - Color Select Register:
+.Bl -tag -width Ds
+.It bit0
+Select Blue Color of Border (Text Modes), Background and Border (320x200 Graphics) or Foreground (640x200 Graphics), 0 = No Color, 1 = Color
+.It bit1
+Select Green Color of Border (Text Modes), Background and Border (320x200 Graphics) or Foreground (640x200 Graphics), 0 = No Color, 1 = Color
+.It bit2
+Select Red Color of Border (Text Modes), Background and Border (320x200 Graphics) or Foreground (640x200 Graphics), 0 = No Color, 1 = Color
+.It bit3
+Select Intensified Color of Border (Text Modes), Background and Border (320x200 Graphics) or Foreground (640x200 Graphics), 0 = No Color, 1 = Color
+.It bit4
+0 = Select Non-intensity Palette Colors, 1 = Select Intensity Palette Colors
+.It bit5
+0 = Select Palette Color Set 1, 1 = Select Palette Color Set 2
+
+.El
+.Pp
+Z - Additional options are a bit field with the bits:
+.Bl -tag -width Ds
+.It bit0
+If set, the file contains a BSAVE header, which must specify an address in the PC video memory, or else the data will be ignored and the picture will be blank.
+.It bit1
+If set, colour 6 appears dark yellow; if clear, colour 6 appears brown.
+.It bit2
+If set, use the thin font (which, on a CGA card, can be selected only by a jumper, not by software). If clear, the normal thick font is used. No effect in APA mode.
+.It bit3
+If set, blinking text is concealed and is displayed using the background colour. If clear, blinking text is displayed using the foreground colour.
+.It bit4
+If set, pixels in the location where the cursor is are transparent (but otherwise retain their colour). If clear, all pixels are opaque.
+.It bit5
+If set, the cursor is displayed using the foreground colour. If clear, the cursor retains the normal colour of the text pattern. No effect in APA mode.
+.It bit6
+Must be clear; reserved for future use.
+.It bit7
+If set, contains a mode header. If the BSAVE header is also present, the mode header comes before the BSAVE header. This header has 18 bytes: the "mode control" register, the "color select" register, and then the sixteen 6845 registers.
+.El
+.Pp
+All unspecified values default to zero.
+.Pp
+The aspect ratio of the output is incorrect; use
+.Xr ff-enlarge 1
+to correct it.
+
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+F35 X33 Y14 Z2E
+< memory.dump > image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

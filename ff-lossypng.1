@@ -1,0 +1,59 @@
+.Dd 2024-05-11
+.Dt FF-LOSSYPNG 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-lossypng
+.Nd farbfeld program that reduces the quality of an image in an attempt to allow for
+smaller PNG files by improved compression
+.Sh SYNOPSIS
+.Nm
+<?opt=value?> <?opt=value?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the lossypng quality reductions and writes the result to stdout.
+.Pp
+This farbfeld program reduces the quality of an image in an attempt to all
+for smaller PNG files by improved compression.
+.Pp
+Note that this program does not perform PNG encoding, it just handles the
+quality reduction.
+.Pp
+When encoding the image as PNG you should add the q3 option to
+.Xr ff2png 1
+for improved compression.
+.Pp
+Additionally, regardless of the options selected, the picture is reduced to
+8-bits per channel.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+Options are a letter and equal sign and a number; no options are required.
+
+The available options are:
+   a -- if specified and nonzero, tries to bring pixels closer to the average;
+        higher numbers
+   d -- a parameter used for rounding the amount of diffusion, which is
+        normally 16
+   h -- a parameter used for rounding - if zero or unspecified, then it will
+        use half of q by default
+   q -- quality setting - higher numbers result in worse quality but improved
+        compression (the default setting is 6)
+.Sh EXAMPLES
+$
+.Nm
+< image.ff | ff2png q3 > image-lossy.png
+.Sh SEE ALSO
+.Xr ff2png 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

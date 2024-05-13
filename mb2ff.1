@@ -1,0 +1,68 @@
+.Dd 2024-03-26
+.Dt MB2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm mb2ff
+.Nd convert Hero Mesh puzzle image to farbfeld
+.Sh SYNOPSIS
+.Nm
+<letter> <?class?> <?index?>
+.Sh DESCRIPTION
+.Nm
+reads a Free Hero Mesh composite puzzle set from stdin, extracts pictures and converts them to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+Free Hero Mesh is a free/open-source puzzle game engine where you can define your own classes of
+objects using the Free Hero Mesh programming language.
+.Pp
+A Free Hero Mesh composite puzzle set file is a Hamster archive containing the
+files of a Free Hero Mesh puzzle set, and optionally some additional lumps,
+such as FILE_ID.DIZ.
+.Pp
+Free Hero Mesh doesn't care about the file name of a composite puzzle set; the use of .fhm is merely
+a convention used by some people.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh Options
+This decoder takes up to three arguments:
+   letter -- a single letter, from A to C, which specifies what size of
+             pictures are wanted (this is the only mandatory argument)
+   class  -- a class name or a one-based level number. If a class, export all
+             pictures in a vertical strip. If a level number, render that
+             level.
+   index  -- a zero-based image number within the class. This is only valid if
+             the second argument is a class name. It outputs only that one
+             picture, rather than all of them.
+
+Pictures are sixteen per row (use ff-strip to change this) and are in the
+allocation order; not the order they appear in class definitions.
+
+Note when previewing a level, it renders it as it would be in the editor; at
+runtime it may look different due to MSG_INIT codes altering stuff.
+
+Also see:
+   - http://fileformats.archiveteam.org/wiki/Free_Hero_Mesh_composite_puzzle_set
+   - http://zzo38computer.org/fossil/heromesh.ui/index
+   - https://chiselapp.com/user/zzo38/repository/freeheromesh/info/27aef9b
+.Sh EXAMPLES
+$
+.Nm
+A < image.fhm > image.ff
+.Pp
+$
+.Nm
+B 3 < image.fhm > image.ff
+.Sh SEE ALSO
+.Xr fhm2ff 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

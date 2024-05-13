@@ -1,0 +1,59 @@
+.Dd 2024-04-03
+.Dt FF-SOLAR 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-solar
+.Nd farbfeld filter that negates pixels above a threshold
+.Sh SYNOPSIS
+.Nm
+<?channels?> <?threshold?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the solar filter and writes the result to stdout.
+.Pp
+This farbfeld filter negates pixels above a threshold.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The first argument combines up to four characters to indicate which channels
+to affect:
+   r -- red channel
+   g -- green channel
+   b -- blue channel
+   a -- alpha channel
+
+If no arguments are provided then
+.Nm
+will default to affect the colour
+channels r, g, and b.
+
+The second argument is the threshold; from 0 to 65535.
+
+If the threshold is not provided then the default value of 32768 (0x8000) will
+be used.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-solar.ff
+.Pp
+$
+.Nm
+rb < image.ff > image-solar.ff
+.Pp
+$
+.Nm
+g 20000 < image.ff > image-solar.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

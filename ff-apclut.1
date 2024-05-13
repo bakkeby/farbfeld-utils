@@ -1,0 +1,59 @@
+.Dd 2024-03-30
+.Dt FF-APCLUT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-apclut
+.Nd farbfeld filter that applies a Hald CLUT picture to the input farbfeld image
+.Sh SYNOPSIS
+.Nm
+<clut picture>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the applies a Hald CLUT picture and writes the result to stdout.
+.Pp
+A Hald CLUT is a special image that encodes how source colors should be mapped to output colors.
+
+Any color correction can be expressed as a Color LookUp Table or CLUT (some times written as "Color
+LUT").
+
+A Hald CLUT is an image that has a specific color pattern on it. In this pattern all colors in the
+color space are represented. An application that uses the HALD CLUT image to color correct an image,
+takes a source image color and looks it up in the color pattern of the HALD CLUT, and the color it
+finds in that place is the corrected color that should replace the source color in the destination
+image. If the color doesn't exist in the CLUT, one can look up several colors and interpolate
+between them.
+
+An identity Hald CLUT is a CLUT that doesn't affect the image it is applied to. Refer to
+.Xr ff-idclut 1
+to generate an identity Hald CLUT. This can be changed to create a colour adjusting template that
+can be applied to other pictures.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The only argument is a Hald CLUT picture with a precision of 8-bits per
+channel (although the pixels themselves are 16-bits per channel).
+.Sh REFERENCES
+https://www.quelsolaar.com/technology/clut.html
+.br
+https://phpimagick.com/Imagick/haldClutImage?image_path=Lorikeet&hald_clut_type=EdgyEmber
+.br
+https://github.com/cedeber/hald-clut
+.Sh EXAMPLES
+$
+.Nm
+clut.ff < image.ff > image-adjusted.ff
+.Sh SEE ALSO
+.Xr ff-idclut 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

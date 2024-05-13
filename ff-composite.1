@@ -1,0 +1,84 @@
+.Dd 2024-05-05
+.Dt FF-COMPOSITE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-composite
+.Nd farbfeld filter that composes one or more pictures over a background picture
+.Sh SYNOPSIS
+.Nm
+<image.ff> <x,y,mode> <?image2.ff?> <?x,y,mode?> ...
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, composes one or more pictures over the background picture and writes
+the result to stdout.
+.Pp
+The input is the background picture.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This filter takes two arguments per picture.
+
+Each picture to add is specified as a pair of arguments, where the first argument of the pair is
+the picture to add and the second is three numbers with commas in between.
+
+The first two numbers being the position (x,y) in the background to place the
+top-left of the added picture, and the third being the mode.
+
+The valid modes are:
+    0 -- overlay the picture in the ordinary way, using the alpha channel to
+         determine what parts of the background are let through
+    1 -- copy all four channels of the source to the target; the background is
+         not let through at all
+    2 -- like mode 0, but the alpha channel of the target is not altered
+    3 -- add the values together, clipping
+    4 -- add the values together, wrapping, and ignoring alpha
+    5 -- multiply the values together, ignoring alpha
+    6 -- add the values together, wrapping
+    7 -- multiply the values together
+    8 -- average of all four channels
+    9 -- copy the red channel only; leave the rest alone
+   10 -- copy the green channel only; leave the rest alone
+   11 -- copy the blue channel only; leave the rest alone
+   12 -- copy the alpha channel only; leave the rest alone
+   13 -- copy the red channel only with alpha applied; leave the rest alone
+   14 -- copy the green channel only with alpha applied; leave the rest alone
+   15 -- copy the blue channel only with alpha applied; leave the rest alone
+   16 -- subtract all values, with clipping
+   17 -- bitwise XOR the values, except alpha
+   18 -- bitwise OR the values, including alpha
+   19 -- absolute value of difference, not including alpha
+   20 -- colour negation - background channels are divided by picture channels
+   21 -- colour negation - picture channels are divided by background channels
+   22 -- like mode 1, but the alpha is the average of the red, green and blue
+         channels and the two (source and target) alphas multiplied
+   23 -- pixels with matching colours (not counting the alpha channel) are
+         made transparent
+   24 -- uses the alpha channel as a depth buffer (like mode 25), but same
+         depth is tied in favour of the background picture. Also, instead of
+         copying the colour, it is combining similar to symbol recolouring in
+         Magic Set Editor.
+   25 -- overlay using the alpha channel as the depth buffer instead of
+         transparency. Zero is the back depth and 65535 is the front depth.
+         Same depth is tied in favour of the added picture.
+   26 -- quaternion multiplication, with wrapping - the alpha channel is
+         treated as the scalar component
+   27 -- quaternion multiplication, with clipping - the alpha channel is
+         treated as the scalar component
+.Sh EXAMPLES
+$
+.Nm
+1.ff 50,50,0 2.ff 100,50,0 < image.ff > image-composite.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

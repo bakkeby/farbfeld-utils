@@ -1,0 +1,38 @@
+.Dd 2023-10-25
+.Dt FF2AVS 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2avs
+.Nd convert farbfeld to Stardent AVS X image
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts it to AVS (8-bit RGBA) and writes the result
+to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.avs
+.Pp
+$ bunzip2 < image.ff.bz2 |
+.Nm
+> image.avs
+.Sh SEE ALSO
+.Xr avs2ff 1,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

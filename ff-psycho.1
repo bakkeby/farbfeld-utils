@@ -1,0 +1,57 @@
+.Dd 2024-05-09
+.Dt FF-PSYCHO 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-psycho
+.Nd farbfeld program that generates psychedelic art or soft gradients
+.Sh SYNOPSIS
+.Nm
+<width> <height> <code> <code> <code>
+.Sh DESCRIPTION
+.Nm
+generates psychedelic art as a
+.Xr farbfeld 5
+picture and writes the result to stdout.
+.Pp
+This farbfeld program is used to generate psychedelic art. It can also
+generate soft gradients.
+.Pp
+This program does not read from standard in.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes five arguments:
+   - width
+   - height
+   - code for red channel
+   - code for green channel
+   - code for blue channel
+
+The codes are strings of digits, and are a stack-based code, where each one
+pops zero or more items and pushes a single item. Digits 0 and 1 pop nothing,
+6 and 7 pop one item, 2 and 8 and 9 pop two items, and 3 and 4 and 5 pop that
+many items.
+.Sh EXAMPLES
+$
+.Nm
+4444 1111 77777 > psycho.ff
+.Pp
+$
+.Nm
+9923401103 11323492200 111442342010 > gradients.ff
+.Pp
+$
+.Nm
+12320078782020302303 032010291025922345667 020234447921001027101243 > psycho.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

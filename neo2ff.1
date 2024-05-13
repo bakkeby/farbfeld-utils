@@ -1,0 +1,102 @@
+.Dd 2023-11-09
+.Dt NEO2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm neo2ff
+.Nd convert NEOchrome image to farbfeld
+.Sh SYNOPSIS
+.Nm
+<?colour animation number?>
+.Sh DESCRIPTION
+.Nm
+reads a NEOchrome image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+NEOchrome format is a raster image file format associated with the NEOchrome
+graphics editor for Atari ST.
+
+This decoder optionally takes one argument, which is the colour animation
+number; if omitted; zero is assumed.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh FORMAT DETAILS
+NEOchrome image files have the file extension .NEO and contain a 79-byte header followed by 16,000
+bytes of image data. The format of the header is as follows:
+
+   typedef struct _NeochromeHeader
+   {
+       WORD Flag;             /* Flag byte (always 00h) */
+       WORD Resolution;       /* Image resolution:
+                               *    0 = low (320x200x16)
+                               *    1 = medium (640x200x4)
+                               *    2 = high (640x400x2)
+                               */
+       WORD Palette[16];      /* Color palette; 9-bit RGB 00000RRR0GGG0BBB */
+       CHAR FileName[12];     /* Name of image file */
+       WORD Limits;           /* Color animation limits */
+       WORD Speed;            /* Color animation speed and direction */
+       WORD NumberOfSteps;    /* Number of color steps */
+       WORD XOffset;          /* Image X offset (always 00h) */
+       WORD YOffset;          /* Image Y offset (always 00h) */
+       WORD Width;            /* Image width (always 320) */
+       WORD Height;           /* Image height (always 200) */
+       WORD Reserved[33];     /* Reserved (always 00h) */
+       WORD data[16000];
+   } NEOCHROMEHEAD;
+
+Flag is a collection of flag bits and is always set to a value of 00h.
+
+Resolution specifies the resolution of the image data. Values are:
+
+   00h - Low resolution (320x200x16)
+   01h - Medium resolution (640x200x4)
+   02h - High resolution (640x400x2)
+
+Palette is the color palette for this image stored as an array of 16 WORD values.
+
+FileName is the name of the image file. The default string for this field is ".".
+
+Limits specifies the color animation limits of the image. Bits 0 through 3 specify the value of the
+upper-right limit, and bits 4 through 7 specify the value of the lower-left limit. Bit 15 is set to
+1 if the animation data is valid.
+
+Speed specifies the color animation speed and direction. Bits 0 through 7 specify the speed of the
+playback in number of blank frames displayed per animation frame. Bit 15 indicates the direction of
+playback. A value of 0 indicates normal and a value of 1 indicates reversed.
+
+NumberOfSteps is the number of frames in the animation.
+
+XOffset and YOffset are the starting coordinates of the image on the display. These values are
+always 00h.
+
+Width is the width of the image in pixels. This value is always 320.
+
+Height is the height of the image in pixels. This value is always 200.
+
+Reserved is a field of 33 bytes reserved for future header fields. All bytes in this field are set
+to 00h.
+
+Note that the format may seem to allow for other video modes, and other image dimensions. However,
+such files are generally not supported, and are probably not valid.
+.Sh EXAMPLES
+$
+.Nm
+< IMAGE.NEO > image.ff
+.Pp
+$
+.Nm
+< IMAGE.NEO | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

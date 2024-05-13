@@ -1,0 +1,61 @@
+.Dd 2023-11-24
+.Dt MZM2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm mzm2ff
+.Nd convert MegaZeux image format to farbfeld
+.Sh SYNOPSIS
+.Nm
+<font> <palette file>
+.br
+.Nm
+<font> <?colour?> ... <?colour?>
+.Sh DESCRIPTION
+.Nm
+reads a MegaZeux image format from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+This program reads a layer-mode MZM of the format used by MegaZeux. Note that
+board-mode is not implemented. Both MZM2 and MZM3 formats can be read.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The first argument is a name of the font file. The font file must be in PC
+format, and it must be complete and have the correct file size. Additionally
+the file must support fseek() and ftell()). The remaining arguments are
+optional and specify the palette.
+
+They may be one of:
+   - omitted, to use the default PC colours
+   - the name of a MegaZeux palette file (unlike the font file, this does not
+     need to be seekable)
+   - sixteen colours
+
+The colours can be defined through one of the following patterns:
+  rrggbb            three pairs of 8-bit hex values
+  rrggbbaa          four pairs of 8-bit hex values
+  rrrrggggbbbb      three pairs of 16-bit hex values
+  rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+.Sh EXAMPLES
+$
+.Nm
+pc.font < image.mzm > image.ff
+.Pp
+$
+.Nm
+pc.font < image.mzm | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr ff2mzm 1,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

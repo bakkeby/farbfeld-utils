@@ -1,0 +1,37 @@
+.Dd 2024-03-29
+.Dt GEMICN2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm gemicn2ff
+.Nd converts GEM icons to farbfeld
+.Sh SYNOPSIS
+.Nm
+<icon number>
+.Sh DESCRIPTION
+.Nm
+reads GEM icons data from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+The context around GEM icons is not documented.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This decoder takes a single argument which is the icon number. This number
+must be between 0 and 71.
+.Sh EXAMPLES
+$
+.Nm
+3 < gem.icon > image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

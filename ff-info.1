@@ -1,0 +1,49 @@
+.Dd 2024-04-04
+.Dt FF-INFO 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-info
+.Nd program that prints the height and/or width of a farbfeld image
+.Sh SYNOPSIS
+.Nm
+<?option?>
+.Sh DESCRIPTION
+.Nm
+prints the height and/or width of a
+.Xr farbfeld 5
+image to stdout.
+.Pp
+The output is decimal ASCII followed by a line feed (newline).
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+.Nm
+optionally takes a single argument which is either "w" to only print the width or "h" to
+only print the height.
+.Pp
+If no arguments are provided then both the width and height will be printed
+separated with a space character.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff
+.Pp
+$
+.Nm
+w < image.ff
+.Pp
+$
+.Nm
+h < image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,52 @@
+.Dd 2024-05-09
+.Dt FF-QUANTILE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-quantile
+.Nd farbfeld filter that computes a median or other quantile
+.Sh SYNOPSIS
+.Nm
+<width> <height> <quantifier> <bitmask options>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the quantile filter and writes the result to stdout.
+.Pp
+This farbfeld filter is used to compute a median or other quantile.
+.Pp
+It should be noted that the calculations are fairly slow due to the amount of
+work needed, so this is best tested with small images.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes four arguments:
+   width - output width, must be less than the input image width
+   height - output height, must be less than the input image height
+   quantifier - must be greater than 0 and less than output width * height
+   option - a 3-bit bitmask enabling various options
+
+The options bitmask is:
+   001 (1) - sets the output pixel to be the nth highest colour out of all the
+             colours in the scanline - where n is the quantifier
+   010 (2) - increment quantifier by 1 for every pixel
+   100 (4) - increment quantifier by 1 for every scanline
+
+Being a bitmask options can be combined, e.g. 3 enables the first two options
+while 7 enables all three.
+.Sh EXAMPLES
+$
+.Nm
+40 40 0 3 < image.ff > image-quantile.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

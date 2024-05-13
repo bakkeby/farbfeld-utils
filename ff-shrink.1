@@ -1,0 +1,58 @@
+.Dd 2024-05-04
+.Dt FF-SHRINK 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-shrink
+.Nd farbfeld filter that shrinks an image by ignoring some pixels
+.Sh SYNOPSIS
+.Nm
+<?x factor?> <?y factor?> <?option?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the shrink filter and writes the result to stdout.
+.Pp
+This farbfeld filter that shrinks an image by ignoring some pixels.
+.Pp
+The filter works similarly to
+.Xr ff-enlarge 1 ,
+but shrinks the picture instead of
+making it larger.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes up to three optional arguments:
+   X factor (defaults to 2)
+   Y factor (defaults to value of X factor)
+   option (affects how the image is reduced)
+
+The following options are available:
+   a -- average
+   c -- corner (default)
+   m -- maximum
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-shrinked.ff
+.Pp
+$
+.Nm
+4 < image.ff > image-shrinked.ff
+.Pp
+$
+.Nm
+3 3 a < image.ff > image-shrinked.ff
+.Sh SEE ALSO
+.Xr ff-enlarge 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

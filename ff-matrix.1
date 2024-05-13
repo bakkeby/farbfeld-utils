@@ -1,0 +1,56 @@
+.Dd 2024-05-12
+.Dt FF-MATRIX 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-matrix
+.Nd farbfeld filter that multiplies each pixel (considered as a vector) by a matrix
+.Sh SYNOPSIS
+.Nm
+<float1> <float2> ... <float20>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the matrix filter and writes the result to stdout.
+.Pp
+Multiplies each pixel, considered as a vector of RGBA, by a matrix to produce
+the new RGBA values for that pixel.
+.Pp
+Possible use cases for matrix processing:
+   - image filtering: matrix operations are often used for image filtering
+     such as blurring, sharpening, edge detection and embossing (in which case
+     also see
+.Xr ff-convolve 1
+which applies a convolution matrix)
+   - colour transformations: matrix operations can be used to convert between
+     different colour models like RGB, CMYK, HSL, HSV and YUV
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes twenty arguments.
+
+The twenty arguments are the matrix coefficients (which are floating numbers).
+
+The input/output values in each channel are considered as numbers in range 0
+to 1, and if the output is out of range then the closest valid value is used.
+.Sh EXAMPLES
+$
+.Nm
+0.329 0.410 0.110 0.010
+            0.982 0.412 0.111 0.234
+            0.040 0.291 0.781 0.824
+            0.111 0.434 0.291 0.331
+            0.221 0.110 0.556 0.689 < image.ff > modified.ff
+.Sh SEE ALSO
+.Xr ff-convolve 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

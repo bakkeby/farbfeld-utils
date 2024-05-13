@@ -1,0 +1,66 @@
+.Dd 2024-05-10
+.Dt FF-SCANF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-scanf
+.Nd farbfeld program that converts text representation pixels into a picture
+.Sh SYNOPSIS
+.Nm
+<width> <height> <?format string?> <?+?>
+.Sh DESCRIPTION
+.Nm
+reads text of pixels from standard in, converts that a
+.Xr farbfeld 5
+picture and writes the result to standard out.
+.Pp
+It is the inverse operation of
+.Xr ff-printf 1 .
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The program takes two, three or four arguments.
+
+The first and second arguments are the width and height of the picture.
+
+The third argument is the format string; by default \\"%d %d %d %d\\n\\". See
+.Xr scanf 3
+for details if you plan on changing the format string. All argument
+types in C are int, regardless of bits-per-channel.
+
+You may use shell operator to expand backslash escapes, as it is not done
+automatically by this program.
+
+An empty string can be given for the format string to skip it if the only
+thing you want is to set the fourth argument.
+
+The fourth argument is optional and controls how many bits per channel is
+used. By default 16 bits per channel is used. If a + is given as the argument
+then this indicates that the input uses 8 bits per channel.
+
+You can use
+.Xr ff-info 1
+on the original image file to work out what the dimensions
+were if you are unsure.
+.Sh EXAMPLES
+$
+.Nm
+640 480 < 16-bits-per-channel.txt > image.ff
+.Pp
+$
+.Nm
+640 480 "" + < 8-bits-per-channel.txt > image.ff
+.Sh SEE ALSO
+.Xr ff-printf 1 ,
+.Xr ff-info 1 ,
+.Xr scanf 3 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

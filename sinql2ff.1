@@ -1,0 +1,45 @@
+.Dd 2023-11-19
+.Dt SINQL2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm sinql2ff
+.Nd convert Sinclair QL screen format image to farbfeld
+.Sh SYNOPSIS
+.Nm
+<?screen mode?>
+.Sh DESCRIPTION
+.Nm
+reads a Sinclair QL screen format image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+The Sinclair QL screen format was used on the Sinclair QL which was a 1980s
+computer system.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh OPTIONS
+This decoder takes one optional argument:
+
+screen mode -- must be 4 or 8 (defaults to 4)
+
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.img > image.ff
+.Pp
+$
+.Nm
+8 < image.img | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

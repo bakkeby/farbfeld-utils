@@ -1,0 +1,68 @@
+.Dd 2024-03-28
+.Dt FF2XZIP 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2zxip
+.Nd convert farbfeld to Z-machine XZIP picture library file format
+.Sh SYNOPSIS
+.Nm
+<flag> <offset> <?options...?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+file from stdin, converts it to Z-machine XZIP picture library file format
+and writes the result to stdout.
+
+The format was documented together with XZIP, but was not given a particular
+name. For the purpose of this documentation we refer to it as the XZIP
+picture library format. It is not the same format as the more common "YZIP
+picture library" format, of which there are several variants.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+.Nm
+takes three or more arguments.
+
+The first two arguments are the flag and the offset. The flag can be 1 if the
+first picture is a splash screen, or 0 otherwise. The offset is the number of
+the first picture in the file.
+
+After the first two arguments, there is either one more argument (for a
+character set) or an even number of arguments.
+
+In the case of a character set, the one argument is the character height, and
+the picture comes from stdin, which is expected to be a vertical strip.
+
+In the other case, the arguments form pairs of a DOS filename and the input
+picture (stdin isn't used in this mode). The DOS filename is limited to 12
+characters; if you put more than 12 characters then it is truncated, and if
+you put less than 12 characters then it is padded with spaces. Instead of the
+input picture you can use an empty string to indicate a picture which isn't
+present.
+
+In either case, transparent pixels are considered background and opaque
+pictures are considered foreground (use
+.Xr ff-colorkey 1
+or
+.Xr ff-swizzle 1
+first to convert if needed).
+.Sh EXAMPLES
+$
+.Nm
+0 2 14 < vertical_strip.ff > image.xzip
+.Sh SEE ALSO
+.Xr xzip2ff 1 ,
+.Xr ff-colorkey 1 ,
+.Xr ff-swizzle 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

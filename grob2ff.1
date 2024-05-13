@@ -1,0 +1,39 @@
+.Dd 2024-03-29
+.Dt GROB2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm grob2ff
+.Nd converts HP-48/HP-49 graphics object to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads HP-48/HP-49 graphics object from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+
+HP-48 and HP-49 are programmable graphing calculators designed and produced by
+Hewlett-Packard.
+
+This decoder can read both ASCII and binary files, although some files may not
+work.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+This decoder takes no arguments.
+.Sh EXAMPLES
+$
+.Nm
+< image.grob > image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

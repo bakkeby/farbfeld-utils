@@ -1,0 +1,69 @@
+.Dd 2024-03-29
+.Dt FF-BRIGHT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-bright
+.Nd farbfeld filter that add/multiply/exponent pixel values by a constant to adjust brightness
+for one or more channels
+.Sh SYNOPSIS
+.Nm
+<?channels?> <?add?> <?multiply?> <?exponent?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies adjust brightness by a constant and writes the result to stdout.
+.Pp
+It scales the values to the range 0 to 1, and then after applying the
+specified arithmetic will clip to that range and expand back to a 16-bit
+integer.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The first argument specifies which channels to affect; use one or more of the
+letters r, g, b, and a. It is the only mandatory argument; the others are
+optional.
+
+Second argument is amount to add, default is 0.0. Greater than 0.0 will result
+in a brighter image and less than 0.0 will result in a darker image.
+
+Third argument is amount to multiply by, default to 1.0. Greater than 1.0 will
+result in a brigher image and less than 1.0 will result in a darker image.
+
+Fourth argument is amount to raise to the power of, default to 1.0. Greater
+than 1.0 will result in a darker image and less than 1.0 will result in a
+brighter image.
+
+Order of operation is first exponent, and then multiply, and then add.
+.Sh EXAMPLES
+$
+.Nm
+rgb 0.25 < image.ff > image-bright.ff
+.Pp
+$
+.Nm
+rgb -0.25 < image.ff > image-dark.ff
+.Pp
+$
+.Nm
+g 0.0 1.1 < image.ff > image-green-hue.ff
+.Pp
+$
+.Nm
+b 0.0 1.0 0.04 < image.ff > image-blue-hue.ff
+.Pp
+$
+.Nm
+rb 0.0 1.0 0.4 < image.ff > image-increase-red-and-blue.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

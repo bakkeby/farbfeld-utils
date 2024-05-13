@@ -1,0 +1,40 @@
+.Dd 2023-10-25
+.Dt MAC2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm mac2ff
+.Nd convert MacPaint image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a MacPaint image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+MacPaint is the native image format of the MacPaint paint program for Apple Macintosh.
+.Pp
+Images are always bi-level, 576×720 pixels in size, and use PackBits compression.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.mac > image.ff
+.Pp
+$
+.Nm
+< image.mac | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

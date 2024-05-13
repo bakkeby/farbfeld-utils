@@ -1,0 +1,74 @@
+.Dd 2024-03-25
+.Dt FF2PSYTC 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2psytc
+.Nd convert farbfeld to Psycopathicteen Tile Compressor graphics
+.Sh SYNOPSIS
+.Nm
+<?opt?> ... <?opt?> + <?palette?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+file from stdin, converts it to psytc and writes the result to stdout.
+.Pp
+Psycopathicteen Tile Compressor is a experimental format for compressing 4
+bits per pixel indexed colours picture (such as using on Super Nintendo).
+
+This encoder expects the input as a vertical strip; use
+.Xr ff-strip 1
+to change it if this is not the case.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh Options
+Optional arguments are given a sequence of options, and also optionally the
+palette; the palette is preceded by + as an argument by itself, and then the
+remaining arguments are each colours for the palette.
+
+Options:
+   a -- Force the compression mode; 1 means horizontal compression, 2
+        means vertical compression, and 3 means uncompressed
+   h -- Tile height; 8 by default (tile width is equal to the width of the
+        input picture)
+   p -- Set to 1 to include the palette in the output file
+   r -- Number of times to repeat trying to figure out the best compression
+        mode. The default is zero, meaning after the initial attempt, do not
+        try again.
+   v -- If nonzero, display diagnostic messages on stderr. This is a bit field
+        and different bits display different diagnostic messages.
+   x -- Weight for preferring horizontal compression (default 1)
+   y -- Weight for preferring vertical compression (default 1)
+   + -- Set palette next (must be the last argument)
+
+The palette consists of 16 colours, where each colour can have one of these patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+Also see:
+   - http://zzo38computer.org/fossil/farbfeld.ui/wiki?name=ffpsytc
+   - https://forums.nesdev.org/viewtopic.php?p=206353#p206353
+.Sh EXAMPLES
+$
+.Nm
+a3 h8 p1 + 9A4040 448023 ...  < image.ff > image.psytc
+.Pp
+$
+.Nm
+r3 < image.ff > image.psytc
+.Sh SEE ALSO
+.Xr psytc2ff 1 ,
+.Xr ff-strip 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

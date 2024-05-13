@@ -1,0 +1,64 @@
+.Dd 2024-05-07
+.Dt FF-FLOOD 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-flood
+.Nd farbfeld filter that applies flood fill
+.Sh SYNOPSIS
+.Nm
+<x> <y> <colour> <?border colour?> <?options?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the flood filter and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes the following arguments:
+   - X coordinate of flood
+   - Y coordinate of flood
+   - colour to fill with
+   - (optional) border colour
+   - (optional) extra options
+
+The colours can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+The extra options are a letter and equal sign and number.
+
+The available options are:
+   a -- if nonzero, this amount is added to the alpha channel each time the
+        flood goes from one scanline to another one
+   c -- specify how many channels to use for comparison, from 1 to 4
+        (the default is to use all four channels)
+   d -- set to 0 (default) for four directions only, or 1 to include diagonals
+   h -- set nonzero to enable horizontal wrapping
+   v -- set nonzero to enable vertical wrapping
+
+Note that the border colour does not need to be defined to add extra options.
+
+By default flood fill will replace the colours of all pixels that have the
+exact same value. If the border colour is used then the flood fill will
+replace all pixels that are not the same as either of the flood and border
+colours. This can be used for example to fill an area that has a black
+outline.
+.Sh EXAMPLES
+$
+.Nm
+20 20 906060 v=1 < image.ff > image-flood.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

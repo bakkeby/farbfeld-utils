@@ -1,0 +1,30 @@
+.Dd 2024-03-30
+.Dt FF-IDCLUT 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-idclut
+.Nd generates an identity Hald CLUT with a precision of 8-bits per channel
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+This program generates an identity Hald CLUT with a precision of 8-bits per
+channel. A Color LookUp Table or CLUT (some times written as "Color LUT") is
+a picture that has a specific colour pattern on it that represents all the
+colours in the colour space. This can be used to create colour adjustment
+templates that can be applied to other pictures.
+
+An identity CLUT is a CLUT that doesn't affect the image it is applied to.
+
+See
+.Xr ff-apclut 1
+for how to apply a CLUT to an image.
+.Sh OPTIONS
+This program takes no arguments and no input.
+.Sh EXAMPLES
+$
+.Nm
+> idclut.ff
+.Sh SEE ALSO
+.Xr ff-apclut 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

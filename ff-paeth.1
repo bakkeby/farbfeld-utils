@@ -1,0 +1,49 @@
+.Dd 2024-05-08
+.Dt FF-PAETH 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-paeth
+.Nd farbfeld filter that performs Paeth prediction
+.Sh SYNOPSIS
+.Nm
+<mode>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the paeth filter and writes the result to stdout.
+.Pp
+This farbfeld filter perform Paeth prediction.
+.Pp
+Paeth prediction is a technique for making image files smaller which can
+improve compression.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes exactly one argument, which is a single letter mode.
+
+The available modes are:
+   d -- decode
+   e -- encode
+.Sh EXAMPLES
+$
+.Nm
+e < image.ff > image-paeth.ff
+.Pp
+$
+.Nm
+e < image.ff |
+.Nm
+d > same-image.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

@@ -1,0 +1,53 @@
+.Dd 2024-05-08
+.Dt FF-REPHASE 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-rephase
+.Nd farbfeld filter that randomizes the phase of the frequency domain of the picture
+.Sh SYNOPSIS
+.Nm
+<?seed?> <?options?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the rephase filter and writes the result to stdout.
+.Pp
+The input picture must be square and have a size that is the power of 2 (e.g.
+256, 512 or 1024).
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes the following optional arguments:
+   seed - a random seed
+   options - one or more letters combined to a string (no spaces)
+
+The available options are:
+   o -- seems to generate rainbow colours
+   w -- simpler transformation that generates a cloud like look, negates o
+   x -- alternate transformation that generates relief and keeps some of the
+        original shapes (when transparency is involved)
+   z -- reduces value passed to sinus and cosinus curves by 50% - tends to
+        generate an all white image
+   r -- reduce red channel strength by 50%
+   g -- reduce green channel strength by 50%
+   b -- reduce blue channel strength by 50%
+
+The options result in different algorithms being used when rephasing the image
+and the effects are not straightforward to describe.
+.Sh EXAMPLES
+$
+.Nm
+313 w < image.ff > image-rephase.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

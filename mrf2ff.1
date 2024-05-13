@@ -1,0 +1,106 @@
+.Dd 2023-11-09
+.Dt MRF2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm mrf2ff
+.Nd convert Monochrome Recursive Format (MRF) image to farbfeld
+.Sh SYNOPSIS
+.Nm
+<?option?>
+.Sh DESCRIPTION
+.Nm
+reads a Monochrome Recursive Format (MRF) image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+MRF is a bi-level raster image file format developed by Russell Marks. MRF
+images are always compressed. The compression scheme is somewhat unusual, and
+involves recursively subdividing tiles until each is a single color.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh OPTIONS
+.Pp
+The decoder has one optional argument, which is zero or more letters to indicate the options:
+.Bl -tag -width Ds
+.It a
+round up the width and height to a multiple of sixty-four
+.It c
+display colours to indicate the encoding
+.El
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh FORMAT DETAILS
+MRF is a compressed format for bilevel (1-bit mono) images. It achieves better compression for some
+images compared to GIF or PNG.
+.Pp
+MRF is a mono format and cannot represent color nor can it represent grayscale.
+.Pp
+Files have a 13-byte header, followed by the compressed image data.
+  ┌────────┬────────────────────────────────────────────────────────────────────┐
+  │ Offset │ Descrioption                                                       │
+  ├────────┼────────────────────────────────────────────────────────────────────┤
+  │    0   │ magic number - "MRF1" (in ASCII)                                   │
+  │    4   │ width (32-bit, MSB first (i.e. big-endian))                        │
+  │    8   │ height (32-bit, MSB first (i.e. big-endian))                       │
+  │   12   │ reserved (single byte, must be zero)                               │
+  │   13   │ compressed data                                                    │
+  └────────┴────────────────────────────────────────────────────────────────────┘
+.Pp
+Note that there is no end-of-file marker in the file itself - the compressed data carries on right
+up to EOF.
+
+.Sh COMPRESSION ALGORITHM
+The image is treated as a number of 64x64 squares, forming a grid large enough to encompass it.
+.Pp
+As such, if an image is 129x65 then it'll be treated in the same way as a 192x128 image. On
+decompression, the extra area which was encoded should be ignored.
+.Pp
+Each of these squares in turn (in left-to-right, top-to-bottom order) is recursively subdivided
+until the smallest completely black or white squares are found. Some pseudocode for the
+recursive subdivision routine to make things clearer:
+
+   if square size > 1x1 and square is all one color, output 1 bit
+   if whole square is black, output a 0 bit and return
+   if whole square is white, output a 1 bit and return
+   output a 0 bit
+   divide the square into four quarters, calling routine for
+   each in this order: top-left, top-right, bottom-left, bottom-right
+.Pp
+Note that the "output a 0 bit" stage is not reached for squares of size 1x1, which is what stops
+it recursing infinitely. This may not be immediately obvious.
+.Pp
+The whole of the compressed data is made up of the bits output by the above routine. The bits are
+packed into bytes MSB first, so for example outputting the bits 1,0,0,0,0,0,0,0 would result in a
+80h byte being output. Any unused bits in the last byte output are undefined; these are
+effectively after EOF and their value is irrelevant.
+.Pp
+If writing that sounds too much like hard work :-), you could always adapt pbmtomrf and/or mrftopbm.
+That's the main reason their source code is public domain, after all.
+.Pp
+When a bitmap smaller than the grid of squares is compressed then the contents of any extra area
+encoded is undefined. This is deliberate so that the MRF compressor can make these unseen areas
+anything it wants so as to maximize compression, rather than simply leaving it blank.
+.Sh EXAMPLES
+$
+.Nm
+c < image.mrf > image.ff
+.Pp
+$
+.Nm
+ac < image.mrf > image.ff
+.Pp
+$
+.Nm
+< image.mrf | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr ff2mrf 1,
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

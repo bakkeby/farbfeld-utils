@@ -1,0 +1,71 @@
+.Dd 2023-11-19
+.Dt VEC2FF 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm vec2ff
+.Nd convert DRAWX Vector Graphics image to farbfeld
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a DRAWX Vector Graphics image from stdin, converts it to
+.Xr farbfeld 5
+and writes the result to stdout.
+.Pp
+This is a vector graphics format for use with a program called drawx, which is
+a graphics tool for examining ASCII data generated elsewhere. It is based on
+and uses basic xlib commands that make drawx fast, portable and well suited
+for examining large volumes of data.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh OPTIONS
+This decoder takes exactly three arguments:
+   width             the width of the output
+   height            the height of the output
+   colour            the drawing colour(s) to use for the output
+
+The colour can be defined through one of the following patterns:
+   rrggbb            three pairs of 8-bit hex values
+   rrggbbaa          four pairs of 8-bit hex values
+   rrrrggggbbbb      three pairs of 16-bit hex values
+   rrrrggggbbbbaaaa  four pairs of 16-bit hex values
+
+The background will be transparent.
+.Sh FORMAT DETAILS
+The vector format consists of a number of five-byte records, each consisting of the command code
+(a single ASCII character), followed by two small-endian 16-bit numbers (the X and Y coordinates).
+
+The commands are:
+
+   P: Set the current position to the specified position.
+   L: Draw a straight line segment from the previous current
+      position to the specified position, and then set the
+      new current position to the specified position.
+   X: End of file. X and Y coordinates are ignored.
+
+The drawing area has the top-left corner at (0,0) and the bottom right corner at (1000,1000);
+these numbers are then scaled to fit into the drawing rectangle.
+
+This is not an official description of the file format, although it has been found to work with
+known files.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh EXAMPLES
+$
+.Nm
+< image.vec > image.ff
+.Pp
+$
+.Nm
+< image.vec | bzip2 > image.ff.bz2
+.Sh SEE ALSO
+.Xr bzip2 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

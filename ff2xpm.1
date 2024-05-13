@@ -1,0 +1,75 @@
+.Dd 2024-03-26
+.Dt FF2XPM 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff2xpm
+.Nd convert farbfeld to X pixmap image format
+.Sh SYNOPSIS
+.Nm
+<?picture name?> <?options...?> <?palette...?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, converts it to X pixmap image and writes the result to stdout.
+.Pp
+This program makes a X pixmap image (XPM) output.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh Options
+The arguments are:
+   - Picture name, with a equal sign at front (the default is "picture").
+     Not used if format 2 is specified, and should be a valid C identifier.
+   - Options
+   - Palette (multiple arguments)
+
+All arguments are optional, but if the colours are specified, then the options
+must also be specified. Also, the order must be as listed above.
+
+Options:
+   1 -- Select format 1
+   2 -- Select format 2
+   3 -- Select format 3 (default)
+   m -- Include a monochrome palette (as well as colours). Only valid if the
+        palette is specified via command-line arguments, and not for format 1.
+   s -- Include symbolic names. Only valid if the palette is specified via
+        command-line arguments, and not for format 1.
+   t -- Include stipples. Same restrictions apply as m and mutually exclusive
+        with m. In addition, encoding of each colour must be only one
+        character rather than two. This is used to specify a colour picture
+        that the monochrome version is to be stippled instead of solid.
+
+The palette consists of, for each colour, two or three arguments:
+   - Encoding, which is one or two characters. All encodings must be the same
+     length, and all must be unique. Should not include any quotation marks or
+     backslashes (if it does, they will be escaped in format 1 and 3, although
+     other programs are not guaranteed to be able to read it in this case, and
+     this also makes it inconvenient to edit with a text editor).
+   - Colour. You can also specify . by itself for transparency. If option m is
+     set, must be preceded by + for white or - for black.
+   - Stipple pattern; only included if option t is set. Use 0 or b or - for
+     black pixels, and use 1 or w or + for white pixels. Use / or : or ,
+     between rows, all of which must be the same size.
+   - Symbolic name; only included if option s is set. Must not include any
+     spaces, quotation marks, or backslashes.
+
+If the palette is not specified, it will automatically make it up, encoding
+each pixel as one or two base64 characters, except for transparent pixels which
+are encoded as spaces.
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image.xpm
+.Sh SEE ALSO
+.Xr xpm2ff 1 ,
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

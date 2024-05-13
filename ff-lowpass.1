@@ -1,0 +1,52 @@
+.Dd 2024-03-29
+.Dt FF-LOWPASS 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-lowpass
+.Nd farbfeld filter that generates a simple IIR low pass filter to each scanline
+.Sh SYNOPSIS
+.Nm
+<?float?> <?float?> <?float?>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the lowpass filter and writes the result to stdout.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes up to three arguments arguments (all floating-point numbers):
+   - real part of filter coefficient (default 0.5) - zero means no filter
+   - imaginary part of filter coefficient (default 0)
+   - bias amount (default 0.5) - this number is added to the result before
+     clipping to range 0 to 65535
+
+A forward slash (/) can be used in place of any value in order to use the
+alpha channel instead.
+
+The imaginary part of the result is not used for output, although it is used
+for calculation of further pixels in the scanline.
+.Sh EXAMPLES
+$
+.Nm
+0.73 0.49 0.11 < image.ff > image-lowpass.ff
+.Pp
+$
+.Nm
+/ 0.009 0.11 < image.ff > image-lowpass.ff
+.Pp
+$
+.Nm
+0.003 / 0.94 < image.ff > image-lowpass.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

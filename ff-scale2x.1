@@ -1,0 +1,37 @@
+.Dd 2024-05-03
+.Dt FF-SCALE2X 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-scale2x
+.Nd farbfeld filter that enlarges an image using the Scale2x algorithm
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the Scale2x filter and writes the result to stdout.
+.Pp
+The output image will be twice the width and twice the height of the original image.
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes no arguments.
+.Sh REFERENCES
+https://www.scale2x.it/
+.Sh EXAMPLES
+$
+.Nm
+< image.ff > image-scale2x.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7

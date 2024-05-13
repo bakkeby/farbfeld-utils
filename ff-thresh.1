@@ -1,0 +1,54 @@
+.Dd 2024-05-10
+.Dt FF-THRESH 1
+.Os farbfeld-utils
+.Sh NAME
+.Nm ff-thresh
+.Nd farbfeld filter that makes pixels black or white based on a specified threshold
+.Sh SYNOPSIS
+.Nm
+<threshold>
+.Nm
+<red threshold> <green threshold> <blue threshold> <alpha threshold>
+.Sh DESCRIPTION
+.Nm
+reads a
+.Xr farbfeld 5
+image from stdin, applies the thresh filter and writes the result to stdout.
+.Pp
+This farbfeld filter makes pixels black or white based on a specified
+threshold.
+.Pp
+Makes pixel values minimum (0) or maximum (65535) based on specified threshold
+(it is black if less than the specified number).
+.Pp
+In case of an error
+.Nm
+writes a diagnostic message to stderr.
+.Sh EXIT STATUS
+.Bl -tag -width Ds
+.It 0
+Image processed successfully.
+.It 1
+An error occurred.
+.El
+.Sh OPTIONS
+The filter takes either one or four arguments:
+   - if there is only one number then it is used for all channels
+   - if there are four numbers then this sets the threshold per channel
+
+Threshold numbers are in the range 1 to 65535.
+.Sh EXAMPLES
+$
+.Nm
+7500 < image.ff > image-thresh.ff
+.Pp
+$
+.Nm
+27500 22500 5000 65535 < image.ff > image-thresh.ff
+.Pp
+$ ff-pasart 512 4 906060 609060 606090 90BB60 9060CC |
+.Nm
+37000 > pasart-threshold.ff
+.Sh SEE ALSO
+.Xr farbfeld 5 ,
+.Xr farbfeld-utils 7
